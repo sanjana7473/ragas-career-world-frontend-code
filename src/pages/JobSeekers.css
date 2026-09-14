@@ -1,0 +1,355 @@
+.job-seekers-page {
+  width: 100%;
+  min-height: 100%;
+  background: #ffffff;
+  color: #10243f;
+}
+
+.job-seekers-main {
+  width: 100%;
+  min-height: calc(100vh - 78px - 58px);
+  padding: 38px 28px 35px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.job-seekers-hero {
+  width: 100%;
+}
+
+.job-seekers-eyebrow {
+  margin: 0 0 12px;
+
+  color: #a77a2c;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.job-seekers-hero h1 {
+  margin: 0;
+
+  color: #10243f;
+
+  font-size: clamp(32px, 3vw, 42px);
+  line-height: 1.12;
+
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.job-seekers-description {
+  max-width: 850px;
+
+  margin: 15px 0 16px;
+
+  color: #4f565b;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.job-seekers-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.job-seekers-btn {
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 20px;
+
+  border-radius: 5px;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition: all 0.25s ease;
+}
+
+.job-seekers-btn.primary {
+  background: #c9a254;
+  color: #10243f;
+
+  border: 1px solid #c9a254;
+}
+
+.job-seekers-btn.primary:hover {
+  background: #b99143;
+  transform: translateY(-1px);
+}
+
+.job-seekers-btn.secondary {
+  background: #ffffff;
+  color: #10243f;
+
+  border: 1px solid #263b4d;
+}
+
+.job-seekers-btn.secondary:hover {
+  background: #f7f7f5;
+  transform: translateY(-1px);
+}
+
+.job-seekers-features {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 12px;
+
+  margin-top: 24px;
+}
+
+.job-seekers-feature {
+  min-height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 11px 14px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e3e1;
+  border-radius: 7px;
+
+  box-shadow: 0 1px 4px rgba(16, 36, 63, 0.035);
+
+  transition: all 0.2s ease;
+}
+
+.job-seekers-feature:hover {
+  border-color: #c9a254;
+  transform: translateY(-2px);
+}
+
+.job-seekers-feature span {
+  flex-shrink: 0;
+
+  margin-right: 7px;
+
+  color: #10243f;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.job-seekers-feature p {
+  margin: 0;
+
+  color: #30383d;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.career-resources {
+  width: 100%;
+  margin-top: 27px;
+}
+
+.resources-eyebrow {
+  margin: 0 0 11px;
+
+  color: #a77a2c;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.resources-grid {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.resource-card {
+  min-height: 65px;
+
+  padding: 13px;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e4e1;
+  border-radius: 7px;
+
+  box-shadow: 0 1px 4px rgba(16, 36, 63, 0.025);
+
+  transition: all 0.2s ease;
+}
+
+.resource-card:hover {
+  border-color: #c9a254;
+  transform: translateY(-2px);
+}
+
+.resource-card h3 {
+  margin: 0 0 5px;
+
+  color: #263847;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.resource-card p {
+  margin: 0;
+
+  color: #70777c;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.job-seekers-strip {
+  width: 100%;
+  height: 58px;
+
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #0b2340;
+  color: #ffffff;
+
+  font-size: 10px;
+}
+
+.job-seekers-strip div {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.job-seekers-strip strong {
+  color: #c9a254;
+
+  font-size: 10px;
+}
+
+.job-seekers-strip span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.job-seekers-strip > div:last-child {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 1000px) {
+
+  .job-seekers-main {
+    padding: 32px 25px;
+  }
+
+  .job-seekers-features,
+  .resources-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .job-seekers-hero h1 {
+    font-size: 36px;
+  }
+
+}
+
+@media (max-width: 800px) {
+
+  .job-seekers-features,
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-seekers-feature,
+  .resource-card {
+    min-height: 55px;
+  }
+
+  .job-seekers-strip {
+    height: auto;
+    min-height: 58px;
+
+    padding: 12px 20px;
+
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 6px;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .job-seekers-main {
+    min-height: calc(100vh - 72px);
+
+    padding: 25px 18px 30px;
+  }
+
+  .job-seekers-eyebrow {
+    font-size: 11px;
+  }
+
+  .job-seekers-hero h1 {
+    font-size: 30px;
+    letter-spacing: -0.5px;
+  }
+
+  .job-seekers-description {
+    font-size: 13px;
+  }
+
+  .job-seekers-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+  }
+
+  .job-seekers-btn {
+    width: 100%;
+  }
+
+  .job-seekers-features,
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-seekers-feature p {
+    font-size: 12px;
+  }
+
+  .resources-eyebrow {
+    font-size: 10px;
+  }
+
+  .resource-card h3 {
+    font-size: 12px;
+  }
+
+  .resource-card p {
+    font-size: 10px;
+  }
+
+  .job-seekers-strip {
+    padding: 12px 18px;
+    font-size: 9px;
+  }
+}

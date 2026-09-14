@@ -1,0 +1,1612 @@
+/* =========================================================
+   RAGAS CAREER WORLD — HOME
+========================================================= */
+
+.home-page {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  background: #ffffff;
+  color: #122746;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   IMPORTANT — ALL HOME SLIDES NATURAL HEIGHT
+========================================================= */
+
+.home-page .page-slide {
+  width: 100% !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  position: relative;
+
+  overflow: visible !important;
+
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+
+  flex: none !important;
+}
+
+
+/* =========================================================
+   EXISTING PAGE SECTIONS
+========================================================= */
+
+.home-page .home-existing-section {
+  width: 100% !important;
+
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  overflow: visible !important;
+}
+
+
+/* =========================================================
+   COMMON CONTAINER
+========================================================= */
+
+.section-container {
+  width: min(1320px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.home-home-slide {
+  width: 100% !important;
+
+  min-height: calc(100vh - 78px) !important;
+
+  height: auto !important;
+
+  display: block;
+}
+
+
+.home-hero {
+  width: 100%;
+
+  min-height: calc(100vh - 78px);
+
+  padding: 55px 0 70px;
+
+  background: #ffffff;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   HERO CONTENT
+========================================================= */
+
+.home-hero-content {
+  width: min(1320px, calc(100% - 80px));
+
+  margin: 0 auto;
+
+  padding-right: 48%;
+
+  position: relative;
+
+  z-index: 3;
+}
+
+
+.hero-eyebrow {
+  margin: 0 0 17px;
+
+  color: #b38428;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+  line-height: 1.4;
+}
+
+
+.home-hero-content h1 {
+  max-width: 850px;
+
+  margin: 0;
+
+  color: #122746;
+
+  font-size: clamp(48px, 5vw, 72px);
+
+  line-height: 1.04;
+
+  font-weight: 800;
+
+  letter-spacing: -2.5px;
+}
+
+
+.hero-text {
+  max-width: 700px;
+
+  margin: 25px 0 30px;
+
+  color: #52667e;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   HERO IMAGE
+========================================================= */
+
+.hero-image-frame {
+  position: absolute;
+
+  width: min(560px, 42vw);
+
+  right: max(40px, calc((100% - 1320px) / 2));
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  padding: 9px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe3e7;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 20px 45px rgba(18, 39, 70, 0.13);
+
+  z-index: 3;
+}
+
+
+.hero-image-inner {
+  width: 100%;
+
+  height: 345px;
+
+  overflow: hidden;
+
+  border-radius: 11px;
+
+  background: #edf1f4;
+}
+
+
+.hero-image-inner img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+/* =========================================================
+   HERO DECORATION
+========================================================= */
+
+.hero-decoration {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: max(5px, calc((100% - 1320px) / 2 - 20px));
+
+  top: 50%;
+
+  transform: translateY(-65%);
+
+  border-radius: 50%;
+
+  background: #f5f0e5;
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   HERO BADGE
+========================================================= */
+
+.hero-image-badge {
+  position: absolute;
+
+  left: -22px;
+  bottom: 25px;
+
+  width: 190px;
+
+  padding: 14px 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #e0e3e6;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 12px 30px rgba(18, 39, 70, 0.12);
+
+  z-index: 5;
+}
+
+
+.hero-image-badge strong {
+  display: block;
+
+  color: #b38428;
+
+  font-size: 25px;
+
+  line-height: 1.1;
+
+  font-weight: 800;
+}
+
+
+.hero-image-badge span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #5d7088;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.job-search {
+  width: 100%;
+  max-width: 850px;
+
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr
+    auto;
+
+  gap: 8px;
+
+  padding: 8px;
+
+  background: #ffffff;
+
+  border: 1px solid #dfe4e9;
+
+  border-radius: 9px;
+
+  box-shadow:
+    0 10px 30px rgba(18, 39, 70, 0.07);
+}
+
+
+.search-field {
+  min-width: 0;
+
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border: 1px solid #e1e6eb;
+
+  border-radius: 6px;
+
+  background: #fafbfc;
+
+  color: #60738b;
+}
+
+
+.search-field input {
+  width: 100%;
+
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #122746;
+
+  font-family: inherit;
+
+  font-size: 12px;
+}
+
+
+.search-field input::placeholder {
+  color: #8190a1;
+}
+
+
+.search-button {
+  height: 44px;
+
+  padding: 0 18px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #183554;
+
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.search-button:hover {
+  background: #122746;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   HERO STATS
+========================================================= */
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+
+  gap: 42px;
+
+  margin-top: 28px;
+}
+
+
+.hero-stat {
+  display: flex;
+  align-items: baseline;
+
+  gap: 7px;
+
+  white-space: nowrap;
+}
+
+
+.hero-stat strong {
+  color: #b38428;
+
+  font-size: 25px;
+
+  line-height: 1;
+
+  font-weight: 800;
+}
+
+
+.hero-stat span {
+  color: #60738b;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   INDUSTRIES — MOST IMPORTANT
+========================================================= */
+
+.home-page section#industries.page-slide {
+  width: 100% !important;
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  display: block !important;
+
+  position: relative;
+
+  overflow: visible !important;
+
+  flex: none !important;
+}
+
+
+.home-page section#industries.page-slide > .industries-section {
+  width: 100% !important;
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  padding: 45px 0 45px !important;
+
+  display: block !important;
+
+  position: relative;
+
+  overflow: visible !important;
+}
+
+
+/* =========================================================
+   SECTION TOP
+========================================================= */
+
+.section-top {
+  width: min(1320px, calc(100% - 80px));
+
+  margin: 0 auto 25px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+
+.section-eyebrow {
+  margin: 0 0 8px;
+
+  color: #b38428;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+}
+
+
+.section-top h2 {
+  margin: 0;
+
+  color: #122746;
+
+  font-size: 31px;
+
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   VIEW ALL INDUSTRIES BUTTON
+========================================================= */
+
+.outline-button {
+  flex-shrink: 0;
+
+  min-height: 42px;
+
+  padding: 0 20px;
+
+  border: 1px solid #183554;
+
+  border-radius: 6px;
+
+  background: #ffffff;
+
+  color: #183554;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.outline-button:hover {
+  background: #183554;
+
+  color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   INDUSTRY GRID
+========================================================= */
+
+.home-page .industry-grid {
+  width: min(1320px, calc(100% - 80px));
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+
+  margin: 0 auto !important;
+
+  padding: 0 !important;
+
+  display: grid !important;
+
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+
+  gap: 16px;
+
+  overflow: visible !important;
+
+  align-content: start;
+
+  flex: none !important;
+}
+
+
+/* =========================================================
+   EXPANDED GRID
+========================================================= */
+
+.home-page .industry-grid-expanded {
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+}
+
+
+/* =========================================================
+   INDUSTRY CARD
+========================================================= */
+
+.home-page .industry-card {
+  width: 100%;
+
+  min-width: 0;
+
+  height: 185px;
+
+  min-height: 185px;
+
+  margin: 0 !important;
+
+  padding: 18px;
+
+  border: 1px solid #dfe4e9;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  justify-content: flex-start;
+
+  position: relative;
+
+  box-sizing: border-box;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.home-page .industry-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #c9d1da;
+
+  box-shadow:
+    0 12px 25px rgba(18, 39, 70, 0.08);
+}
+
+
+/* =========================================================
+   INDUSTRY ICON
+========================================================= */
+
+.home-page .industry-icon {
+  width: 43px;
+  height: 43px;
+
+  margin-bottom: 14px;
+
+  border-radius: 6px;
+
+  background: #f0f3f5;
+
+  color: #193757;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+
+.home-page .industry-icon svg {
+  stroke-width: 1.8;
+}
+
+
+/* =========================================================
+   INDUSTRY TITLE
+========================================================= */
+
+.home-page .industry-card h3 {
+  margin: 0;
+
+  color: #122746;
+
+  font-size: 14px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   INDUSTRY OPENINGS
+========================================================= */
+
+.home-page .industry-opening-link {
+  margin-top: auto;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #b38428;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+
+.home-page .industry-opening-link:hover {
+  color: #8e681d;
+}
+
+
+/* =========================================================
+   CURRENT VACANCIES — NO EXTRA SPACE
+========================================================= */
+
+.home-page section#current-openings.page-slide {
+  width: 100% !important;
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  display: block !important;
+
+  position: relative;
+
+  overflow: visible !important;
+
+  flex: none !important;
+}
+
+
+.home-page section#current-openings.page-slide > .openings-section {
+  width: min(1320px, calc(100% - 80px));
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  margin: 0 auto !important;
+
+  padding: 55px 0 80px !important;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.65fr)
+    minmax(320px, 0.75fr);
+
+  gap: 35px;
+
+  align-items: start;
+
+  background: #f7f9fa;
+
+  position: relative;
+
+  overflow: visible !important;
+}
+
+
+/* =========================================================
+   OPENINGS LEFT
+========================================================= */
+
+.openings-left {
+  min-width: 0;
+}
+
+
+.openings-left h2 {
+  margin: 0 0 25px;
+
+  color: #122746;
+
+  font-size: 32px;
+
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   JOBS LIST
+========================================================= */
+
+.jobs-list {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+.job-card {
+  width: 100%;
+
+  min-height: 92px;
+
+  padding: 18px 20px;
+
+  border: 1px solid #dfe4e8;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.job-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 22px rgba(18, 39, 70, 0.07);
+}
+
+
+.job-info {
+  min-width: 0;
+}
+
+
+.job-info h3 {
+  margin: 0 0 6px;
+
+  color: #122746;
+
+  font-size: 16px;
+
+  line-height: 1.35;
+
+  font-weight: 700;
+}
+
+
+.job-info p {
+  margin: 0;
+
+  color: #61738b;
+
+  font-size: 12px;
+}
+
+
+.job-info p span {
+  margin: 0 7px;
+
+  color: #b38428;
+}
+
+
+/* =========================================================
+   JOB ACTION
+========================================================= */
+
+.job-action {
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+
+.job-type {
+  color: #b38428;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+.job-action button {
+  min-width: 76px;
+
+  min-height: 36px;
+
+  padding: 0 15px;
+
+  border: 1px solid #183554;
+
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #183554;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.job-action button:hover {
+  background: #183554;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   WHY CHOOSE US
+========================================================= */
+
+.why-card {
+  min-width: 0;
+
+  padding: 30px;
+
+  border-radius: 10px;
+
+  background: #122746;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 15px 35px rgba(18, 39, 70, 0.12);
+}
+
+
+.why-card .section-eyebrow {
+  color: #d0a443;
+}
+
+
+.why-card h2 {
+  margin: 0 0 22px;
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+
+.why-card ul {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 17px;
+}
+
+
+.why-card li {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  color: #d1dbe7;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+
+.why-card li svg {
+  flex-shrink: 0;
+
+  margin-top: 2px;
+
+  color: #d0a443;
+}
+
+
+/* =========================================================
+   RESUME BUTTON
+========================================================= */
+
+.resume-button {
+  width: 100%;
+
+  min-height: 44px;
+
+  margin-top: 28px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #d0a443;
+
+  color: #102944;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.resume-button:hover {
+  background: #dfb452;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   EXISTING SECTIONS
+========================================================= */
+
+.home-content-section,
+.home-existing-section {
+  width: 100% !important;
+
+  height: auto !important;
+
+  min-height: 0 !important;
+
+  max-height: none !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  overflow: visible !important;
+}
+
+
+.home-content-section > *,
+.home-existing-section > * {
+  width: 100%;
+}
+
+
+/* =========================================================
+   1250px
+========================================================= */
+
+@media (max-width: 1250px) {
+
+  .section-container,
+  .section-top,
+  .home-hero-content,
+  .home-page .industry-grid {
+    width: calc(100% - 50px);
+  }
+
+
+  .home-hero-content {
+    padding-right: 47%;
+  }
+
+
+  .hero-image-frame {
+    width: 43vw;
+  }
+
+
+  .home-page .industry-grid {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  }
+
+
+  .home-page section#current-openings.page-slide > .openings-section {
+    width: calc(100% - 50px);
+
+    grid-template-columns:
+      1fr 360px;
+  }
+}
+
+
+/* =========================================================
+   1050px
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  .home-hero {
+    min-height: auto;
+
+    padding: 60px 0 70px;
+  }
+
+
+  .home-hero-content {
+    padding-right: 0;
+  }
+
+
+  .home-hero-content h1 {
+    max-width: 800px;
+
+    font-size: clamp(44px, 6vw, 62px);
+  }
+
+
+  .hero-image-frame {
+    position: relative;
+
+    width: min(650px, 100%);
+
+    right: auto;
+    top: auto;
+
+    transform: none;
+
+    margin: 50px auto 0;
+  }
+
+
+  .hero-image-inner {
+    height: 370px;
+  }
+
+
+  .hero-decoration {
+    right: 5%;
+
+    top: 48%;
+  }
+
+
+  .home-hero {
+    display: block;
+  }
+
+
+  .job-search {
+    max-width: 100%;
+  }
+
+
+  .home-page section#current-openings.page-slide > .openings-section {
+    width: calc(100% - 50px);
+
+    grid-template-columns: 1fr;
+  }
+
+
+  .why-card {
+    max-width: 700px;
+  }
+}
+
+
+/* =========================================================
+   850px
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .section-container,
+  .section-top,
+  .home-hero-content,
+  .home-page .industry-grid,
+  .home-page section#current-openings.page-slide > .openings-section {
+    width: calc(100% - 36px);
+  }
+
+
+  .home-hero {
+    padding: 45px 0 60px;
+  }
+
+
+  .home-hero-content h1 {
+    font-size: clamp(40px, 7vw, 58px);
+
+    letter-spacing: -1.8px;
+  }
+
+
+  .hero-text {
+    font-size: 15px;
+  }
+
+
+  .hero-stats {
+    gap: 30px;
+  }
+
+
+  .home-page .industry-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+
+
+  .section-top {
+    align-items: flex-start;
+  }
+
+
+  .home-page section#current-openings.page-slide > .openings-section {
+    padding: 45px 0 65px !important;
+  }
+}
+
+
+/* =========================================================
+   650px
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .section-container,
+  .section-top,
+  .home-hero-content,
+  .home-page .industry-grid,
+  .home-page section#current-openings.page-slide > .openings-section {
+    width: calc(100% - 28px);
+  }
+
+
+  .home-hero {
+    padding: 35px 0 50px;
+  }
+
+
+  .hero-eyebrow {
+    font-size: 11px;
+
+    letter-spacing: 1.3px;
+  }
+
+
+  .home-hero-content h1 {
+    font-size: 40px;
+
+    line-height: 1.08;
+
+    letter-spacing: -1.3px;
+  }
+
+
+  .hero-text {
+    margin: 18px 0 25px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+  }
+
+
+  .job-search {
+    grid-template-columns: 1fr;
+
+    padding: 8px;
+  }
+
+
+  .search-field,
+  .search-button {
+    width: 100%;
+  }
+
+
+  .hero-stats {
+    flex-wrap: wrap;
+
+    gap: 18px 25px;
+  }
+
+
+  .hero-stat strong {
+    font-size: 21px;
+  }
+
+
+  .hero-stat span {
+    font-size: 12px;
+  }
+
+
+  .hero-image-frame {
+    width: 100%;
+
+    margin-top: 35px;
+  }
+
+
+  .hero-image-inner {
+    height: 260px;
+  }
+
+
+  .hero-decoration {
+    width: 190px;
+    height: 190px;
+  }
+
+
+  .hero-image-badge {
+    left: 5px;
+    bottom: 15px;
+
+    width: 165px;
+
+    padding: 11px 14px;
+  }
+
+
+  .hero-image-badge strong {
+    font-size: 21px;
+  }
+
+
+  .hero-image-badge span {
+    font-size: 10px;
+  }
+
+
+  /* INDUSTRIES */
+
+  .home-page section#industries.page-slide > .industries-section {
+    padding: 40px 0 35px !important;
+  }
+
+
+  .section-top {
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+
+  .section-top h2 {
+    font-size: 26px;
+  }
+
+
+  .outline-button {
+    width: 100%;
+  }
+
+
+  .home-page .industry-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+
+
+  .home-page .industry-card {
+    height: 175px;
+
+    min-height: 175px;
+
+    padding: 14px;
+  }
+
+
+  /* CURRENT VACANCIES */
+
+  .openings-left h2 {
+    font-size: 26px;
+  }
+
+
+  .job-card {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+
+  .job-action {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+
+  .why-card {
+    padding: 23px;
+  }
+
+
+  .why-card h2 {
+    font-size: 25px;
+  }
+}
+
+
+/* =========================================================
+   450px
+========================================================= */
+
+@media (max-width: 450px) {
+
+  .section-container,
+  .section-top,
+  .home-hero-content,
+  .home-page .industry-grid,
+  .home-page section#current-openings.page-slide > .openings-section {
+    width: calc(100% - 22px);
+  }
+
+
+  .home-hero-content h1 {
+    font-size: 34px;
+  }
+
+
+  .hero-text {
+    font-size: 13px;
+  }
+
+
+  .hero-stats {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 17px;
+  }
+
+
+  .hero-stat {
+    white-space: normal;
+  }
+
+
+  .hero-stat:last-child {
+    grid-column: 1 / -1;
+  }
+
+
+  .hero-image-inner {
+    height: 220px;
+  }
+
+
+  .hero-decoration {
+    width: 160px;
+    height: 160px;
+
+    right: 0;
+  }
+
+
+  .hero-image-badge {
+    width: 150px;
+
+    left: 0;
+    bottom: 8px;
+  }
+
+
+  .hero-image-badge strong {
+    font-size: 19px;
+  }
+
+
+  .hero-image-badge span {
+    font-size: 10px;
+  }
+
+
+  .home-page .industry-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .home-page .industry-card {
+    height: 155px;
+
+    min-height: 155px;
+  }
+
+
+  .why-card {
+    padding: 20px;
+  }
+
+
+  .resume-button {
+    width: 100%;
+  }
+}
+/* =========================================================
+   CURRENT OPENINGS - HOME PAGE FIX
+========================================================= */
+
+.home-page #current-openings.page-slide {
+  width: 100%;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow: visible;
+  scroll-snap-align: none;
+}
+
+.home-page #current-openings.page-slide > * {
+  width: 100%;
+  min-height: 0 !important;
+  margin: 0;
+}
+
+.home-page #current-openings .current-openings-page {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+}

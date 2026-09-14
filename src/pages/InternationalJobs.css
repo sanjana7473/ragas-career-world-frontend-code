@@ -1,0 +1,531 @@
+/* =========================================
+   RAGAS CAREER WORLD
+   INTERNATIONAL JOBS
+========================================= */
+
+.international-page {
+  width: 100%;
+  height: calc(100vh - 78px);
+  min-height: calc(100vh - 78px);
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+  color: #10243f;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  overflow: hidden;
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.international-main {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+
+  padding: 32px 40px 25px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   HEADING
+========================================= */
+
+.international-heading {
+  margin-bottom: 18px;
+}
+
+.international-eyebrow,
+.jobs-eyebrow {
+  margin: 0 0 8px;
+
+  color: #8c753d;
+
+  font-size: 11px;
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+.international-heading h1 {
+  margin: 0;
+
+  color: #10243f;
+
+  font-size: clamp(36px, 4vw, 48px);
+  line-height: 1.05;
+
+  font-weight: 750;
+
+  letter-spacing: -1.6px;
+}
+
+/* =========================================
+   REGION CARDS
+========================================= */
+
+.region-grid {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+.region-card {
+  min-height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e5e7;
+
+  border-radius: 7px;
+
+  text-align: center;
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.region-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d7bd7c;
+
+  box-shadow:
+    0 8px 20px rgba(16, 36, 63, 0.06);
+}
+
+.region-icon {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #8c753d;
+
+  background: #f5f1e7;
+
+  border-radius: 5px;
+}
+
+.region-card h3 {
+  margin: 0 0 3px;
+
+  color: #24354a;
+
+  font-size: 12px;
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+.region-card span {
+  color: #8c753d;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* =========================================
+   FEATURED JOBS
+========================================= */
+
+.international-jobs {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.international-jobs .jobs-eyebrow {
+  margin-bottom: 8px;
+}
+
+.international-job-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.international-job-card {
+  width: 100%;
+  min-height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e3e5e7;
+
+  border-radius: 7px;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.international-job-card:hover {
+  border-color: #d7bd7c;
+
+  box-shadow:
+    0 6px 18px rgba(16, 36, 63, 0.05);
+}
+
+/* =========================================
+   JOB INFO
+========================================= */
+
+.international-job-info {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+}
+
+.job-icon {
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  margin-right: 11px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #26374b;
+
+  background: #f1f3f4;
+
+  border-radius: 5px;
+}
+
+.international-job-info h3 {
+  margin: 0 0 3px;
+
+  color: #24354a;
+
+  font-size: 12px;
+  line-height: 1.2;
+
+  font-weight: 800;
+}
+
+.international-job-info p {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  color: #7a8086;
+
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.international-job-info p span {
+  color: #b4b6b8;
+}
+
+/* =========================================
+   JOB ACTION
+========================================= */
+
+.international-job-action {
+  display: flex;
+  align-items: center;
+
+  gap: 15px;
+
+  flex-shrink: 0;
+}
+
+.international-job-action strong {
+  color: #24354a;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+.international-job-action button {
+  min-width: 58px;
+
+  padding: 7px 12px;
+
+  border: 1px solid #10243f;
+
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: #10243f;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.international-job-action button:hover {
+  background: #10243f;
+  color: #ffffff;
+}
+
+/* =========================================
+   VISA SUPPORT
+========================================= */
+
+.visa-support-card {
+  width: 100%;
+
+  min-height: 40px;
+
+  margin-top: 10px;
+
+  padding: 10px 14px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  background: #f4f5f6;
+
+  border-radius: 6px;
+}
+
+.visa-support-title strong {
+  color: #8c753d;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+.visa-support-card p {
+  margin: 0;
+
+  color: #747a80;
+
+  font-size: 9px;
+}
+
+/* =========================================
+   BOTTOM STRIP
+========================================= */
+
+.international-bottom {
+  width: 100%;
+
+  height: 52px;
+  min-height: 52px;
+
+  flex-shrink: 0;
+
+  padding: 0 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #102b47;
+
+  color: #ffffff;
+}
+
+.international-bottom-left {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  min-width: 0;
+}
+
+.international-bottom-left strong {
+  flex-shrink: 0;
+
+  color: #d7b56d;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.international-bottom-left span {
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 10px;
+}
+
+.international-bottom-right {
+  flex-shrink: 0;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 10px;
+
+  text-align: right;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .international-main {
+    padding: 30px 28px 22px;
+  }
+
+  .region-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .international-bottom {
+    padding: 0 28px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .international-page {
+    height: auto;
+    min-height: calc(100vh - 72px);
+
+    overflow-y: auto;
+  }
+
+  .international-main {
+    flex: none;
+
+    padding: 28px 20px 30px;
+  }
+
+  .international-heading h1 {
+    font-size: 35px;
+  }
+
+  .region-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+  }
+
+  .international-job-card {
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .international-job-action {
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 6px;
+  }
+
+  .visa-support-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .international-bottom {
+    height: auto;
+    min-height: 60px;
+
+    padding: 14px 20px;
+
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 7px;
+  }
+
+  .international-bottom-right {
+    text-align: left;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 450px) {
+
+  .international-main {
+    padding: 24px 16px 25px;
+  }
+
+  .international-heading h1 {
+    font-size: 30px;
+  }
+
+  .region-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .international-job-info h3 {
+    font-size: 11px;
+  }
+
+  .international-job-info p {
+    font-size: 8px;
+  }
+
+  .international-job-action strong {
+    font-size: 9px;
+  }
+
+  .international-bottom {
+    padding: 13px 16px;
+  }
+}
