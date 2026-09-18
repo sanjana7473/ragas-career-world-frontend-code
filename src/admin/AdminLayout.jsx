@@ -59,10 +59,7 @@ function AdminLayout() {
             className="admin-brand-logo"
           />
 
-          <div>
-            <strong>RAGAS</strong>
-            <span>CAREER WORLD</span>
-          </div>
+        
         </div>
 
         {/* ADMIN USER */}

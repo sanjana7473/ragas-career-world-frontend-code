@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { API_BASE_URL } from "../config/api";
 import "./Contact.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -125,8 +126,8 @@ function Contact() {
           </div>
 
           <div className="head-office">
-            <strong>Head Office</strong>
-            <span>RAGAS CAREER WORLD, Business District, India</span>
+            <strong>1885, Ground Floor, South End C Cross Road, 28th Main Road, E End B Main Rd, near Kabab Magic, Jayanagara 11th Block, Jayanagar, Bengaluru, Karnataka 56004</strong>
+            <span>RAGAS CAREER WORLD</span>
           </div>
 
           <div className="contact-actions">

@@ -25,7 +25,7 @@
   flex-direction: column;
 
   /* SAME COLOR AS MAIN NAVBAR */
-  background: #0d3029;
+ background: #09452E;
   color: #ffffff;
 
   z-index: 1000;
@@ -48,15 +48,11 @@
 }
 
 .admin-brand-logo {
-  width: 45px;
-  height: 45px;
-
-  flex-shrink: 0;
-
+  width: 145px;
+  height: 60px;
   object-fit: contain;
   display: block;
 }
-
 .admin-brand strong {
   display: block;
 
@@ -427,10 +423,9 @@
   }
 
   .admin-brand-logo {
-    width: 42px;
-    height: 42px;
-  }
-
+      width: 135px;
+  height: 58px;
+}
   /* ---------- OVERLAY ---------- */
 
   .admin-sidebar-overlay {

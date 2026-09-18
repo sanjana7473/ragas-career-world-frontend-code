@@ -23,13 +23,12 @@
   display: grid;
 
   grid-template-columns:
-    1.7fr
-    1fr
+    1.6fr
     1fr
     1fr
     1.35fr;
 
-  gap: 45px;
+  gap: 55px;
 }
 
 /* =========================================

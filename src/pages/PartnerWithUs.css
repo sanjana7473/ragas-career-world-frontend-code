@@ -83,6 +83,34 @@
   line-height: 1.4;
 }
 
+.partner-login-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 39px;
+
+  margin-top: 20px;
+  padding: 0 22px;
+
+  border: 1px solid #0b2340;
+  border-radius: 5px;
+
+  background: #0b2340;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: all 0.2s ease;
+}
+
+.partner-login-link:hover {
+  background: #173d63;
+  transform: translateY(-1px);
+}
+
 .partner-card {
   width: 100%;
 

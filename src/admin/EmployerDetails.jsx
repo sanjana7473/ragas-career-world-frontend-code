@@ -11,8 +11,9 @@ import {
   Users,
   FileText,
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
 import "./EmployerDetails.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const API_URL = API_BASE_URL;
 

@@ -11,10 +11,11 @@ import {
   Pencil,
   XCircle,
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
 import "./PartnerJobs.css";
 
-const API_URL = `${API_BASE_URL}/api/jobs`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const API_URL = API_BASE_URL;
 
 function PartnerJobs() {
   const navigate = useNavigate();

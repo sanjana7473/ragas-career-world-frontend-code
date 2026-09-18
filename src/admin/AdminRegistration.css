@@ -13,7 +13,7 @@
 .admin-register-left {
   width: 50%;
   min-height: 100vh;
-  background: #0d3029;
+  background: #09452E;
   color: #ffffff;
   padding: 50px 70px;
   display: flex;
@@ -31,11 +31,11 @@
 }
 
 .admin-register-logo {
-  width: 52px;
-  height: 52px;
+  width: 150px;
+  height: 60px;
   object-fit: contain;
+  display: block;
 }
-
 .admin-register-brand div {
   display: flex;
   flex-direction: column;

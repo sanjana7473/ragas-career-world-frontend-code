@@ -3,6 +3,7 @@ import {
   Mail,
   ArrowUpRight,
 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   FaLinkedinIn,
@@ -14,14 +15,51 @@ import {
 import "./Footer.css";
 
 function Footer() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
 
-    if (element) {
+    const standaloneRoutes = {
+      "recruitment-process": "/recruitment-process",
+      "visa-immigration": "/visa-support",
+    };
+
+    if (standaloneRoutes[id]) {
+      navigate(standaloneRoutes[id]);
+      return;
+    }
+
+    if (location.pathname === "/" && element) {
       element.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
+      return;
+    }
+
+    const routeBySection = {
+      home: "/",
+      about: "/about",
+      services: "/services",
+      "international-jobs": "/international-jobs",
+      "domestic-jobs": "/domestic-jobs",
+      industries: "/industries",
+      "current-openings": "/current-openings",
+      employers: "/employers",
+      "job-seekers": "/job-seekers",
+      "upload-resume": "/upload-resume",
+      "post-a-job": "/post-a-job",
+      "partner-with-us": "/partner-with-us",
+      blog: "/blog",
+      testimonials: "/testimonials",
+      contact: "/contact",
+      careers: "/careers",
+    };
+
+    if (routeBySection[id]) {
+      navigate(routeBySection[id]);
     }
   };
 
@@ -119,38 +157,12 @@ function Footer() {
           </button>
         </div>
 
-        {/* Candidates */}
-        <div className="footer-column">
-          <h3>For Candidates</h3>
-
-          <button onClick={() => scrollToSection("current-openings")}>
-            Current Openings
-          </button>
-
-          <button onClick={() => scrollToSection("job-seekers")}>
-            Job Seekers
-          </button>
-
-          <button onClick={() => scrollToSection("visa-immigration")}>
-            Visa & Immigration
-          </button>
-
-          <button onClick={() => scrollToSection("blog")}>
-            Career Blog
-          </button>
-
-          <button onClick={() => scrollToSection("careers")}>
-            Careers
-          </button>
-        </div>
-
+        
         {/* Employers */}
         <div className="footer-column">
           <h3>For Employers</h3>
 
-          <button onClick={() => scrollToSection("employers")}>
-            Employers
-          </button>
+         
 
           <button onClick={() => scrollToSection("post-a-job")}>
             Post a Job
@@ -229,9 +241,6 @@ function Footer() {
           <span>
             © {new Date().getFullYear()} RAGAS CAREER WORLD.
             All rights reserved.
-          </span>
-          <span style={{ marginLeft: "20px" }}>
-            Developed by <a href="https://gradepac.com/" target="_blank" rel="noreferrer" style={{ color: "inherit", textDecoration: "none", fontWeight: "500" }}>https://gradepac.com/</a>
           </span>
         </div>
 

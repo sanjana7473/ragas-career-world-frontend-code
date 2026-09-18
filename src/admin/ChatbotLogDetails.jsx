@@ -10,10 +10,11 @@ import {
   Bot,
   UserRound,
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
 import "./ChatbotLogDetails.css";
 
-const API_URL = `${API_BASE_URL}/api/chatbot-logs`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const API_URL = API_BASE_URL;
 
 function ChatbotLogDetails() {
   const { id } = useParams();

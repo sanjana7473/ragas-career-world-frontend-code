@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config/api";
 import "./PartnerDashboard.css";
 
-const API_URL = `${API_BASE_URL}/api/partners`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const API_URL = API_BASE_URL;
 
 function PartnerDashboard() {
   const navigate = useNavigate();

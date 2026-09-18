@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import "./AdminRegistration.css";
 import ragasLogo from "../assets/ragas-logo.png";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+
 function AdminRegistration() {
   const navigate = useNavigate();
 
@@ -58,7 +61,8 @@ function AdminRegistration() {
     setLoading(true);
 
     try {
-      const API_URL = API_BASE_URL;
+      const API_URL =
+        API_BASE_URL;
 
       const response = await fetch(
         `${API_URL}/api/auth/admin/register`,
@@ -117,10 +121,7 @@ function AdminRegistration() {
             className="admin-register-logo"
           />
 
-          <div>
-            <strong>RAGAS</strong>
-            <span>CAREER WORLD</span>
-          </div>
+          
         </div>
 
         <div className="admin-register-left-content">

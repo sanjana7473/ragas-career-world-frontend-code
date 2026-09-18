@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { API_BASE_URL } from "../config/api";
+import { Link } from "react-router-dom";
 import "./PartnerWithUs.css";
 
-const API_URL = `${API_BASE_URL}/api/partners`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const API_URL = API_BASE_URL;
 
 function PartnerWithUs() {
   const [formData, setFormData] = useState({
@@ -147,6 +149,13 @@ function PartnerWithUs() {
             account — share job orders, track referrals, and see commission
             terms up front.
           </p>
+
+          <Link
+            to="/partner-login"
+            className="partner-login-link"
+          >
+            Partner Login
+          </Link>
 
           <div className="partner-steps">
 

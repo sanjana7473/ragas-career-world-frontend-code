@@ -5,10 +5,11 @@ import {
   ArrowLeft,
   CheckCircle2,
 } from "lucide-react";
-import { API_BASE_URL } from "../config/api";
 import "./JobApplication.css";
 
-const API_URL = `${API_BASE_URL}/api/applications`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const API_URL = API_BASE_URL;
 const JOB_API_URL = API_BASE_URL;
 
 /* =========================================
@@ -368,7 +369,7 @@ function JobApplication() {
         MongoDB _id is sent as jobId.
       */
 
-      data.append("jobId", jobId);
+      data.append("jobId", job.id ||jobId);
 
       /*
         IMPORTANT:

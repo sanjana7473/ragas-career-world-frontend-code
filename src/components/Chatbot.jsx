@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { API_BASE_URL } from "../config/api";
 import "./Chatbot.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const CHATBOT_LOG_API = `${API_BASE_URL}/api/chatbot-logs`;
 const CANDIDATE_API = `${API_BASE_URL}/api/candidates`;
