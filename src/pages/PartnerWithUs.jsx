@@ -17,6 +17,8 @@ function PartnerWithUs() {
     contactPerson: "",
     email: "",
     phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [registrationFile, setRegistrationFile] = useState(null);
@@ -68,6 +70,21 @@ function PartnerWithUs() {
 
     setSuccess("");
     setError("");
+
+    /* -----------------------------------------
+       PASSWORD VALIDATION
+    ----------------------------------------- */
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Password and Confirm Password do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -82,6 +99,7 @@ function PartnerWithUs() {
       data.append("contactPerson", formData.contactPerson);
       data.append("email", formData.email);
       data.append("phone", formData.phone);
+      data.append("password", formData.password);
 
       if (registrationFile) {
         data.append("registrationCertificate", registrationFile);
@@ -101,7 +119,7 @@ function PartnerWithUs() {
       }
 
       setSuccess(
-        "Your partner registration has been submitted successfully."
+        "Your partner registration has been submitted successfully. You can now log in with your email and password."
       );
 
       setFormData({
@@ -114,6 +132,8 @@ function PartnerWithUs() {
         contactPerson: "",
         email: "",
         phone: "",
+        password: "",
+        confirmPassword: "",
       });
 
       setRegistrationFile(null);
@@ -169,7 +189,7 @@ function PartnerWithUs() {
             <div className="partner-step">
               <strong>2. Verify</strong>
               <span>
-                Admin reviews registration documents
+                Admin reviews registration documents in the background
               </span>
             </div>
 
@@ -347,6 +367,36 @@ function PartnerWithUs() {
               />
             </div>
 
+            <div className="partner-field">
+              <label>Password</label>
+
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Minimum 6 characters"
+                minLength={6}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+
+            <div className="partner-field">
+              <label>Confirm Password</label>
+
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Re-enter your password"
+                minLength={6}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+
             {/* ERROR */}
             {error && (
               <div
@@ -380,8 +430,9 @@ function PartnerWithUs() {
             )}
 
             <p className="partner-form-note">
-              All fields are labelled and validated with clear,
-              specific inline error messages.
+              Choose a password you will use to log in to your partner
+              dashboard. Your registration documents are still reviewed
+              by our team for verification.
             </p>
 
             <button
@@ -391,7 +442,7 @@ function PartnerWithUs() {
             >
               {loading
                 ? "Submitting..."
-                : "Submit for Verification"}
+                : "Create Partner Account"}
             </button>
 
           </form>

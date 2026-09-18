@@ -13,6 +13,8 @@ import {
   Headphones,
 } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 import "./Services.css";
 
 const services = [
@@ -359,19 +361,19 @@ function Services() {
 
           <div className="services-cta-actions">
 
-            <a
-              href="/current-openings"
+            <Link
+              to="/current-openings"
               className="services-cta-primary"
             >
               Explore Jobs
-            </a>
+            </Link>
 
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="services-cta-secondary"
             >
               Contact Us
-            </a>
+            </Link>
 
           </div>
 

@@ -28,7 +28,6 @@ import JobApplication from "./pages/JobApplication";
 import EmployerRegistration from "./pages/EmployerRegistration";
 import UserLogin from "./pages/UserLogin";
 import UserRegistration from "./pages/UserRegistration";
-import AdminRegister from "./admin/AdminRegistration";
 
 import PartnerLogin from "./pages/PartnerLogin";
 
@@ -248,10 +247,10 @@ function AdminWebsite() {
   return (
     <Routes>
       <Route path="login" element={<AdminLogin />} />
-      {/* Admin Registration */}
-      <Route path="register" element={<AdminRegister />} />
 
-      
+      {/* Admin registration removed from the UI - old /admin/register URL now redirects to login */}
+      <Route path="register" element={<Navigate to="/admin/login" replace />} />
+
 
       <Route element={<AdminRoute />}>
         <Route index element={<Dashboard />} />

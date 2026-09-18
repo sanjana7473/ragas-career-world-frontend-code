@@ -359,24 +359,6 @@ function UserRegistration() {
 
           </div>
 
-          {/* ADMIN */}
-          <div className="user-register-admin">
-
-            <span>
-              Are you an administrator?
-            </span>
-
-            <button
-              type="button"
-              onClick={() =>
-                navigate("/admin/register")
-              }
-            >
-              Admin Login
-            </button>
-
-          </div>
-
         </div>
 
       </div>

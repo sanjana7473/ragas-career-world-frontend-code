@@ -289,24 +289,6 @@ function UserLogin() {
 
           </div>
 
-          {/* ADMIN */}
-          <div className="user-login-admin">
-
-            <span>
-              Are you an administrator?
-            </span>
-
-            <button
-              type="button"
-              onClick={() =>
-                navigate("/admin")
-              }
-            >
-              Admin Login
-            </button>
-
-          </div>
-
         </div>
 
       </div>

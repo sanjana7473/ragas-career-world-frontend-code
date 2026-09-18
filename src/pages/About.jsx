@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import "./About.css";
 
 import {
@@ -126,22 +128,22 @@ function About() {
 
             <div className="about-hero-actions">
 
-              <a
-                href="/current-openings"
+              <Link
+                to="/current-openings"
                 className="about-btn about-btn-primary"
               >
                 <span>Explore Opportunities</span>
                 <span className="about-btn-icon">
                   <ArrowRight size={16} />
                 </span>
-              </a>
+              </Link>
 
-              <a
-                href="/contact"
+              <Link
+                to="/contact"
                 className="about-btn about-btn-secondary"
               >
                 Contact Us
-              </a>
+              </Link>
 
             </div>
 
@@ -671,20 +673,20 @@ function About() {
 
           <div className="cta-actions">
 
-            <a
-              href="/current-openings"
+            <Link
+              to="/current-openings"
               className="cta-primary"
             >
               <span>Explore Opportunities</span>
               <ArrowRight size={16} />
-            </a>
+            </Link>
 
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="cta-secondary"
             >
               Contact Us
-            </a>
+            </Link>
 
           </div>
 

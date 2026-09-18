@@ -209,14 +209,14 @@ function Footer() {
           </a>
 
           <a
-            href="mailto:hr@ragascarrerworld.com"
+            href="mailto:hr@ragascareerworld.com"
             className="footer-contact-item"
           >
             <Mail size={16} />
 
             <div>
               <strong>Corporate</strong>
-              <span>hr@ragascarrerworld.com</span>
+              <span>hr@ragascareerworld.com</span>
             </div>
           </a>
 
