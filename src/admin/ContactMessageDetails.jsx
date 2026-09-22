@@ -20,9 +20,13 @@ const ContactMessageDetails = () => {
       try {
         setLoading(true);
 
-        const response = await fetch(
-          `${API_URL}/api/contact/${id}`
-        );
+        const response = await fetch(`${API_URL}/api/contact/${id}`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
 
         const data = await response.json();
 

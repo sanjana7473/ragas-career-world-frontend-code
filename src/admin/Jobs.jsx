@@ -55,9 +55,19 @@ function Jobs() {
       setLoading(true);
       setError("");
 
+      const token = localStorage.getItem("ragasAdminToken");
+
+      const authHeaders = {
+        Authorization: `Bearer ${token}`,
+      };
+
       const [jobsResponse, applicationsResponse] = await Promise.all([
-        fetch(`${API_URL}/api/jobs/admin/all`),
-        fetch(`${API_URL}/api/applications`),
+        fetch(`${API_URL}/api/jobs/admin/all`, {
+          headers: authHeaders,
+        }),
+        fetch(`${API_URL}/api/applications`, {
+          headers: authHeaders,
+        }),
       ]);
 
       if (!jobsResponse.ok) {
@@ -74,7 +84,13 @@ function Jobs() {
       console.log("Admin Jobs:", jobsData);
       console.log("Applications:", applicationsData);
 
-      setJobs(jobsData.data || []);
+      /* Partner drafts are private to the partner panel until the
+         partner publishes them, so they never enter this queue. */
+      const visibleJobs = (jobsData.data || []).filter(
+        (job) => job.status !== "Draft"
+      );
+
+      setJobs(visibleJobs);
       setApplications(applicationsData.data || []);
     } catch (err) {
       console.error("Jobs error:", err);
@@ -176,9 +192,14 @@ function Jobs() {
       setUpdatingJobId(jobId);
       setError("");
 
+      const token = localStorage.getItem("ragasAdminToken");
+
       const response = await fetch(`${API_URL}/api/jobs/${jobId}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -253,7 +274,10 @@ function Jobs() {
     try {
       const response = await fetch(`${API_URL}/api/applications/${applicationId}/status`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("ragasAdminToken") || ""}`,
+        },
         body: JSON.stringify({ status: newStatus }),
       });
 

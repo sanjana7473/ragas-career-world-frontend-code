@@ -44,10 +44,15 @@ function PostAJob() {
       const response = await fetch(`${API_URL}/api/jobs`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("ragasPartnerToken") || ""}`,
         },
         body: JSON.stringify({
-          companyName: "Employer",
+          // Real partner company name; "Employer" only as a
+          // last resort if the profile object is missing.
+          companyName:
+            JSON.parse(
+              localStorage.getItem("ragasPartner") || "null"
+            )?.companyName || "Employer",
           jobTitle: formData.jobTitle,
           jobType: formData.employmentType,
           category: formData.category,
@@ -56,6 +61,7 @@ function PostAJob() {
           salary: formData.salaryRange,
           description: formData.jobDescription,
           openings: Number(formData.openings),
+          publish: true,
         }),
       });
 

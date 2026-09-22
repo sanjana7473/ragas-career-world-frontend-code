@@ -31,9 +31,13 @@ function EmployerDetails() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `${API_URL}/api/employers/${id}`
-        );
+        const response = await fetch(`${API_URL}/api/employers/${id}`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
 
         const data = await response.json();
 

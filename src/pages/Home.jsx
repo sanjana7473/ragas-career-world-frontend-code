@@ -17,10 +17,7 @@ import Employers from "./Employers";
 import JobSeekers from "./JobSeekers";
 import PostAJob from "./PostAJob";
 import PartnerWithUs from "./PartnerWithUs";
-import Blog from "./Blog";
-import Testimonials from "./Testimonials";
 import Contact from "./Contact";
-import Careers from "./Careers";
 
 import homeRecruitment from "../assets/home-recruitment.png";
 
@@ -419,30 +416,6 @@ export function Home() {
 
 
       {/* =====================================================
-          BLOG
-      ===================================================== */}
-
-      <section
-        id="blog"
-        className="page-slide home-existing-section"
-      >
-        <Blog />
-      </section>
-
-
-      {/* =====================================================
-          TESTIMONIALS
-      ===================================================== */}
-
-      <section
-        id="testimonials"
-        className="page-slide home-existing-section"
-      >
-        <Testimonials />
-      </section>
-
-
-      {/* =====================================================
           CONTACT
       ===================================================== */}
 
@@ -451,18 +424,6 @@ export function Home() {
         className="page-slide home-existing-section"
       >
         <Contact />
-      </section>
-
-
-      {/* =====================================================
-          CAREERS
-      ===================================================== */}
-
-      <section
-        id="careers"
-        className="page-slide home-existing-section"
-      >
-        <Careers />
       </section>
 
     </main>

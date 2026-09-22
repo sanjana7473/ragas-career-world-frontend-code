@@ -28,10 +28,23 @@ function Employers() {
         setLoading(true);
         setError("");
 
+        const token = localStorage.getItem("ragasAdminToken");
+
+        const authHeaders = {
+          Authorization: `Bearer ${token || ""}`,
+        };
+
         const [employersResponse, jobsResponse] =
           await Promise.all([
-            fetch(`${API_URL}/api/employers`),
-            fetch(`${API_URL}/api/jobs`),
+            fetch(`${API_URL}/api/employers`, {
+              headers: authHeaders,
+            }),
+
+            // ADMIN MUST COUNT EVERY JOB,
+            // NOT ONLY THE APPROVED ONES
+            fetch(`${API_URL}/api/jobs/admin/all`, {
+              headers: authHeaders,
+            }),
           ]);
 
         if (!employersResponse.ok || !jobsResponse.ok) {

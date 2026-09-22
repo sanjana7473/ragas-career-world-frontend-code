@@ -4,7 +4,7 @@ import "./ChatbotLogs.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/chatbot-logs`;
 
 const ITEMS_PER_PAGE = 10;
 
@@ -41,7 +41,13 @@ function ChatbotLogs() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(API_URL);
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("ragasAdminToken") || ""
+          }`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error(

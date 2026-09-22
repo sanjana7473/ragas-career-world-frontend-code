@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import "./Partners.css";
+import AddPartnerModal from "./AddPartnerModal";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/partners`;
 
 function Partners() {
   const [partners, setPartners] = useState([]);
@@ -12,19 +15,27 @@ function Partners() {
     useState("All Partner Types");
   const [statusFilter, setStatusFilter] =
     useState("All Status");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [selectedPartner, setSelectedPartner] =
     useState(null);
+
   const [actionLoading, setActionLoading] =
     useState("");
+
+  const [showAddPartner, setShowAddPartner] =
+    useState(false);
 
   /* =========================================
      ADMIN TOKEN
   ========================================= */
 
   const getAdminToken = () => {
-    return localStorage.getItem("ragasAdminToken");
+    return localStorage.getItem(
+      "ragasAdminToken"
+    );
   };
 
   /* =========================================
@@ -70,7 +81,10 @@ function Partners() {
 
       const data = await response.json();
 
-      if (response.status === 401 || response.status === 403) {
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
         setError(
           data.message ||
             "Admin authentication failed. Please login again."
@@ -87,7 +101,11 @@ function Partners() {
       }
 
       if (data.success) {
-        setPartners(data.partners || []);
+        setPartners(
+          data.partners ||
+            data.data ||
+            []
+        );
       } else {
         setError(
           data.message ||
@@ -113,13 +131,46 @@ function Partners() {
   }, []);
 
   /* =========================================
+     ADD PARTNER
+  ========================================= */
+
+  const handleAddPartner = () => {
+    setError("");
+    setShowAddPartner(true);
+  };
+
+  /* =========================================
+     PARTNER CREATED
+  ========================================= */
+
+  const handlePartnerCreated = (
+    newPartner
+  ) => {
+    if (newPartner) {
+      setPartners(
+        (currentPartners) => [
+          newPartner,
+          ...currentPartners,
+        ]
+      );
+    } else {
+      fetchPartners();
+    }
+
+    setShowAddPartner(false);
+  };
+
+  /* =========================================
      APPROVE PARTNER
   ========================================= */
 
-  const handleApprove = async (partner) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to approve ${partner.companyName}?`
-    );
+  const handleApprove = async (
+    partner
+  ) => {
+    const confirmed =
+      window.confirm(
+        `Are you sure you want to approve ${partner.companyName}?`
+      );
 
     if (!confirmed) {
       return;
@@ -129,9 +180,11 @@ function Partners() {
       setActionLoading(
         `approve-${partner._id}`
       );
+
       setError("");
 
-      const token = getAdminToken();
+      const token =
+        getAdminToken();
 
       if (!token) {
         setError(
@@ -140,17 +193,19 @@ function Partners() {
         return;
       }
 
-      const response = await fetch(
-        `${API_URL}/${partner._id}/approve`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response =
+        await fetch(
+          `${API_URL}/${partner._id}/approve`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (
         response.status === 401 ||
@@ -163,7 +218,10 @@ function Partners() {
         return;
       }
 
-      if (!response.ok || !data.success) {
+      if (
+        !response.ok ||
+        !data.success
+      ) {
         setError(
           data.message ||
             "Unable to approve partner."
@@ -171,25 +229,33 @@ function Partners() {
         return;
       }
 
-      setPartners((currentPartners) =>
-        currentPartners.map((item) =>
-          item._id === partner._id
-            ? {
-                ...item,
-                status: "Verified",
-              }
-            : item
-        )
+      setPartners(
+        (currentPartners) =>
+          currentPartners.map(
+            (item) =>
+              item._id ===
+              partner._id
+                ? {
+                    ...item,
+                    status:
+                      "Verified",
+                  }
+                : item
+          )
       );
 
       if (
         selectedPartner &&
-        selectedPartner._id === partner._id
+        selectedPartner._id ===
+          partner._id
       ) {
-        setSelectedPartner((current) => ({
-          ...current,
-          status: "Verified",
-        }));
+        setSelectedPartner(
+          (current) => ({
+            ...current,
+            status:
+              "Verified",
+          })
+        );
       }
     } catch (err) {
       console.error(
@@ -209,10 +275,13 @@ function Partners() {
      REJECT PARTNER
   ========================================= */
 
-  const handleReject = async (partner) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to reject ${partner.companyName}?`
-    );
+  const handleReject = async (
+    partner
+  ) => {
+    const confirmed =
+      window.confirm(
+        `Are you sure you want to reject ${partner.companyName}?`
+      );
 
     if (!confirmed) {
       return;
@@ -222,9 +291,11 @@ function Partners() {
       setActionLoading(
         `reject-${partner._id}`
       );
+
       setError("");
 
-      const token = getAdminToken();
+      const token =
+        getAdminToken();
 
       if (!token) {
         setError(
@@ -233,17 +304,19 @@ function Partners() {
         return;
       }
 
-      const response = await fetch(
-        `${API_URL}/${partner._id}/reject`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response =
+        await fetch(
+          `${API_URL}/${partner._id}/reject`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (
         response.status === 401 ||
@@ -256,7 +329,10 @@ function Partners() {
         return;
       }
 
-      if (!response.ok || !data.success) {
+      if (
+        !response.ok ||
+        !data.success
+      ) {
         setError(
           data.message ||
             "Unable to reject partner."
@@ -264,25 +340,33 @@ function Partners() {
         return;
       }
 
-      setPartners((currentPartners) =>
-        currentPartners.map((item) =>
-          item._id === partner._id
-            ? {
-                ...item,
-                status: "Rejected",
-              }
-            : item
-        )
+      setPartners(
+        (currentPartners) =>
+          currentPartners.map(
+            (item) =>
+              item._id ===
+              partner._id
+                ? {
+                    ...item,
+                    status:
+                      "Rejected",
+                  }
+                : item
+          )
       );
 
       if (
         selectedPartner &&
-        selectedPartner._id === partner._id
+        selectedPartner._id ===
+          partner._id
       ) {
-        setSelectedPartner((current) => ({
-          ...current,
-          status: "Rejected",
-        }));
+        setSelectedPartner(
+          (current) => ({
+            ...current,
+            status:
+              "Rejected",
+          })
+        );
       }
     } catch (err) {
       console.error(
@@ -302,17 +386,22 @@ function Partners() {
      STATS
   ========================================= */
 
-  const totalPartners = partners.length;
+  const totalPartners =
+    partners.length;
 
-  const verifiedPartners = partners.filter(
-    (partner) =>
-      partner.status === "Verified"
-  ).length;
+  const verifiedPartners =
+    partners.filter(
+      (partner) =>
+        partner.status ===
+        "Verified"
+    ).length;
 
-  const pendingPartners = partners.filter(
-    (partner) =>
-      partner.status === "Pending"
-  ).length;
+  const pendingPartners =
+    partners.filter(
+      (partner) =>
+        partner.status ===
+        "Pending"
+    ).length;
 
   const activeCollaborations =
     verifiedPartners;
@@ -330,55 +419,73 @@ function Partners() {
      FILTERED PARTNERS
   ========================================= */
 
-  const filteredPartners = useMemo(() => {
-    return partners.filter((partner) => {
-      const searchText =
-        search.toLowerCase().trim();
+  const filteredPartners =
+    useMemo(() => {
+      return partners.filter(
+        (partner) => {
+          const searchText =
+            search
+              .toLowerCase()
+              .trim();
 
-      const companyName =
-        partner.companyName
-          ?.toLowerCase() || "";
+          const companyName =
+            partner.companyName
+              ?.toLowerCase() ||
+            "";
 
-      const contactPerson =
-        partner.contactPerson
-          ?.toLowerCase() || "";
+          const contactPerson =
+            partner.contactPerson
+              ?.toLowerCase() ||
+            "";
 
-      const email =
-        partner.email?.toLowerCase() || "";
+          const email =
+            partner.email?.toLowerCase() ||
+            "";
 
-      const matchesSearch =
-        companyName.includes(searchText) ||
-        contactPerson.includes(searchText) ||
-        email.includes(searchText);
+          const matchesSearch =
+            companyName.includes(
+              searchText
+            ) ||
+            contactPerson.includes(
+              searchText
+            ) ||
+            email.includes(
+              searchText
+            );
 
-      const matchesType =
-        typeFilter ===
-          "All Partner Types" ||
-        partner.partnerType ===
-          typeFilter;
+          const matchesType =
+            typeFilter ===
+              "All Partner Types" ||
+            partner.partnerType ===
+              typeFilter;
 
-      const matchesStatus =
-        statusFilter === "All Status" ||
-        partner.status === statusFilter;
+          const matchesStatus =
+            statusFilter ===
+              "All Status" ||
+            partner.status ===
+              statusFilter;
 
-      return (
-        matchesSearch &&
-        matchesType &&
-        matchesStatus
+          return (
+            matchesSearch &&
+            matchesType &&
+            matchesStatus
+          );
+        }
       );
-    });
-  }, [
-    partners,
-    search,
-    typeFilter,
-    statusFilter,
-  ]);
+    }, [
+      partners,
+      search,
+      typeFilter,
+      statusFilter,
+    ]);
 
   /* =========================================
      VIEW PARTNER
   ========================================= */
 
-  const handleView = (partner) => {
+  const handleView = (
+    partner
+  ) => {
     setSelectedPartner(partner);
   };
 
@@ -391,16 +498,6 @@ function Partners() {
   };
 
   /* =========================================
-     ADD PARTNER
-  ========================================= */
-
-  const handleAddPartner = () => {
-    alert(
-      "Add Partner form can be connected here next."
-    );
-  };
-
-  /* =========================================
      PARTNER DETAIL PAGE
   ========================================= */
 
@@ -409,9 +506,10 @@ function Partners() {
       selectedPartner.companyName ||
       "Unknown Company";
 
-    const initials = company
-      .charAt(0)
-      .toUpperCase();
+    const initials =
+      company
+        .charAt(0)
+        .toUpperCase();
 
     const approveLoading =
       actionLoading ===
@@ -445,11 +543,14 @@ function Partners() {
             </div>
 
             <div>
+
               <p className="partners-eyebrow">
                 PARTNER DETAILS
               </p>
 
-              <h2>{company}</h2>
+              <h2>
+                {company}
+              </h2>
 
               <span>
                 Partner ID: PT-
@@ -457,6 +558,7 @@ function Partners() {
                   ?.slice(-6)
                   .toUpperCase()}
               </span>
+
             </div>
 
           </div>
@@ -490,8 +592,10 @@ function Partners() {
                 </h3>
 
                 <p>
-                  Basic information about the
-                  recruitment partner.
+                  Basic information
+                  about the
+                  recruitment
+                  partner.
                 </p>
               </div>
 
@@ -500,7 +604,9 @@ function Partners() {
             <div className="partner-detail-grid">
 
               <div>
-                <span>Company Name</span>
+                <span>
+                  Company Name
+                </span>
 
                 <strong>
                   {selectedPartner.companyName ||
@@ -509,7 +615,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Partner Type</span>
+                <span>
+                  Partner Type
+                </span>
 
                 <strong>
                   {selectedPartner.partnerType ||
@@ -518,7 +626,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Specialization</span>
+                <span>
+                  Specialization
+                </span>
 
                 <strong>
                   {selectedPartner.specialization ||
@@ -527,7 +637,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Geography</span>
+                <span>
+                  Geography
+                </span>
 
                 <strong>
                   {selectedPartner.geography ||
@@ -536,7 +648,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Website</span>
+                <span>
+                  Website
+                </span>
 
                 <strong>
                   {selectedPartner.website ||
@@ -545,7 +659,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Registration Date</span>
+                <span>
+                  Registration Date
+                </span>
 
                 <strong>
                   {selectedPartner.createdAt
@@ -555,8 +671,10 @@ function Partners() {
                         "en-IN",
                         {
                           day: "2-digit",
-                          month: "short",
-                          year: "numeric",
+                          month:
+                            "short",
+                          year:
+                            "numeric",
                         }
                       )
                     : "N/A"}
@@ -581,8 +699,9 @@ function Partners() {
                 </h3>
 
                 <p>
-                  Primary contact details for
-                  this partner.
+                  Primary contact
+                  details for this
+                  partner.
                 </p>
               </div>
 
@@ -591,7 +710,9 @@ function Partners() {
             <div className="partner-detail-grid">
 
               <div>
-                <span>Contact Person</span>
+                <span>
+                  Contact Person
+                </span>
 
                 <strong>
                   {selectedPartner.contactPerson ||
@@ -600,7 +721,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Email</span>
+                <span>
+                  Email
+                </span>
 
                 <strong>
                   {selectedPartner.email ||
@@ -609,7 +732,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Phone</span>
+                <span>
+                  Phone
+                </span>
 
                 <strong>
                   {selectedPartner.phone ||
@@ -619,7 +744,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Alternate Phone</span>
+                <span>
+                  Alternate Phone
+                </span>
 
                 <strong>
                   {selectedPartner.alternatePhone ||
@@ -645,7 +772,8 @@ function Partners() {
                 </h3>
 
                 <p>
-                  Registered office and location
+                  Registered office
+                  and location
                   information.
                 </p>
               </div>
@@ -656,7 +784,9 @@ function Partners() {
 
               <div className="full-detail">
 
-                <span>Address</span>
+                <span>
+                  Address
+                </span>
 
                 <strong>
                   {selectedPartner.address ||
@@ -666,7 +796,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>City</span>
+                <span>
+                  City
+                </span>
 
                 <strong>
                   {selectedPartner.city ||
@@ -675,7 +807,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>State</span>
+                <span>
+                  State
+                </span>
 
                 <strong>
                   {selectedPartner.state ||
@@ -684,7 +818,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Country</span>
+                <span>
+                  Country
+                </span>
 
                 <strong>
                   {selectedPartner.country ||
@@ -693,7 +829,9 @@ function Partners() {
               </div>
 
               <div>
-                <span>Postal Code</span>
+                <span>
+                  Postal Code
+                </span>
 
                 <strong>
                   {selectedPartner.postalCode ||
@@ -716,12 +854,15 @@ function Partners() {
 
               <div>
                 <h3>
-                  Partnership Information
+                  Partnership
+                  Information
                 </h3>
 
                 <p>
-                  Additional information submitted
-                  by the partner.
+                  Additional
+                  information
+                  submitted by the
+                  partner.
                 </p>
               </div>
 
@@ -750,7 +891,9 @@ function Partners() {
                 </h3>
 
                 <p>
-                  Current verification status.
+                  Current
+                  verification
+                  status.
                 </p>
               </div>
 
@@ -777,8 +920,10 @@ function Partners() {
                 style={{
                   display: "flex",
                   gap: "12px",
-                  marginTop: "20px",
-                  flexWrap: "wrap",
+                  marginTop:
+                    "20px",
+                  flexWrap:
+                    "wrap",
                 }}
               >
 
@@ -789,18 +934,23 @@ function Partners() {
                       selectedPartner
                     )
                   }
-                  disabled={approveLoading}
+                  disabled={
+                    approveLoading
+                  }
                   style={{
                     padding:
                       "10px 18px",
                     border: "none",
-                    borderRadius: "8px",
-                    cursor: approveLoading
-                      ? "not-allowed"
-                      : "pointer",
+                    borderRadius:
+                      "8px",
+                    cursor:
+                      approveLoading
+                        ? "not-allowed"
+                        : "pointer",
                     background:
                       "#0d3029",
-                    color: "#ffffff",
+                    color:
+                      "#ffffff",
                   }}
                 >
                   {approveLoading
@@ -815,18 +965,23 @@ function Partners() {
                       selectedPartner
                     )
                   }
-                  disabled={rejectLoading}
+                  disabled={
+                    rejectLoading
+                  }
                   style={{
                     padding:
                       "10px 18px",
                     border: "none",
-                    borderRadius: "8px",
-                    cursor: rejectLoading
-                      ? "not-allowed"
-                      : "pointer",
+                    borderRadius:
+                      "8px",
+                    cursor:
+                      rejectLoading
+                        ? "not-allowed"
+                        : "pointer",
                     background:
                       "#8f2d2d",
-                    color: "#ffffff",
+                    color:
+                      "#ffffff",
                   }}
                 >
                   {rejectLoading
@@ -862,11 +1017,14 @@ function Partners() {
             PARTNER MANAGEMENT
           </p>
 
-          <h2>Partners</h2>
+          <h2>
+            Partners
+          </h2>
 
           <span>
-            Manage recruitment partners,
-            verification and collaboration
+            Manage recruitment
+            partners, verification
+            and collaboration
             details.
           </span>
 
@@ -875,7 +1033,9 @@ function Partners() {
         <button
           type="button"
           className="partners-add-btn"
-          onClick={handleAddPartner}
+          onClick={
+            handleAddPartner
+          }
         >
           + Add Partner
         </button>
@@ -887,11 +1047,16 @@ function Partners() {
       {error && (
         <div
           style={{
-            marginBottom: "16px",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            background: "#fff1f1",
-            color: "#b42318",
+            marginBottom:
+              "16px",
+            padding:
+              "12px 16px",
+            borderRadius:
+              "8px",
+            background:
+              "#fff1f1",
+            color:
+              "#b42318",
             border:
               "1px solid #f3c2c2",
           }}
@@ -948,7 +1113,8 @@ function Partners() {
           </strong>
 
           <small>
-            Requires admin review
+            Requires admin
+            review
           </small>
 
         </div>
@@ -981,14 +1147,18 @@ function Partners() {
 
           <div className="partners-search">
 
-            <span>⌕</span>
+            <span>
+              ⌕
+            </span>
 
             <input
               type="text"
               placeholder="Search company, contact or email..."
               value={search}
               onChange={(e) =>
-                setSearch(e.target.value)
+                setSearch(
+                  e.target.value
+                )
               }
             />
 
@@ -1044,390 +1214,206 @@ function Partners() {
             </option>
           </select>
 
-          <button
-            type="button"
-            className="partners-filter-btn"
-            onClick={fetchPartners}
-          >
-            Filter
-          </button>
-
         </div>
 
-        {/* TABLE */}
+        {/* LOADING */}
 
-        <div className="partners-table-wrapper">
+        {loading && (
+          <div
+            style={{
+              padding:
+                "40px",
+              textAlign:
+                "center",
+              color:
+                "#64748b",
+            }}
+          >
+            Loading partners...
+          </div>
+        )}
 
-          <table className="partners-table">
+        {/* EMPTY */}
 
-            <thead>
+        {!loading &&
+          filteredPartners.length ===
+            0 && (
+            <div
+              style={{
+                padding:
+                  "50px 20px",
+                textAlign:
+                  "center",
+                color:
+                  "#64748b",
+              }}
+            >
+              <strong
+                style={{
+                  display:
+                    "block",
+                  marginBottom:
+                    "6px",
+                  color:
+                    "#10243f",
+                }}
+              >
+                No partners found
+              </strong>
 
-              <tr>
-                <th>Partner</th>
-                <th>Type</th>
-                <th>Contact</th>
-                <th>Specialization</th>
-                <th>Geography</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
+              <span>
+                No partners match
+                your current
+                search or filter.
+              </span>
+            </div>
+          )}
 
-            </thead>
+        {/* PARTNER LIST */}
 
-            <tbody>
+        {!loading &&
+          filteredPartners.length >
+            0 && (
+            <div
+              className="partners-list"
+            >
 
-              {loading ? (
-
-                <tr>
-
-                  <td
-                    colSpan="7"
-                    style={{
-                      textAlign:
-                        "center",
-                    }}
+              {filteredPartners.map(
+                (partner) => (
+                  <div
+                    className="partner-row"
+                    key={
+                      partner._id
+                    }
                   >
-                    Loading partners...
-                  </td>
 
-                </tr>
+                    {/* IDENTITY */}
 
-              ) : error ? (
+                    <div
+                      className="partner-row-identity"
+                    >
 
-                <tr>
+                      <div className="partner-row-avatar">
+                        {(
+                          partner.companyName ||
+                          "P"
+                        )
+                          .charAt(0)
+                          .toUpperCase()}
+                      </div>
 
-                  <td
-                    colSpan="7"
-                    style={{
-                      textAlign:
-                        "center",
-                      color:
-                        "#c0392b",
-                    }}
-                  >
-                    {error}
-                  </td>
+                      <div>
 
-                </tr>
+                        <strong>
+                          {
+                            partner.companyName ||
+                            "Unknown Company"
+                          }
+                        </strong>
 
-              ) : filteredPartners.length ===
-                0 ? (
+                        <span>
+                          {
+                            partner.contactPerson ||
+                            "No contact person"
+                          }
+                        </span>
 
-                <tr>
+                      </div>
 
-                  <td
-                    colSpan="7"
-                    style={{
-                      textAlign:
-                        "center",
-                    }}
-                  >
-                    No partners found.
-                  </td>
+                    </div>
 
-                </tr>
+                    {/* CONTACT */}
 
-              ) : (
+                    <div className="partner-row-contact">
 
-                filteredPartners.map(
-                  (partner) => {
+                      <span>
+                        {
+                          partner.email ||
+                          "N/A"
+                        }
+                      </span>
 
-                    const company =
-                      partner.companyName ||
-                      "Unknown Company";
+                      <span>
+                        {
+                          partner.phone ||
+                          partner.contactNumber ||
+                          "N/A"
+                        }
+                      </span>
 
-                    const approveLoading =
-                      actionLoading ===
-                      `approve-${partner._id}`;
+                    </div>
 
-                    const rejectLoading =
-                      actionLoading ===
-                      `reject-${partner._id}`;
+                    {/* TYPE */}
 
-                    return (
-                      <tr
-                        key={
-                          partner._id
+                    <div className="partner-row-type">
+
+                      <span>
+                        {
+                          partner.partnerType ||
+                          "N/A"
+                        }
+                      </span>
+
+                    </div>
+
+                    {/* STATUS */}
+
+                    <div>
+
+                      <span
+                        className={`partner-status ${getStatusClass(
+                          partner.status
+                        )}`}
+                      >
+                        {
+                          partner.status ||
+                          "Pending"
+                        }
+                      </span>
+
+                    </div>
+
+                    {/* ACTION */}
+
+                    <div className="partner-row-action">
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleView(
+                            partner
+                          )
                         }
                       >
+                        View
+                      </button>
 
-                        {/* PARTNER */}
+                    </div>
 
-                        <td>
-
-                          <div className="partner-company">
-
-                            <div className="partner-avatar">
-                              {company
-                                .charAt(
-                                  0
-                                )
-                                .toUpperCase()}
-                            </div>
-
-                            <div>
-
-                              <strong>
-                                {company}
-                              </strong>
-
-                              <span>
-                                PT-
-                                {partner._id
-                                  ?.slice(
-                                    -4
-                                  )
-                                  .toUpperCase()}
-                              </span>
-
-                            </div>
-
-                          </div>
-
-                        </td>
-
-                        {/* TYPE */}
-
-                        <td>
-                          {partner.partnerType ||
-                            "N/A"}
-                        </td>
-
-                        {/* CONTACT */}
-
-                        <td>
-
-                          <div className="partner-contact">
-
-                            <strong>
-                              {partner.contactPerson ||
-                                "N/A"}
-                            </strong>
-
-                            <span>
-                              {partner.email ||
-                                "N/A"}
-                            </span>
-
-                          </div>
-
-                        </td>
-
-                        {/* SPECIALIZATION */}
-
-                        <td>
-                          {partner.specialization ||
-                            "N/A"}
-                        </td>
-
-                        {/* GEOGRAPHY */}
-
-                        <td>
-                          {partner.geography ||
-                            "N/A"}
-                        </td>
-
-                        {/* STATUS */}
-
-                        <td>
-
-                          <span
-                            className={`partner-status ${getStatusClass(
-                              partner.status
-                            )}`}
-                          >
-                            {partner.status ||
-                              "Pending"}
-                          </span>
-
-                        </td>
-
-                        {/* ACTION */}
-
-                        <td>
-
-                          <div
-                            style={{
-                              display:
-                                "flex",
-                              gap: "8px",
-                              alignItems:
-                                "center",
-                              flexWrap:
-                                "wrap",
-                            }}
-                          >
-
-                            {/* VIEW */}
-
-                            <button
-                              type="button"
-                              className="partner-view-btn"
-                              onClick={() =>
-                                handleView(
-                                  partner
-                                )
-                              }
-                            >
-                              View
-                            </button>
-
-                            {/* APPROVE / REJECT */}
-
-                            {partner.status ===
-                              "Pending" && (
-                              <>
-
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleApprove(
-                                      partner
-                                    )
-                                  }
-                                  disabled={
-                                    approveLoading ||
-                                    rejectLoading
-                                  }
-                                  style={{
-                                    padding:
-                                      "7px 12px",
-                                    border:
-                                      "none",
-                                    borderRadius:
-                                      "6px",
-                                    cursor:
-                                      approveLoading ||
-                                      rejectLoading
-                                        ? "not-allowed"
-                                        : "pointer",
-                                    background:
-                                      "#0d3029",
-                                    color:
-                                      "#ffffff",
-                                    fontSize:
-                                      "12px",
-                                  }}
-                                >
-                                  {approveLoading
-                                    ? "..."
-                                    : "Approve"}
-                                </button>
-
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleReject(
-                                      partner
-                                    )
-                                  }
-                                  disabled={
-                                    approveLoading ||
-                                    rejectLoading
-                                  }
-                                  style={{
-                                    padding:
-                                      "7px 12px",
-                                    border:
-                                      "none",
-                                    borderRadius:
-                                      "6px",
-                                    cursor:
-                                      approveLoading ||
-                                      rejectLoading
-                                        ? "not-allowed"
-                                        : "pointer",
-                                    background:
-                                      "#8f2d2d",
-                                    color:
-                                      "#ffffff",
-                                    fontSize:
-                                      "12px",
-                                  }}
-                                >
-                                  {rejectLoading
-                                    ? "..."
-                                    : "Reject"}
-                                </button>
-
-                              </>
-                            )}
-
-                          </div>
-
-                        </td>
-
-                      </tr>
-                    );
-                  }
+                  </div>
                 )
               )}
 
-            </tbody>
-
-          </table>
-
-        </div>
-
-        {/* PAGINATION */}
-
-        <div className="partners-pagination">
-
-          <span>
-            Showing{" "}
-            {filteredPartners.length >
-            0
-              ? `1–${filteredPartners.length}`
-              : "0"}{" "}
-            of{" "}
-            {filteredPartners.length}{" "}
-            partners
-          </span>
-
-          <div>
-
-            <button
-              type="button"
-            >
-              ‹
-            </button>
-
-            <button
-              type="button"
-              className="active"
-            >
-              1
-            </button>
-
-            <button
-              type="button"
-            >
-              2
-            </button>
-
-            <button
-              type="button"
-            >
-              3
-            </button>
-
-            <button
-              type="button"
-            >
-              4
-            </button>
-
-            <button
-              type="button"
-            >
-              ›
-            </button>
-
-          </div>
-
-        </div>
+            </div>
+          )}
 
       </section>
+
+      {/* ADD PARTNER MODAL */}
+
+      <AddPartnerModal
+        isOpen={
+          showAddPartner
+        }
+        onClose={() =>
+          setShowAddPartner(
+            false
+          )
+        }
+        onPartnerCreated={
+          handlePartnerCreated
+        }
+      />
 
     </div>
   );

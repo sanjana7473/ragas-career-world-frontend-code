@@ -4,7 +4,7 @@ import "./PartnerDashboard.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const DASHBOARD_API = `${API_BASE_URL}/api/partners/dashboard`;
 
 function PartnerDashboard() {
   const navigate = useNavigate();
@@ -15,10 +15,14 @@ function PartnerDashboard() {
       closedJobs: 0,
       totalApplications: 0,
       pendingReview: 0,
+      drafts: 0,
+      rejectedJobs: 0,
       shortlisted: 0,
       interviews: 0,
       selectedCandidates: 0,
     },
+    partnerStatus: null,
+    canPublishJobs: false,
     jobs: [],
     applications: [],
   });
@@ -38,7 +42,7 @@ function PartnerDashboard() {
           return;
         }
 
-        const response = await fetch(`${API_URL}/dashboard`, {
+        const response = await fetch(DASHBOARD_API, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -54,6 +58,8 @@ function PartnerDashboard() {
 
         setDashboard({
           stats: data.data.stats,
+          partnerStatus: data.data.partnerStatus || null,
+          canPublishJobs: data.data.canPublishJobs === true,
           jobs: data.data.jobs || [],
           applications: data.data.applications || [],
         });
@@ -85,6 +91,41 @@ function PartnerDashboard() {
       </section>
 
       {error && <div className="partner-dashboard-error">{error}</div>}
+
+      {/* -----------------------------------------
+          PARTNER VERIFICATION NOTICE
+
+          Login and the dashboard work immediately after
+          registration. Publishing jobs requires the admin to
+          verify this account, and drafts are allowed meanwhile.
+      ----------------------------------------- */}
+
+      {!loading && dashboard.partnerStatus && (
+        <div
+          className={
+            dashboard.canPublishJobs
+              ? "partner-dashboard-notice partner-dashboard-notice-verified"
+              : "partner-dashboard-notice partner-dashboard-notice-pending"
+          }
+        >
+          {dashboard.canPublishJobs ? (
+            <p>
+              <strong>Account verified.</strong> You can publish jobs
+              directly - each published job is sent to the admin for
+              final approval.
+            </p>
+          ) : (
+            <p>
+              <strong>
+                Account verification {dashboard.partnerStatus}.
+              </strong>{}
+              You can create jobs and keep them as drafts. Publishing
+              will be enabled as soon as the admin verifies your
+              account.
+            </p>
+          )}
+        </div>
+      )}
 
       {loading ? (
         <div className="partner-dashboard-loading">Loading partner dashboard...</div>

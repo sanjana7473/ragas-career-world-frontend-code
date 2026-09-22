@@ -27,7 +27,9 @@ import Careers from "./pages/Careers";
 import JobApplication from "./pages/JobApplication";
 import EmployerRegistration from "./pages/EmployerRegistration";
 import UserLogin from "./pages/UserLogin";
+import ForgotPassword from "./pages/ForgotPassword";
 import UserRegistration from "./pages/UserRegistration";
+import ApplicationStatus from "./components/ApplicationStatus"; // <-- Yahan import add kiya hai
 
 import PartnerLogin from "./pages/PartnerLogin";
 
@@ -54,6 +56,12 @@ import AddCandidate from "./admin/AddCandidate";
 // Partner Panel
 import PartnerLayout from "./partner/PartnerLayout";
 import PartnerDashboard from "./partner/PartnerDashboard";
+import PartnerPostJob from "./partner/PartnerPostJob";
+import PartnerJobs from "./partner/PartnerJobs";
+import PartnerJobDetails from "./partner/PartnerJobDetails";
+import PartnerApplications from "./partner/PartnerApplication";
+import PartnerApplicationDetails from "./partner/PartnerApplicationDetails";
+import PartnerProfile from "./partner/PartnerProfile";
 
 
 function ScrollManager() {
@@ -75,9 +83,25 @@ function ScrollManager() {
 
 function ProtectedRoute({ children }) {
   const location = useLocation();
-  const isLoggedIn =
-    localStorage.getItem("ragasUserLoggedIn") === "true" ||
-    sessionStorage.getItem("ragasUserLoggedIn") === "true";
+
+  // Security: a real JWT must exist and not be expired.
+  // The boolean flag alone can be typed from the console.
+  const token =
+    localStorage.getItem("ragasUserToken") ||
+    sessionStorage.getItem("ragasUserToken");
+
+  let isLoggedIn = false;
+
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      isLoggedIn =
+        !payload.exp || payload.exp * 1000 >= Date.now();
+    } catch (tokenError) {
+      isLoggedIn = false;
+    }
+  }
 
   if (!isLoggedIn) {
     return (
@@ -199,9 +223,11 @@ function PublicWebsite() {
         <Route
           path="/post-a-job"
           element={
-            <ProtectedRoute>
+            localStorage.getItem("ragasPartnerToken") ? (
               <PostAJob />
-            </ProtectedRoute>
+            ) : (
+              <Navigate to="/partner-login" replace />
+            )
           }
         />
         <Route path="/partner-with-us" element={<PartnerWithUs />} />
@@ -212,7 +238,18 @@ function PublicWebsite() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<Careers />} />
 
+        {/* Application Status Route Protected */}
+        <Route
+          path="/application-status"
+          element={
+            <ProtectedRoute>
+              <ApplicationStatus />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/user-login" element={<UserLogin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/user-registration" element={<UserRegistration />} />
 
         <Route path="/partner-login" element={<PartnerLogin />} />
@@ -247,10 +284,7 @@ function AdminWebsite() {
   return (
     <Routes>
       <Route path="login" element={<AdminLogin />} />
-
-      {/* Admin registration removed from the UI - old /admin/register URL now redirects to login */}
       <Route path="register" element={<Navigate to="/admin/login" replace />} />
-
 
       <Route element={<AdminRoute />}>
         <Route index element={<Dashboard />} />
@@ -281,41 +315,20 @@ function PartnerWebsite() {
       <Route path="/" element={<PartnerRoute />}>
         <Route index element={<PartnerDashboard />} />
 
-        <Route
-          path="post-job"
-          element={
-            <div>
-              Post New Job
-            </div>
-          }
-        />
+        <Route path="post-job" element={<PartnerPostJob />} />
+
+        <Route path="jobs" element={<PartnerJobs />} />
+
+        <Route path="jobs/:id" element={<PartnerJobDetails />} />
+
+        <Route path="applications" element={<PartnerApplications />} />
 
         <Route
-          path="jobs"
-          element={
-            <div>
-              My Jobs
-            </div>
-          }
+          path="applications/:id"
+          element={<PartnerApplicationDetails />}
         />
 
-        <Route
-          path="applications"
-          element={
-            <div>
-              Applications
-            </div>
-          }
-        />
-
-        <Route
-          path="profile"
-          element={
-            <div>
-              My Profile
-            </div>
-          }
-        />
+        <Route path="profile" element={<PartnerProfile />} />
       </Route>
     </Routes>
   );

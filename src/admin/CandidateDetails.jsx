@@ -20,9 +20,13 @@ function CandidateDetails() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `${API_URL}/api/candidates/${id}`
-        );
+        const response = await fetch(`${API_URL}/api/candidates/${id}`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Unable to fetch candidate.");

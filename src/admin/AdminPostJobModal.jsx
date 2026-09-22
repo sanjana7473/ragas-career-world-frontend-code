@@ -34,7 +34,7 @@ function AdminPostJobModal({
   useEffect(() => {
     if (!isOpen) return;
 
-    fetch(`${API_URL}/api/partners`)
+    fetch(`${API_URL}/api/partners`, { headers: { Authorization: `Bearer ${localStorage.getItem("ragasAdminToken") || ""}` } })
       .then((res) => (res.ok ? res.json() : null))
       .then((resData) => {
         if (resData?.data && Array.isArray(resData.data)) {
@@ -93,7 +93,7 @@ function AdminPostJobModal({
     try {
       const response = await fetch(`${API_URL}/api/jobs/admin/create`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("ragasAdminToken") || ""}` },
         body: JSON.stringify({
           ...formData,
           postFor,

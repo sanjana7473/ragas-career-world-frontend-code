@@ -2,47 +2,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const API_URL = API_BASE_URL;
 
-const conversations = [
-  {
-    id: "#RC-10284",
-    user: "Amit R.",
-    topic: "Dubai Jobs",
-    status: "Live Agent",
-    time: "2 min ago",
-    route: "/admin/chatbot-logs",
-  },
-  {
-    id: "#RC-10283",
-    user: "Fatima K.",
-    topic: "Visa Support",
-    status: "AI Resolved",
-    time: "8 min ago",
-    route: "/admin/chatbot-logs",
-  },
-  {
-    id: "#RC-10282",
-    user: "Rahul S.",
-    topic: "IT Jobs",
-    status: "AI Resolved",
-    time: "14 min ago",
-    route: "/admin/chatbot-logs",
-  },
-  {
-    id: "#RC-10281",
-    user: "Neha P.",
-    topic: "Resume Upload",
-    status: "Live Agent",
-    time: "21 min ago",
-    route: "/admin/chatbot-logs",
-  },
-];
-
 function Dashboard() {
   const navigate = useNavigate();
+
+  // ==========================================
+  // STATE
+  // ==========================================
 
   const [stats, setStats] = useState({
     conversations: 0,
@@ -64,11 +34,26 @@ function Dashboard() {
 
   const [showMonths, setShowMonths] = useState(false);
 
+  // ==========================================
+  // LOAD DASHBOARD DATA
+  // ==========================================
+
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
         setLoading(true);
         setError("");
+
+        // ==========================================
+        // ADMIN TOKEN
+        // ==========================================
+
+        const token =
+          localStorage.getItem("ragasAdminToken");
+
+        // ==========================================
+        // FETCH ALL DATA
+        // ==========================================
 
         const [
           candidatesRes,
@@ -77,17 +62,56 @@ function Dashboard() {
           resumesRes,
           applicationsRes,
           contactsRes,
+          partnersRes,
         ] = await Promise.all([
-          fetch(`${API_URL}/api/candidates`),
-          fetch(`${API_URL}/api/employers`),
+          fetch(`${API_URL}/api/candidates`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+
+          fetch(`${API_URL}/api/employers`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
 
           // ADMIN MUST SEE ALL JOBS
-          fetch(`${API_URL}/api/jobs/admin/all`),
+          fetch(`${API_URL}/api/jobs/admin/all`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
 
-          fetch(`${API_URL}/api/resume`),
-          fetch(`${API_URL}/api/applications`),
-          fetch(`${API_URL}/api/contact`),
+          fetch(`${API_URL}/api/resume`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+
+          fetch(`${API_URL}/api/applications`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+
+          fetch(`${API_URL}/api/contact`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+
+          // PARTNERS REQUIRE ADMIN AUTH
+          fetch(`${API_URL}/api/partners`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
         ]);
+
+        // ==========================================
+        // CHECK RESPONSE STATUS
+        // ==========================================
 
         if (
           !candidatesRes.ok ||
@@ -95,10 +119,30 @@ function Dashboard() {
           !jobsRes.ok ||
           !resumesRes.ok ||
           !applicationsRes.ok ||
-          !contactsRes.ok
+          !contactsRes.ok ||
+          !partnersRes.ok
         ) {
-          throw new Error("Unable to load dashboard data.");
+          console.error(
+            "Dashboard API status:",
+            {
+              candidates: candidatesRes.status,
+              employers: employersRes.status,
+              jobs: jobsRes.status,
+              resumes: resumesRes.status,
+              applications: applicationsRes.status,
+              contacts: contactsRes.status,
+              partners: partnersRes.status,
+            }
+          );
+
+          throw new Error(
+            "Unable to load dashboard data."
+          );
         }
+
+        // ==========================================
+        // CONVERT TO JSON
+        // ==========================================
 
         const [
           candidatesData,
@@ -107,6 +151,7 @@ function Dashboard() {
           resumesData,
           applicationsData,
           contactsData,
+          partnersData,
         ] = await Promise.all([
           candidatesRes.json(),
           employersRes.json(),
@@ -114,50 +159,84 @@ function Dashboard() {
           resumesRes.json(),
           applicationsRes.json(),
           contactsRes.json(),
+          partnersRes.json(),
         ]);
 
-        const candidates = candidatesData.data || [];
-        const employers = employersData.data || [];
+        // ==========================================
+        // NORMALIZE DATA
+        // ==========================================
+
+        const candidates =
+          candidatesData.data || [];
+
+        const employers =
+          employersData.data || [];
 
         const jobs =
           jobsData.data ||
           jobsData.jobs ||
           [];
 
-        const resumes = resumesData.data || [];
+        const resumes =
+          resumesData.data || [];
+
         const applications =
           applicationsData.data || [];
+
         const contacts =
           contactsData.data || [];
 
+        // IMPORTANT:
+        // Partners API returns `partners`
+        const partners =
+          partnersData.partners || [];
+
+        // ==========================================
+        // JOB COUNTS
+        // ==========================================
+
         const pendingJobs = jobs.filter(
-          (job) => job.status === "Pending"
+          (job) =>
+            job.status === "Pending"
         ).length;
 
         const approvedJobs = jobs.filter(
-          (job) => job.status === "Approved"
+          (job) =>
+            job.status === "Approved"
         ).length;
+
+        // ==========================================
+        // UPDATE STATS
+        // ==========================================
 
         setStats({
           conversations:
             contacts.length +
             applications.length,
 
-          candidates: candidates.length,
+          candidates:
+            candidates.length,
 
-          employers: employers.length,
+          employers:
+            employers.length,
 
-          jobs: approvedJobs,
+          jobs:
+            approvedJobs,
 
-          resumes: resumes.length,
+          resumes:
+            resumes.length,
 
-          applications: applications.length,
+          applications:
+            applications.length,
 
-          contacts: contacts.length,
+          contacts:
+            contacts.length,
 
-          pendingJobs,
+          pendingJobs:
+            pendingJobs,
 
-          partners: 0,
+          partners:
+            partners.length,
         });
       } catch (err) {
         console.error(
@@ -189,6 +268,10 @@ function Dashboard() {
     setShowMonths(false);
   };
 
+  // ==========================================
+  // RETURN
+  // ==========================================
+
   return (
     <div className="dashboard-page">
 
@@ -203,7 +286,9 @@ function Dashboard() {
             ADMIN OVERVIEW
           </p>
 
-          <h2>Dashboard</h2>
+          <h2>
+            Dashboard
+          </h2>
 
           <span>
             Monitor recruitment activity, chatbot
@@ -255,7 +340,6 @@ function Dashboard() {
 
       </div>
 
-
       {/* ======================================
           ERROR
       ====================================== */}
@@ -273,7 +357,6 @@ function Dashboard() {
           {error}
         </div>
       )}
-
 
       {/* ======================================
           STAT CARDS
@@ -309,7 +392,6 @@ function Dashboard() {
           </small>
         </button>
 
-
         {/* APPLICATIONS */}
 
         <button
@@ -338,7 +420,6 @@ function Dashboard() {
           </small>
         </button>
 
-
         {/* CANDIDATES */}
 
         <button
@@ -366,7 +447,6 @@ function Dashboard() {
             Registered candidates
           </small>
         </button>
-
 
         {/* JOBS */}
 
@@ -397,7 +477,6 @@ function Dashboard() {
         </button>
 
       </div>
-
 
       {/* ======================================
           MAIN GRID
@@ -436,7 +515,6 @@ function Dashboard() {
 
           </div>
 
-
           <div className="chatbot-chart">
 
             <div className="chart-value">
@@ -452,7 +530,6 @@ function Dashboard() {
               </span>
 
             </div>
-
 
             <div className="fake-chart">
 
@@ -509,7 +586,6 @@ function Dashboard() {
               </div>
 
             </div>
-
 
             <div className="chart-days">
 
@@ -582,7 +658,6 @@ function Dashboard() {
 
         </section>
 
-
         {/* ====================================
             QUICK SUMMARY
         ==================================== */}
@@ -603,8 +678,7 @@ function Dashboard() {
 
           </div>
 
-
-          {/* NEW CANDIDATES */}
+          {/* CANDIDATES */}
 
           <button
             type="button"
@@ -624,8 +698,7 @@ function Dashboard() {
             </strong>
           </button>
 
-
-          {/* NEW EMPLOYERS */}
+          {/* EMPLOYERS */}
 
           <button
             type="button"
@@ -644,7 +717,6 @@ function Dashboard() {
                 : stats.employers}
             </strong>
           </button>
-
 
           {/* PENDING JOBS */}
 
@@ -666,7 +738,6 @@ function Dashboard() {
             </strong>
           </button>
 
-
           {/* PARTNERS */}
 
           <button
@@ -686,7 +757,6 @@ function Dashboard() {
                 : stats.partners}
             </strong>
           </button>
-
 
           {/* RESUMES */}
 
@@ -712,9 +782,8 @@ function Dashboard() {
 
       </div>
 
-
       {/* ======================================
-          RECENT CONVERSATIONS
+          RECENT CHATBOT CONVERSATIONS
       ====================================== */}
 
       <section className="dashboard-card recent-card">
@@ -733,7 +802,6 @@ function Dashboard() {
 
           </div>
 
-
           <button
             type="button"
             className="dashboard-view-all"
@@ -745,7 +813,6 @@ function Dashboard() {
           </button>
 
         </div>
-
 
         <div className="dashboard-table-wrapper">
 
@@ -779,57 +846,40 @@ function Dashboard() {
 
             </thead>
 
-
             <tbody>
 
-              {conversations.map(
-                (item) => (
+              <tr
+                className="conversation-row"
+                onClick={() =>
+                  goTo("/admin/chatbot-logs")
+                }
+              >
 
-                  <tr
-                    key={item.id}
-                    className="conversation-row"
-                    onClick={() =>
-                      goTo(item.route)
-                    }
-                  >
+                <td>
+                  <strong>
+                    Chatbot Logs
+                  </strong>
+                </td>
 
-                    <td>
-                      <strong>
-                        {item.id}
-                      </strong>
-                    </td>
+                <td>
+                  View conversations
+                </td>
 
-                    <td>
-                      {item.user}
-                    </td>
+                <td>
+                  Chatbot
+                </td>
 
-                    <td>
-                      {item.topic}
-                    </td>
+                <td>
+                  <span className="status-badge live">
+                    Live
+                  </span>
+                </td>
 
-                    <td>
+                <td>
+                  View All
+                </td>
 
-                      <span
-                        className={
-                          item.status ===
-                          "Live Agent"
-                            ? "status-badge live"
-                            : "status-badge resolved"
-                        }
-                      >
-                        {item.status}
-                      </span>
-
-                    </td>
-
-                    <td>
-                      {item.time}
-                    </td>
-
-                  </tr>
-
-                )
-              )}
+              </tr>
 
             </tbody>
 

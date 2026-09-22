@@ -8,12 +8,14 @@ import {
   DollarSign,
   FileText,
   ArrowLeft,
+  ShieldAlert,
+  ShieldCheck,
 } from "lucide-react";
 import "./PartnerPostJob.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const PARTNER_JOBS_API = `${API_BASE_URL}/api/jobs`;
 
 function PartnerPostJob() {
   const navigate = useNavigate();
@@ -34,6 +36,27 @@ function PartnerPostJob() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  /* -----------------------------------------
+     PARTNER VERIFICATION STATE
+
+     The account works instantly, but publishing a job
+     requires admin verification. An unverified partner can
+     still save the job as a private draft.
+  ----------------------------------------- */
+
+  let partner = null;
+
+  try {
+    partner = JSON.parse(
+      localStorage.getItem("ragasPartner") || "null"
+    );
+  } catch (parseError) {
+    console.error("Invalid partner data:", parseError);
+    partner = null;
+  }
+
+  const isVerified = partner?.status === "Verified";
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -43,9 +66,14 @@ function PartnerPostJob() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  /* -----------------------------------------
+     SUBMIT
 
+     publish = true  -> send the job to the admin queue
+     publish = false -> keep it as a private draft
+  ----------------------------------------- */
+
+  const submitJob = async ({ publish }) => {
     setLoading(true);
     setMessage("");
     setError("");
@@ -59,25 +87,37 @@ function PartnerPostJob() {
         return;
       }
 
-      const response = await fetch(API_URL, {
+      const response = await fetch(PARTNER_JOBS_API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          jobTitle: formData.title,
+          description: formData.description,
+          jobType: formData.jobType,
+          category: formData.industry,
+          location: formData.location,
+          salary: formData.salary,
+          experience: formData.experience,
+          skills: formData.skills,
+          publish,
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Unable to post the job."
+          data.message || "Unable to save the job."
         );
       }
 
       setMessage(
-        "Job submitted successfully and is pending approval."
+        publish
+          ? "Job published successfully and sent for admin approval."
+          : "Job saved as a draft. You can publish it once your partner account is verified."
       );
 
       setFormData({
@@ -96,6 +136,23 @@ function PartnerPostJob() {
     } finally {
       setLoading(false);
     }
+  };
+
+  /* -----------------------------------------
+     FORM SUBMIT
+
+     A verified partner publishes straight away, an
+     unverified partner saves a draft with the same button.
+  ----------------------------------------- */
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await submitJob({ publish: isVerified });
+  };
+
+  const handleSaveDraft = async () => {
+    await submitJob({ publish: false });
   };
 
   return (
@@ -126,6 +183,24 @@ function PartnerPostJob() {
         </div>
 
       </div>
+
+      {/* VERIFICATION NOTICE */}
+
+      {isVerified ? (
+        <div className="partner-form-success">
+          <ShieldCheck size={16} /> Your partner account is verified.
+          You can publish jobs directly for admin approval.
+        </div>
+      ) : (
+        <div className="partner-form-warning">
+          <ShieldAlert size={16} />
+          <span>
+            Your partner account is awaiting admin verification.
+            You can save this job as a draft now and publish it
+            once your account is verified.
+          </span>
+        </div>
+      )}
 
       <form
         className="partner-job-form"
@@ -360,12 +435,32 @@ function PartnerPostJob() {
             Cancel
           </button>
 
+          {/* Save as draft - always available */}
+          <button
+            type="button"
+            className="partner-cancel-btn"
+            onClick={handleSaveDraft}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save as Draft"}
+          </button>
+
+          {/* Publish - verified partners only */}
           <button
             type="submit"
             className="partner-submit-job-btn"
-            disabled={loading}
+            disabled={loading || !isVerified}
+            title={
+              isVerified
+                ? "Publish this job for admin approval"
+                : "Publishing is enabled once the admin verifies your account"
+            }
           >
-            {loading ? "Submitting..." : "Submit Job"}
+            {loading
+              ? "Submitting..."
+              : isVerified
+                ? "Publish Job"
+                : "Publish (Verification Pending)"}
           </button>
 
         </div>

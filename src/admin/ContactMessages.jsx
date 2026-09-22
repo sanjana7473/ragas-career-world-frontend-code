@@ -24,9 +24,13 @@ function ContactMessages() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `${API_URL}/api/contact`
-        );
+        const response = await fetch(`${API_URL}/api/contact`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(

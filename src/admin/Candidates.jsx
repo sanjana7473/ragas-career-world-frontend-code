@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Candidates.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const API_URL = API_BASE_URL;
 const ITEMS_PER_PAGE = 10;
@@ -11,6 +12,8 @@ function Candidates() {
   const navigate = useNavigate();
 
   const [candidates, setCandidates] = useState([]);
+  const [applications, setApplications] = useState([]);
+
   const [search, setSearch] = useState("");
   const [qualificationFilter, setQualificationFilter] =
     useState("All");
@@ -29,9 +32,15 @@ function Candidates() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `${API_URL}/api/candidates`
-      );
+      const token = localStorage.getItem("ragasAdminToken");
+
+      const authHeaders = {
+        Authorization: `Bearer ${token || ""}`,
+      };
+
+      const response = await fetch(`${API_URL}/api/candidates`, {
+        headers: authHeaders,
+      });
 
       if (!response.ok) {
         throw new Error("Unable to fetch candidates.");
@@ -49,8 +58,44 @@ function Candidates() {
     }
   };
 
+  // =========================================
+  // FETCH APPLICATIONS
+  // =========================================
+
+  const fetchApplications = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/applications`, {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("ragasAdminToken") || ""
+          }`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          "Unable to fetch applications."
+        );
+      }
+
+      const data = await response.json();
+
+      setApplications(data.data || []);
+    } catch (err) {
+      console.error(
+        "Applications error:",
+        err
+      );
+    }
+  };
+
+  // =========================================
+  // INITIAL FETCH
+  // =========================================
+
   useEffect(() => {
     fetchCandidates();
+    fetchApplications();
   }, []);
 
   // =========================================
@@ -59,7 +104,10 @@ function Candidates() {
 
   const qualifications = useMemo(() => {
     const values = candidates
-      .map((candidate) => candidate.qualification)
+      .map(
+        (candidate) =>
+          candidate.qualification
+      )
       .filter(Boolean);
 
     return [...new Set(values)];
@@ -214,6 +262,67 @@ function Candidates() {
     }).length;
 
   // =========================================
+  // SHORTLISTED CANDIDATES
+  // =========================================
+  // Unique candidates only
+  // Same candidate shortlisted for
+  // multiple jobs = count once
+  // =========================================
+
+  const shortlistedCount = useMemo(() => {
+    const uniqueCandidates = new Set();
+
+    applications.forEach((application) => {
+      if (
+        application.status ===
+        "Shortlisted"
+      ) {
+        const email = String(
+          application.email || ""
+        )
+          .trim()
+          .toLowerCase();
+
+        if (email) {
+          uniqueCandidates.add(email);
+        }
+      }
+    });
+
+    return uniqueCandidates.size;
+  }, [applications]);
+
+  // =========================================
+  // PLACED CANDIDATES
+  // =========================================
+  // "Selected" application status
+  // is counted as Placed
+  // =========================================
+
+  const placedCount = useMemo(() => {
+    const uniqueCandidates = new Set();
+
+    applications.forEach((application) => {
+      if (
+        application.status ===
+        "Selected"
+      ) {
+        const email = String(
+          application.email || ""
+        )
+          .trim()
+          .toLowerCase();
+
+        if (email) {
+          uniqueCandidates.add(email);
+        }
+      }
+    });
+
+    return uniqueCandidates.size;
+  }, [applications]);
+
+  // =========================================
   // VIEW CANDIDATE
   // =========================================
 
@@ -230,18 +339,6 @@ function Candidates() {
     navigate(
       `/admin/candidates/${candidate._id}`
     );
-  };
-
-  // =========================================
-  // ADD CANDIDATE
-  // =========================================
-  // IMPORTANT:
-  // Open ADMIN Add Candidate page
-  // NOT public Job Seekers page
-  // =========================================
-
-  const handleAddCandidate = () => {
-    navigate("/admin/candidates/add");
   };
 
   // =========================================
@@ -360,20 +457,7 @@ function Candidates() {
           </span>
         </div>
 
-        {/* ADD CANDIDATE */}
-
-        <button
-          className="add-candidate-btn"
-          type="button"
-          onClick={
-            handleAddCandidate
-          }
-        >
-          + Add Candidate
-        </button>
-
       </div>
-
 
       {/* =====================================
           ERROR
@@ -393,12 +477,13 @@ function Candidates() {
         </div>
       )}
 
-
       {/* =====================================
           STATS
       ===================================== */}
 
       <div className="candidate-stats">
+
+        {/* TOTAL CANDIDATES */}
 
         <div className="candidate-stat">
           <span>
@@ -416,6 +501,7 @@ function Candidates() {
           </small>
         </div>
 
+        {/* NEW THIS MONTH */}
 
         <div className="candidate-stat">
           <span>
@@ -433,6 +519,7 @@ function Candidates() {
           </small>
         </div>
 
+        {/* SHORTLISTED */}
 
         <div className="candidate-stat">
           <span>
@@ -440,14 +527,17 @@ function Candidates() {
           </span>
 
           <strong>
-            0
+            {loading
+              ? "..."
+              : shortlistedCount}
           </strong>
 
           <small>
-            Status tracking coming soon
+            Candidates shortlisted
           </small>
         </div>
 
+        {/* PLACED */}
 
         <div className="candidate-stat">
           <span>
@@ -455,16 +545,17 @@ function Candidates() {
           </span>
 
           <strong>
-            0
+            {loading
+              ? "..."
+              : placedCount}
           </strong>
 
           <small>
-            Placement tracking coming soon
+            Candidates selected
           </small>
         </div>
 
       </div>
-
 
       {/* =====================================
           MAIN CARD
@@ -497,7 +588,6 @@ function Candidates() {
 
           </div>
 
-
           {/* QUALIFICATION */}
 
           <select
@@ -526,7 +616,6 @@ function Candidates() {
 
           </select>
 
-
           {/* RESET */}
 
           <button
@@ -540,7 +629,6 @@ function Candidates() {
           </button>
 
         </div>
-
 
         {/* ===================================
             TABLE
@@ -585,7 +673,6 @@ function Candidates() {
               </tr>
 
             </thead>
-
 
             <tbody>
 
@@ -686,7 +773,6 @@ function Candidates() {
 
                         </td>
 
-
                         {/* CONTACT */}
 
                         <td>
@@ -707,14 +793,12 @@ function Candidates() {
 
                         </td>
 
-
                         {/* QUALIFICATION */}
 
                         <td>
                           {candidate.qualification ||
                             "—"}
                         </td>
-
 
                         {/* EXPERIENCE */}
 
@@ -723,14 +807,12 @@ function Candidates() {
                             "—"}
                         </td>
 
-
                         {/* LOCATION */}
 
                         <td>
                           {candidate.location ||
                             "—"}
                         </td>
-
 
                         {/* STATUS */}
 
@@ -742,7 +824,6 @@ function Candidates() {
                           </span>
 
                         </td>
-
 
                         {/* VIEW */}
 
@@ -774,7 +855,6 @@ function Candidates() {
 
         </div>
 
-
         {/* =====================================
             PAGINATION
         ===================================== */}
@@ -793,7 +873,6 @@ function Candidates() {
             candidates
           </span>
 
-
           <div>
 
             {/* PREVIOUS */}
@@ -810,7 +889,6 @@ function Candidates() {
             >
               ‹
             </button>
-
 
             {/* PAGE NUMBERS */}
 
@@ -836,7 +914,6 @@ function Candidates() {
 
               )
             )}
-
 
             {/* NEXT */}
 

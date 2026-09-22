@@ -28,7 +28,7 @@ function JobDetails() {
     const fetchJob = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/jobs/${id}`
+          `${API_URL}/api/jobs/admin/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("ragasAdminToken") || ""}` } }
         );
 
         const data = await response.json();

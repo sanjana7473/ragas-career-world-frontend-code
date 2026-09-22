@@ -11,17 +11,32 @@ import {
 
 import "./CurrentOpenings.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000";
 
 const API_URL = API_BASE_URL;
 
 function CurrentOpenings() {
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
 
+  // =====================================================
+  // JOB STATES
+  // =====================================================
+
   const [jobs, setJobs] = useState([]);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
+
+  // =====================================================
+  // APPLIED JOB IDS
+  // =====================================================
+
+  const [appliedJobIds, setAppliedJobIds] = useState([]);
 
   // =====================================================
   // FILTER STATES
@@ -48,7 +63,75 @@ function CurrentOpenings() {
   );
 
   // =====================================================
-  // FETCH JOBS FROM MONGODB
+  // GET CURRENT LOGGED-IN CANDIDATE
+  // =====================================================
+
+  const getCurrentCandidate = () => {
+    let user = null;
+
+    // -----------------------------------------------
+    // LOCAL STORAGE
+    // -----------------------------------------------
+
+    const localUser = localStorage.getItem("ragasUser");
+
+    if (localUser) {
+      try {
+        user = JSON.parse(localUser);
+      } catch (error) {
+        console.error(
+          "Unable to parse local user:",
+          error
+        );
+      }
+    }
+
+    // -----------------------------------------------
+    // SESSION STORAGE
+    // -----------------------------------------------
+
+    if (!user) {
+      const sessionUser =
+        sessionStorage.getItem("ragasUser");
+
+      if (sessionUser) {
+        try {
+          user = JSON.parse(sessionUser);
+        } catch (error) {
+          console.error(
+            "Unable to parse session user:",
+            error
+          );
+        }
+      }
+    }
+
+    return user;
+  };
+
+  // =====================================================
+  // GET CANDIDATE EMAIL
+  // =====================================================
+
+  const getCandidateEmail = () => {
+    const user = getCurrentCandidate();
+
+    if (!user) {
+      return "";
+    }
+
+    return (
+      user.email ||
+      user.Email ||
+      ""
+    )
+      .toString()
+      .trim()
+      .toLowerCase();
+  };
+
+  // =====================================================
+  // FETCH JOBS
   // =====================================================
 
   const fetchJobs = async () => {
@@ -58,43 +141,38 @@ function CurrentOpenings() {
 
       const params = new URLSearchParams();
 
-      /*
-        IMPORTANT:
-        Backend expects:
-        search
-        location
-        category
-        country
-
-        So frontend keyword -> search
-        frontend industry -> category
-      */
-
       if (keyword.trim()) {
-        params.set("search", keyword.trim());
+        params.set(
+          "search",
+          keyword.trim()
+        );
       }
 
       if (location.trim()) {
-        params.set("location", location.trim());
+        params.set(
+          "location",
+          location.trim()
+        );
       }
 
       if (industry.trim()) {
-        params.set("category", industry.trim());
+        params.set(
+          "category",
+          industry.trim()
+        );
       }
 
-      /*
-        Experience and salary are not currently handled
-        by the backend route, but we keep them in the
-        frontend URL/filter state for future backend support.
-      */
+      const url =
+        `${API_URL}/api/jobs${
+          params.toString()
+            ? `?${params.toString()}`
+            : ""
+        }`;
 
-      const url = `${API_URL}/api/jobs${
-        params.toString()
-          ? `?${params.toString()}`
-          : ""
-      }`;
-
-      console.log("Fetching jobs from:", url);
+      console.log(
+        "Fetching jobs:",
+        url
+      );
 
       const response = await fetch(url);
 
@@ -106,7 +184,10 @@ function CurrentOpenings() {
 
       const result = await response.json();
 
-      console.log("Jobs API response:", result);
+      console.log(
+        "Jobs response:",
+        result
+      );
 
       if (result.success) {
         setJobs(result.data || []);
@@ -114,11 +195,15 @@ function CurrentOpenings() {
         setJobs([]);
 
         setError(
-          result.message || "Unable to load jobs."
+          result.message ||
+            "Unable to load jobs."
         );
       }
     } catch (err) {
-      console.error("Jobs fetch error:", err);
+      console.error(
+        "Jobs fetch error:",
+        err
+      );
 
       setJobs([]);
 
@@ -131,19 +216,145 @@ function CurrentOpenings() {
   };
 
   // =====================================================
+  // FETCH APPLIED JOBS FOR CURRENT CANDIDATE
+  // =====================================================
+
+  const fetchAppliedJobs = async () => {
+    try {
+      const userEmail = getCandidateEmail();
+
+      console.log(
+        "Current candidate email:",
+        userEmail
+      );
+
+      // -----------------------------------------------
+      // NO CANDIDATE LOGGED IN
+      // -----------------------------------------------
+
+      if (!userEmail) {
+        console.log(
+          "No candidate logged in."
+        );
+
+        setAppliedJobIds([]);
+
+        return;
+      }
+
+      // -----------------------------------------------
+      // FETCH APPLICATIONS
+      // -----------------------------------------------
+
+      const url =
+        `${API_BASE_URL}/api/applications/candidate?email=${encodeURIComponent(
+          userEmail
+        )}`;
+
+      console.log(
+        "Fetching candidate applications:",
+        url
+      );
+
+      const response = await fetch(url);
+
+      // -----------------------------------------------
+      // CHECK RESPONSE
+      // -----------------------------------------------
+
+      if (!response.ok) {
+        console.error(
+          "Candidate applications request failed:",
+          response.status
+        );
+
+        setAppliedJobIds([]);
+
+        return;
+      }
+
+      const result = await response.json();
+
+      console.log(
+        "Candidate applications response:",
+        result
+      );
+
+      if (
+        !result ||
+        !result.success
+      ) {
+        console.error(
+          "Candidate applications API returned unsuccessful response:",
+          result
+        );
+
+        setAppliedJobIds([]);
+
+        return;
+      }
+
+      // -----------------------------------------------
+      // EXTRACT JOB IDS
+      // -----------------------------------------------
+
+      const ids = (result.data || [])
+        .map((application) => {
+          return application?.jobId;
+        })
+        .filter(Boolean)
+        .map((id) => {
+          return String(id).trim();
+        });
+
+      console.log(
+        "Applied job IDs:",
+        ids
+      );
+
+      setAppliedJobIds(ids);
+    } catch (err) {
+      console.error(
+        "Fetch applied jobs error:",
+        err
+      );
+
+      setAppliedJobIds([]);
+    }
+  };
+
+  // =====================================================
+  // URL SEARCH PARAMS STRING
+  // =====================================================
+
+  const searchParamsString =
+    searchParams.toString();
+
+  // =====================================================
   // LOAD JOBS
+  // Runs when URL filters change
   // =====================================================
 
   useEffect(() => {
     fetchJobs();
-  }, [searchParams.toString()]);
+  }, [searchParamsString]);
+
+  // =====================================================
+  // LOAD CANDIDATE APPLICATIONS
+  // Runs only when page/component mounts
+  // =====================================================
+
+  useEffect(() => {
+    fetchAppliedJobs();
+  }, []);
 
   // =====================================================
   // APPLY FILTERS
   // =====================================================
 
   const handleApplyFilters = () => {
-    const params = new URLSearchParams();
+    const params =
+      new URLSearchParams();
 
     if (keyword.trim()) {
       params.set(
@@ -200,7 +411,9 @@ function CurrentOpenings() {
     setExperience("");
     setSalary("");
 
-    navigate("/current-openings");
+    navigate(
+      "/current-openings"
+    );
   };
 
   // =====================================================
@@ -209,23 +422,72 @@ function CurrentOpenings() {
 
   const handleApply = (jobId) => {
     if (!jobId) {
-      alert("Job ID is not available.");
+      alert(
+        "Job ID is not available."
+      );
+
       return;
     }
 
-    navigate(`/apply/${jobId}`);
+    // -----------------------------------------------
+    // CHECK LOGIN
+    // -----------------------------------------------
+
+    const userEmail =
+      getCandidateEmail();
+
+    if (!userEmail) {
+      alert(
+        "Please login as a candidate before applying."
+      );
+
+      navigate(
+        "/user-login"
+      );
+
+      return;
+    }
+
+    // -----------------------------------------------
+    // ALREADY APPLIED
+    // -----------------------------------------------
+
+    const normalizedJobId =
+      String(jobId).trim();
+
+    if (
+      appliedJobIds.includes(
+        normalizedJobId
+      )
+    ) {
+      return;
+    }
+
+    // -----------------------------------------------
+    // OPEN APPLICATION PAGE
+    // -----------------------------------------------
+
+    navigate(
+      `/apply/${normalizedJobId}`
+    );
   };
 
   // =====================================================
-  // JOB DATA HELPERS
+  // JOB HELPERS
   // =====================================================
 
   const getJobSalary = (job) => {
-    return job.salary || "Salary not disclosed";
+    return (
+      job.salary ||
+      "Salary not disclosed"
+    );
   };
 
   const getJobLocation = (job) => {
-    if (job.location && job.country) {
+    if (
+      job.location &&
+      job.country
+    ) {
       return `${job.location}, ${job.country}`;
     }
 
@@ -285,7 +547,9 @@ function CurrentOpenings() {
             placeholder="Select keyword"
             value={keyword}
             onChange={(e) =>
-              setKeyword(e.target.value)
+              setKeyword(
+                e.target.value
+              )
             }
           />
 
@@ -300,7 +564,9 @@ function CurrentOpenings() {
             placeholder="Select location / country"
             value={location}
             onChange={(e) =>
-              setLocation(e.target.value)
+              setLocation(
+                e.target.value
+              )
             }
           />
 
@@ -315,7 +581,9 @@ function CurrentOpenings() {
             placeholder="Select industry"
             value={industry}
             onChange={(e) =>
-              setIndustry(e.target.value)
+              setIndustry(
+                e.target.value
+              )
             }
           />
 
@@ -330,7 +598,9 @@ function CurrentOpenings() {
             placeholder="Select experience level"
             value={experience}
             onChange={(e) =>
-              setExperience(e.target.value)
+              setExperience(
+                e.target.value
+              )
             }
           />
 
@@ -345,7 +615,9 @@ function CurrentOpenings() {
             placeholder="Select salary range"
             value={salary}
             onChange={(e) =>
-              setSalary(e.target.value)
+              setSalary(
+                e.target.value
+              )
             }
           />
 
@@ -354,46 +626,50 @@ function CurrentOpenings() {
           <button
             type="button"
             className="apply-filters"
-            onClick={handleApplyFilters}
+            onClick={
+              handleApplyFilters
+            }
           >
             <Search size={14} />
+
             Apply Filters
           </button>
 
-          {/* CLEAR FILTERS */}
+          {/* CLEAR */}
 
           {(keyword ||
             location ||
             industry ||
             experience ||
             salary) && (
-
             <button
               type="button"
               className="clear-filters"
-              onClick={handleClearFilters}
+              onClick={
+                handleClearFilters
+              }
             >
               Clear Filters
             </button>
-
           )}
 
         </aside>
 
-
         {/* =================================================
-            RESULTS
+            JOB RESULTS
         ================================================== */}
 
         <section className="openings-results">
 
-          {/* RESULTS HEADER */}
+          {/* HEADER */}
 
           <div className="results-heading">
 
             <h1>
               Current Openings —{" "}
-              {loading ? "..." : jobs.length}{" "}
+              {loading
+                ? "..."
+                : jobs.length}{" "}
               {jobs.length === 1
                 ? "role"
                 : "roles"}
@@ -405,10 +681,7 @@ function CurrentOpenings() {
 
           </div>
 
-
-          {/* =================================================
-              ERROR
-          ================================================== */}
+          {/* ERROR */}
 
           {error && (
             <div className="jobs-message error">
@@ -416,145 +689,198 @@ function CurrentOpenings() {
             </div>
           )}
 
+          {/* LOADING */}
 
-          {/* =================================================
-              LOADING
-          ================================================== */}
+          {loading &&
+            !error && (
+              <div className="jobs-message">
+                Loading available jobs...
+              </div>
+            )}
 
-          {loading && !error && (
-            <div className="jobs-message">
-              Loading available jobs...
-            </div>
-          )}
-
-
-          {/* =================================================
-              NO JOBS
-          ================================================== */}
+          {/* NO JOBS */}
 
           {!loading &&
             !error &&
             jobs.length === 0 && (
-
               <div className="jobs-message no-results">
 
-                <Briefcase size={30} />
+                <Briefcase
+                  size={30}
+                />
 
                 <h3>
                   No jobs found
                 </h3>
 
                 <p>
-                  No current openings match your
-                  search criteria.
+                  No current openings
+                  match your search
+                  criteria.
                 </p>
 
                 <button
                   type="button"
-                  onClick={handleClearFilters}
+                  onClick={
+                    handleClearFilters
+                  }
                 >
                   Clear Search
                 </button>
 
               </div>
-
             )}
 
-
-          {/* =================================================
-              ALL APPROVED JOBS
-          ================================================== */}
+          {/* JOB LIST */}
 
           {!loading &&
             !error &&
             jobs.length > 0 && (
-
               <div className="opening-job-list">
 
-                {jobs.map((job) => (
+                {jobs.map((job) => {
 
-                  <div
-                    className="opening-job-card"
-                    key={job._id}
-                  >
+                  // -----------------------------------------
+                  // NORMALIZE JOB ID
+                  // -----------------------------------------
 
-                    {/* =================================================
-                        LEFT SIDE
-                    ================================================== */}
+                  const currentJobId =
+                    String(
+                      job?._id || ""
+                    ).trim();
 
-                    <div className="opening-job-info">
+                  // -----------------------------------------
+                  // CHECK WHETHER CURRENT CANDIDATE
+                  // HAS APPLIED TO THIS JOB
+                  // -----------------------------------------
 
-                      <div className="opening-job-icon">
-                        <Briefcase size={16} />
+                  const isApplied =
+                    currentJobId &&
+                    appliedJobIds.includes(
+                      currentJobId
+                    );
+
+                  return (
+                    <div
+                      className="opening-job-card"
+                      key={currentJobId}
+                    >
+
+                      {/* LEFT */}
+
+                      <div className="opening-job-info">
+
+                        <div className="opening-job-icon">
+                          <Briefcase
+                            size={16}
+                          />
+                        </div>
+
+                        <div>
+
+                          <h3>
+                            {
+                              job.jobTitle ||
+                              "Untitled Job"
+                            }
+                          </h3>
+
+                          <p>
+
+                            <span>
+                              {
+                                getJobCategory(
+                                  job
+                                )
+                              }
+                            </span>
+
+                            <span>
+                              •
+                            </span>
+
+                            <MapPin
+                              size={11}
+                            />
+
+                            <span>
+                              {
+                                getJobLocation(
+                                  job
+                                )
+                              }
+                            </span>
+
+                          </p>
+
+                          {job.companyName && (
+                            <small className="opening-company">
+                              {
+                                job.companyName
+                              }
+                            </small>
+                          )}
+
+                        </div>
+
                       </div>
 
-                      <div>
+                      {/* RIGHT */}
 
-                        <h3>
-                          {job.jobTitle ||
-                            "Untitled Job"}
-                        </h3>
+                      <div className="opening-job-right">
 
-                        <p>
+                        <strong>
+                          {
+                            getJobSalary(
+                              job
+                            )
+                          }
+                        </strong>
 
-                          <span>
-                            {getJobCategory(job)}
-                          </span>
+                        <span className="opening-type">
+                          {
+                            getJobType(
+                              job
+                            )
+                          }
+                        </span>
 
-                          <span>
-                            •
-                          </span>
+                        {/* ==========================================
+                            APPLIED / APPLY
+                        =========================================== */}
 
-                          <MapPin size={11} />
+                        {isApplied ? (
 
-                          <span>
-                            {getJobLocation(job)}
-                          </span>
+                          <button
+                            type="button"
+                            className="applied-job-button"
+                            disabled
+                          >
+                            Applied ✓
+                          </button>
 
-                        </p>
+                        ) : (
 
-                        {job.companyName && (
-                          <small className="opening-company">
-                            {job.companyName}
-                          </small>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleApply(
+                                currentJobId
+                              )
+                            }
+                          >
+                            Apply
+                          </button>
+
                         )}
 
                       </div>
 
                     </div>
-
-
-                    {/* =================================================
-                        RIGHT SIDE
-                    ================================================== */}
-
-                    <div className="opening-job-right">
-
-                      <strong>
-                        {getJobSalary(job)}
-                      </strong>
-
-                      <span className="opening-type">
-                        {getJobType(job)}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleApply(job._id)
-                        }
-                      >
-                        Apply
-                      </button>
-
-                    </div>
-
-                  </div>
-
-                ))}
+                  );
+                })}
 
               </div>
-
             )}
 
         </section>

@@ -15,7 +15,7 @@ import "./PartnerJobs.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const PARTNER_JOBS_API = `${API_BASE_URL}/api/partners/jobs`;
 
 function PartnerJobs() {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ function PartnerJobs() {
         return;
       }
 
-      const response = await fetch(API_URL, {
+      const response = await fetch(PARTNER_JOBS_API, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -118,7 +118,7 @@ function PartnerJobs() {
       const token = localStorage.getItem("ragasPartnerToken");
 
       const response = await fetch(
-        `${API_URL}/${jobId}`,
+        `${PARTNER_JOBS_API}/${jobId}`,
         {
           method: "PATCH",
           headers: {
@@ -126,8 +126,7 @@ function PartnerJobs() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            status: "Closed",
-            isActive: false,
+            close: true,
           }),
         }
       );
@@ -143,6 +142,52 @@ function PartnerJobs() {
       fetchJobs();
     } catch (error) {
       console.error("Close job error:", error);
+      alert(error.message);
+    }
+  };
+
+  /* -----------------------------------------
+     PUBLISH A DRAFT
+
+     Only a verified partner account can publish. The
+     backend refuses with 403 until the admin verifies.
+  ----------------------------------------- */
+
+  const handlePublishJob = async (jobId) => {
+    const confirmed = window.confirm(
+      "Publish this draft? It will be sent to the admin for approval."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("ragasPartnerToken");
+
+      const response = await fetch(
+        `${PARTNER_JOBS_API}/${jobId}/publish`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Unable to publish job."
+        );
+      }
+
+      alert(data.message);
+      fetchJobs();
+    } catch (error) {
+      console.error("Publish job error:", error);
       alert(error.message);
     }
   };
@@ -200,8 +245,9 @@ function PartnerJobs() {
             }
           >
             <option value="All">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Pending">Pending</option>
+            <option value="Draft">Draft</option>
+            <option value="Approved">Published</option>
+            <option value="Pending">Pending Approval</option>
             <option value="Closed">Closed</option>
             <option value="Rejected">Rejected</option>
           </select>
@@ -367,7 +413,22 @@ function PartnerJobs() {
                     <span>Edit</span>
                   </button>
 
-                  {status.toLowerCase() === "active" && (
+                  {/* Drafts can be published once the partner account is verified */}
+                  {status.toLowerCase() === "draft" && (
+                    <button
+                      type="button"
+                      title="Publish Job"
+                      onClick={() =>
+                        handlePublishJob(jobId)
+                      }
+                    >
+                      <PlusCircle size={16} />
+                      <span>Publish</span>
+                    </button>
+                  )}
+
+                  {(status.toLowerCase() === "approved" ||
+                    status.toLowerCase() === "active") && (
                     <button
                       type="button"
                       className="partner-close-job-btn"

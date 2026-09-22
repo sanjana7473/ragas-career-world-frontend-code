@@ -17,7 +17,13 @@ export default function ResumeDetails() {
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/resume/${id}`);
+        const response = await fetch(`${API_URL}/api/resume/${id}`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
         const data = await response.json();
 
         if (!response.ok || !data.success) {

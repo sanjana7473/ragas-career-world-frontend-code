@@ -13,7 +13,7 @@ import "./PartnerApplications.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/partners/applications`;
 
 function PartnerApplications() {
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ function PartnerApplications() {
       }
 
       const response = await fetch(
-        `${API_BASE_URL}/api/jobs`,
+        `${API_BASE_URL}/api/partners/jobs`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

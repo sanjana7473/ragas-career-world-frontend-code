@@ -17,7 +17,7 @@ import "./PartnerJobDetails.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/partners/jobs`;
 
 function PartnerJobDetails() {
   const navigate = useNavigate();
@@ -179,7 +179,7 @@ function PartnerJobDetails() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          status: "Closed",
+          close: true,
           isActive: false,
         }),
       });

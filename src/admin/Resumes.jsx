@@ -25,9 +25,13 @@ function Resumes() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          `${API_URL}/api/resume`
-        );
+        const response = await fetch(`${API_URL}/api/resume`, {
+          headers: {
+            Authorization: `Bearer ${
+              localStorage.getItem("ragasAdminToken") || ""
+            }`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Unable to fetch resumes.");

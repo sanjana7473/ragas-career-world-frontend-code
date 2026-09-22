@@ -4,7 +4,7 @@ import "./Applications.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/applications`;
 
 function Applications() {
   const [applications, setApplications] = useState([]);
@@ -18,7 +18,14 @@ function Applications() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(API_URL);
+      const token = localStorage.getItem("ragasAdminToken");
+
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token || ""}`,
+        },
+      });
+
       const data = await response.json();
 
       if (!response.ok || !data.success) {
@@ -63,7 +70,7 @@ function Applications() {
   const totalApplications = applications.length;
 
   const newApplications = applications.filter(
-    (application) => application.status === "New"
+    (application) => application.status === "Applied"
   ).length;
 
   const shortlistedApplications = applications.filter(
@@ -71,7 +78,7 @@ function Applications() {
   ).length;
 
   const hiredApplications = applications.filter(
-    (application) => application.status === "Hired"
+    (application) => application.status === "Selected"
   ).length;
 
   const formatDate = (date) => {
@@ -119,7 +126,7 @@ function Applications() {
         </div>
 
         <div className="application-stat-card">
-          <span>New Applications</span>
+          <span>New / Applied</span>
           <strong>{newApplications}</strong>
         </div>
 
@@ -129,7 +136,7 @@ function Applications() {
         </div>
 
         <div className="application-stat-card">
-          <span>Hired</span>
+          <span>Selected</span>
           <strong>{hiredApplications}</strong>
         </div>
 

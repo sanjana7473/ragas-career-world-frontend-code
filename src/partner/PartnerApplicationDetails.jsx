@@ -18,7 +18,7 @@ import "./PartnerApplicationDetails.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/partners/applications`;
 
 function PartnerApplicationDetails() {
   const navigate = useNavigate();
@@ -139,7 +139,7 @@ function PartnerApplicationDetails() {
 
   const getResume = () => {
     return (
-      application?.resume ||
+      application?.resumeFile ? `${API_BASE_URL}/api/applications/resume/${encodeURIComponent(application.resumeFile)}` :
       application?.resumeUrl ||
       application?.resumePath ||
       application?.candidate?.resume ||

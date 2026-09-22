@@ -69,6 +69,33 @@
   font-size: 11px;
 }
 
+/* Partner verification notice: Pending / Verified account state */
+
+.partner-dashboard-notice {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.partner-dashboard-notice p {
+  margin: 0;
+}
+
+.partner-dashboard-notice-pending {
+  border-left: 4px solid #d9a441;
+  color: #7d5a12;
+  background: #fffaef;
+}
+
+.partner-dashboard-notice-verified {
+  border-left: 4px solid #3f8a55;
+  color: #2f6b41;
+  background: #f3faf5;
+}
+
 .partner-dashboard-loading {
   width: 100%;
   padding: 40px 0;

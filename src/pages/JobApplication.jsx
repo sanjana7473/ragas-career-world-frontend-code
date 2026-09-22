@@ -7,10 +7,11 @@ import {
 } from "lucide-react";
 import "./JobApplication.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
-const JOB_API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/applications`;
+const JOB_API_URL = `${API_BASE_URL}/api/jobs`;
 
 /* =========================================
    STATIC WEBSITE JOBS
@@ -136,10 +137,39 @@ const createFallbackJob = (id) => {
     .join(" ");
 
   return {
+    id,
     title: formattedTitle || "Job Position",
     location: "Multiple Locations",
     industry: "General",
   };
+};
+
+/* =========================================
+   GET LOGGED-IN CANDIDATE
+========================================= */
+
+const getLoggedInCandidate = () => {
+  try {
+    const localUser = localStorage.getItem("ragasUser");
+
+    if (localUser) {
+      return JSON.parse(localUser);
+    }
+
+    const sessionUser =
+      sessionStorage.getItem("ragasUser");
+
+    if (sessionUser) {
+      return JSON.parse(sessionUser);
+    }
+  } catch (error) {
+    console.error(
+      "Unable to read logged-in candidate:",
+      error
+    );
+  }
+
+  return null;
 };
 
 /* =========================================
@@ -162,23 +192,87 @@ function JobApplication() {
   const [jobError, setJobError] = useState("");
 
   /* =========================================
+     FORM STATES
+  ========================================= */
+
+  const [resume, setResume] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  /* =========================================
+     FORM DATA
+  ========================================= */
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    currentLocation: "",
+    currentJobTitle: "",
+    totalExperience: "",
+    highestQualification: "",
+    currentCompany: "",
+    keySkills: "",
+    preferredLocation: "",
+    preferredCountry: "",
+    expectedSalary: "",
+    noticePeriod: "",
+    coverLetter: "",
+  });
+
+  /* =========================================
+     LOAD LOGGED-IN CANDIDATE
+  ========================================= */
+
+  useEffect(() => {
+    const candidate = getLoggedInCandidate();
+
+    if (!candidate) {
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      fullName:
+        candidate.fullName ||
+        candidate.name ||
+        candidate.fullName ||
+        "",
+      email:
+        candidate.email ||
+        candidate.Email ||
+        "",
+      phone:
+        candidate.phone ||
+        candidate.mobile ||
+        candidate.phoneNumber ||
+        "",
+    }));
+  }, []);
+
+  /* =========================================
      FETCH MONGODB JOB
   ========================================= */
 
   useEffect(() => {
     const fetchJob = async () => {
       /*
-        If this is one of the old/static jobs,
-        no API call is required.
+        Old/static jobs don't need MongoDB.
       */
 
       if (JOBS[jobId]) {
-        setJob(JOBS[jobId]);
+        setJob({
+          ...JOBS[jobId],
+          id: jobId,
+        });
+
         return;
       }
 
       /*
-        Otherwise this should be a MongoDB Job ID.
+        Dynamic jobs come from MongoDB.
       */
 
       setJobLoading(true);
@@ -211,16 +305,12 @@ function JobApplication() {
 
         const mongoJob = result.data;
 
-        /*
-          Convert MongoDB job fields into
-          the format used by this page.
-        */
-
         setJob({
           id: mongoJob._id,
 
           title:
             mongoJob.jobTitle ||
+            mongoJob.title ||
             "Job Position",
 
           location:
@@ -229,9 +319,9 @@ function JobApplication() {
 
           industry:
             mongoJob.category ||
+            mongoJob.industry ||
             "General",
         });
-
       } catch (error) {
         console.error(
           "Fetch job error:",
@@ -243,11 +333,6 @@ function JobApplication() {
             "Unable to load job details."
         );
 
-        /*
-          Keep fallback so the page does not
-          completely break.
-        */
-
         setJob(
           JOBS[jobId] ||
             createFallbackJob(jobId)
@@ -257,39 +342,10 @@ function JobApplication() {
       }
     };
 
-    fetchJob();
+    if (jobId) {
+      fetchJob();
+    }
   }, [jobId]);
-
-  /* =========================================
-     STATES
-  ========================================= */
-
-  const [resume, setResume] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  /* =========================================
-     FORM DATA
-  ========================================= */
-
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    dateOfBirth: "",
-    currentLocation: "",
-    currentJobTitle: "",
-    totalExperience: "",
-    highestQualification: "",
-    currentCompany: "",
-    keySkills: "",
-    preferredLocation: "",
-    preferredCountry: "",
-    expectedSalary: "",
-    noticePeriod: "",
-    coverLetter: "",
-  });
 
   /* =========================================
      HANDLE INPUT
@@ -353,41 +409,113 @@ function JobApplication() {
     e.preventDefault();
 
     setError("");
-    setLoading(true);
+
+    /*
+      Candidate must be logged in.
+    */
+
+    const candidate = getLoggedInCandidate();
+
+    if (!candidate) {
+      setError(
+        "Please login as a candidate before applying."
+      );
+
+      setTimeout(() => {
+        navigate("/user-login");
+      }, 1000);
+
+      return;
+    }
+
+    /*
+      Make sure job exists.
+    */
+
+    const actualJobId = job.id || jobId;
+
+    if (!actualJobId) {
+      setError(
+        "Job information is missing. Please go back and try again."
+      );
+
+      return;
+    }
+
+    /*
+      Resume required.
+    */
 
     if (!resume) {
       setError("Please upload your resume.");
-      setLoading(false);
       return;
     }
+
+    /*
+      Make sure email exists.
+    */
+
+    if (!formData.email.trim()) {
+      setError(
+        "Candidate email is required."
+      );
+
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const data = new FormData();
 
       /*
-        IMPORTANT:
-        MongoDB _id is sent as jobId.
+        MongoDB Job _id
       */
 
-      data.append("jobId", job.id ||jobId);
+      data.append(
+        "jobId",
+        actualJobId
+      );
 
       /*
-        IMPORTANT:
-        Actual job title is sent.
+        Actual job title
       */
 
       data.append(
         "jobTitle",
-        job.title
+        job.title || "Job Position"
       );
+
+      /*
+        Candidate fields
+      */
 
       Object.entries(formData).forEach(
         ([key, value]) => {
-          data.append(key, value);
+          data.append(
+            key,
+            value ?? ""
+          );
         }
       );
 
-      data.append("resume", resume);
+      /*
+        Resume file
+      */
+
+      data.append(
+        "resume",
+        resume
+      );
+
+      console.log(
+        "Submitting application:",
+        {
+          jobId: actualJobId,
+          jobTitle: job.title,
+          email: formData.email,
+        }
+      );
 
       const response = await fetch(
         API_URL,
@@ -414,9 +542,8 @@ function JobApplication() {
 
       setSubmitted(true);
 
-      setFormData({
-        fullName: "",
-        email: "",
+      setFormData((prev) => ({
+        ...prev,
         phone: "",
         dateOfBirth: "",
         currentLocation: "",
@@ -430,7 +557,7 @@ function JobApplication() {
         expectedSalary: "",
         noticePeriod: "",
         coverLetter: "",
-      });
+      }));
 
       setResume(null);
 
@@ -443,10 +570,14 @@ function JobApplication() {
         fileInput.value = "";
       }
 
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 5000);
+      /*
+        After successful submission,
+        return to Current Openings after 2 seconds.
+      */
 
+      setTimeout(() => {
+        navigate("/current-openings");
+      }, 2000);
     } catch (error) {
       console.error(
         "Application submission error:",

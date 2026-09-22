@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ChevronDown, Menu, UserRound, X } from "lucide-react";
+import { ChevronDown, Menu, UserRound, X, FileText } from "lucide-react";
 import ragasLogo from "../assets/ragas-logo.png";
 import "./Navbar.css";
 
@@ -225,11 +225,6 @@ function Navbar() {
     "current-openings",
   ].includes(activeSection);
 
-  const candidatesActive = [
-    "job-seekers",
-    "upload-resume",
-  ].includes(activeSection);
-
   const employersActive = [
     "employers",
     "post-a-job",
@@ -242,23 +237,22 @@ function Navbar() {
 
         {/* LOGO */}
         <Link
-  to="/"
-  className="navbar-logo"
-  onClick={(e) => {
-    e.preventDefault();
-    scrollToSection("home");
-  }}
->
-  <img
-    src={ragasLogo}
-    alt="RAGAS Career World"
-    className="navbar-logo-image"
-  />
-</Link>
+          to="/"
+          className="navbar-logo"
+          onClick={(e) => {
+            e.preventDefault();
+            scrollToSection("home");
+          }}
+        >
+          <img
+            src={ragasLogo}
+            alt="RAGAS Career World"
+            className="navbar-logo-image"
+          />
+        </Link>
 
         {/* DESKTOP NAVIGATION */}
         <nav className="navbar-links">
-
           <a
             href="#home"
             className={activeSection === "home" ? "active" : ""}
@@ -284,9 +278,7 @@ function Navbar() {
           {/* SERVICES DROPDOWN */}
           <div
             className={`navbar-dropdown ${
-              desktopDropdown === "services"
-                ? "dropdown-open"
-                : ""
+              desktopDropdown === "services" ? "dropdown-open" : ""
             }`}
           >
             <button
@@ -303,9 +295,7 @@ function Navbar() {
               <ChevronDown
                 size={15}
                 className={
-                  desktopDropdown === "services"
-                    ? "rotate-arrow"
-                    : ""
+                  desktopDropdown === "services" ? "rotate-arrow" : ""
                 }
               />
             </button>
@@ -321,7 +311,6 @@ function Navbar() {
                 >
                   Recruitment Services
                 </a>
-
                 <a
                   href="#recruitment-process"
                   onClick={(e) => {
@@ -331,7 +320,6 @@ function Navbar() {
                 >
                   Recruitment Process
                 </a>
-
                 <a
                   href="#visa-immigration"
                   onClick={(e) => {
@@ -348,9 +336,7 @@ function Navbar() {
           {/* JOBS DROPDOWN */}
           <div
             className={`navbar-dropdown ${
-              desktopDropdown === "jobs"
-                ? "dropdown-open"
-                : ""
+              desktopDropdown === "jobs" ? "dropdown-open" : ""
             }`}
           >
             <button
@@ -365,9 +351,7 @@ function Navbar() {
               <ChevronDown
                 size={15}
                 className={
-                  desktopDropdown === "jobs"
-                    ? "rotate-arrow"
-                    : ""
+                  desktopDropdown === "jobs" ? "rotate-arrow" : ""
                 }
               />
             </button>
@@ -383,7 +367,6 @@ function Navbar() {
                 >
                   International Jobs
                 </a>
-
                 <a
                   href="#domestic-jobs"
                   onClick={(e) => {
@@ -393,7 +376,6 @@ function Navbar() {
                 >
                   Domestic Jobs
                 </a>
-
                 <a
                   href="/current-openings"
                   onClick={(e) => {
@@ -407,13 +389,10 @@ function Navbar() {
             )}
           </div>
 
-          
           {/* EMPLOYERS DROPDOWN */}
           <div
             className={`navbar-dropdown ${
-              desktopDropdown === "employers"
-                ? "dropdown-open"
-                : ""
+              desktopDropdown === "employers" ? "dropdown-open" : ""
             }`}
           >
             <button
@@ -428,25 +407,13 @@ function Navbar() {
               <ChevronDown
                 size={15}
                 className={
-                  desktopDropdown === "employers"
-                    ? "rotate-arrow"
-                    : ""
+                  desktopDropdown === "employers" ? "rotate-arrow" : ""
                 }
               />
             </button>
 
             {desktopDropdown === "employers" && (
               <div className="dropdown-menu">
-                {/* <a
-                  href="#employers"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection("employers");
-                  }}
-                >
-                  For Employers
-                </a> */}
-
                 <a
                   href="/post-a-job"
                   onClick={(e) => {
@@ -456,7 +423,6 @@ function Navbar() {
                 >
                   Post a Job
                 </a>
-
                 <a
                   href="#partner-with-us"
                   onClick={(e) => {
@@ -472,9 +438,7 @@ function Navbar() {
 
           <a
             href="#contact"
-            className={
-              activeSection === "contact" ? "active" : ""
-            }
+            className={activeSection === "contact" ? "active" : ""}
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("contact");
@@ -485,7 +449,6 @@ function Navbar() {
         </nav>
 
         <div className="navbar-actions">
-          {/* DESKTOP CTA */}
           {!isUserLoggedIn && (
             <button
               type="button"
@@ -494,7 +457,7 @@ function Navbar() {
               aria-label="Open user login"
             >
               <UserRound size={17} aria-hidden="true" />
-          Log in
+              Log in
             </button>
           )}
 
@@ -518,12 +481,26 @@ function Navbar() {
                   </div>
                   <p><span>Email</span>{user?.email || "Not available"}</p>
                   <p><span>Phone</span>{user?.phone || user?.phoneNumber || "Not available"}</p>
+                  
                   <button
                     type="button"
                     className="navbar-logout"
                     onClick={handleLogout}
                   >
                     Logout
+                  </button>
+
+                  {/* CHECK APPLICATION STATUS BUTTON ADDED BELOW LOGOUT */}
+                  <button
+                    type="button"
+                    className="navbar-status-link-btn"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate("/application-status");
+                    }}
+                  >
+                    <FileText size={16} />
+                    Check Application Status
                   </button>
                 </div>
               )}
@@ -543,25 +520,15 @@ function Navbar() {
           aria-label="Toggle navigation menu"
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? (
-            <X size={26} />
-          ) : (
-            <Menu size={26} />
-          )}
+          {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
       {/* MOBILE MENU */}
-      <div
-        className={`mobile-menu ${
-          mobileMenuOpen ? "mobile-menu-open" : ""
-        }`}
-      >
+      <div className={`mobile-menu ${mobileMenuOpen ? "mobile-menu-open" : ""}`}>
         <a
           href="#home"
-          className={
-            activeSection === "home" ? "active" : ""
-          }
+          className={activeSection === "home" ? "active" : ""}
           onClick={(e) => {
             e.preventDefault();
             scrollToSection("home");
@@ -572,9 +539,7 @@ function Navbar() {
 
         <a
           href="#about"
-          className={
-            activeSection === "about" ? "active" : ""
-          }
+          className={activeSection === "about" ? "active" : ""}
           onClick={(e) => {
             e.preventDefault();
             scrollToSection("about");
@@ -584,189 +549,49 @@ function Navbar() {
         </a>
 
         <div className="mobile-dropdown">
-          <button
-            type="button"
-            onClick={() =>
-              toggleMobileDropdown("services")
-            }
-          >
+          <button type="button" onClick={() => toggleMobileDropdown("services")}>
             Services
-            <ChevronDown
-              size={17}
-              className={
-                mobileDropdown === "services"
-                  ? "rotate-arrow"
-                  : ""
-              }
-            />
+            <ChevronDown size={17} className={mobileDropdown === "services" ? "rotate-arrow" : ""} />
           </button>
-
           {mobileDropdown === "services" && (
             <div className="mobile-submenu">
-              <a
-                href="#services"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("services");
-                }}
-              >
-                Recruitment Services
-              </a>
-
-              <a
-                href="#international-jobs"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("international-jobs");
-                }}
-              >
-                International Jobs
-              </a>
-
-              <a
-                href="#domestic-jobs"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("domestic-jobs");
-                }}
-              >
-                Domestic Jobs
-              </a>
-
-              <a
-                href="#recruitment-process"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("recruitment-process");
-                }}
-              >
-                Recruitment Process
-              </a>
-
-              <a
-                href="#visa-immigration"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("visa-immigration");
-                }}
-              >
-                Visa Support
-              </a>
+              <a href="#services" onClick={(e) => { e.preventDefault(); scrollToSection("services"); }}>Recruitment Services</a>
+              <a href="#recruitment-process" onClick={(e) => { e.preventDefault(); scrollToSection("recruitment-process"); }}>Recruitment Process</a>
+              <a href="#visa-immigration" onClick={(e) => { e.preventDefault(); scrollToSection("visa-immigration"); }}>Visa Support</a>
             </div>
           )}
         </div>
 
         <div className="mobile-dropdown">
-          <button
-            type="button"
-            onClick={() => toggleMobileDropdown("jobs")}
-          >
+          <button type="button" onClick={() => toggleMobileDropdown("jobs")}>
             Jobs
-            <ChevronDown
-              size={17}
-              className={
-                mobileDropdown === "jobs"
-                  ? "rotate-arrow"
-                  : ""
-              }
-            />
+            <ChevronDown size={17} className={mobileDropdown === "jobs" ? "rotate-arrow" : ""} />
           </button>
-
           {mobileDropdown === "jobs" && (
             <div className="mobile-submenu">
-              <a
-                href="#international-jobs"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("international-jobs");
-                }}
-              >
-                International Jobs
-              </a>
-
-              <a
-                href="#domestic-jobs"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("domestic-jobs");
-                }}
-              >
-                Domestic Jobs
-              </a>
-
-              <a
-                href="/current-openings"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/current-openings");
-                }}
-              >
-                Current Openings
-              </a>
+              <a href="#international-jobs" onClick={(e) => { e.preventDefault(); scrollToSection("international-jobs"); }}>International Jobs</a>
+              <a href="#domestic-jobs" onClick={(e) => { e.preventDefault(); scrollToSection("domestic-jobs"); }}>Domestic Jobs</a>
+              <a href="/current-openings" onClick={(e) => { e.preventDefault(); navigate("/current-openings"); }}>Current Openings</a>
             </div>
           )}
         </div>
 
-       
-
         <div className="mobile-dropdown">
-          <button
-            type="button"
-            onClick={() =>
-              toggleMobileDropdown("employers")
-            }
-          >
+          <button type="button" onClick={() => toggleMobileDropdown("employers")}>
             Employers
-            <ChevronDown
-              size={17}
-              className={
-                mobileDropdown === "employers"
-                  ? "rotate-arrow"
-                  : ""
-              }
-            />
+            <ChevronDown size={17} className={mobileDropdown === "employers" ? "rotate-arrow" : ""} />
           </button>
-
           {mobileDropdown === "employers" && (
             <div className="mobile-submenu">
-              <a
-                href="#employers"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("employers");
-                }}
-              >
-                For Employers
-              </a>
-
-              <a
-                href="/post-a-job"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/post-a-job");
-                }}
-              >
-                Post a Job
-              </a>
-
-              <a
-                href="#partner-with-us"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("partner-with-us");
-                }}
-              >
-                Partner With Us
-              </a>
+              <a href="/post-a-job" onClick={(e) => { e.preventDefault(); navigate("/post-a-job"); }}>Post a Job</a>
+              <a href="#partner-with-us" onClick={(e) => { e.preventDefault(); scrollToSection("partner-with-us"); }}>Partner With Us</a>
             </div>
           )}
         </div>
 
         <a
           href="#contact"
-          className={
-            activeSection === "contact" ? "active" : ""
-          }
+          className={activeSection === "contact" ? "active" : ""}
           onClick={(e) => {
             e.preventDefault();
             scrollToSection("contact");
@@ -775,15 +600,37 @@ function Navbar() {
           Contact
         </a>
 
-        <button
-          type="button"
-          className="mobile-get-started"
-          onClick={() => navigate("/user-login")}
-          aria-label="Open user login"
-        >
-          <UserRound size={17} aria-hidden="true" />
-          user
-        </button>
+        {!isUserLoggedIn ? (
+          <button
+            type="button"
+            className="mobile-get-started"
+            onClick={() => navigate("/user-login")}
+          >
+            <UserRound size={17} aria-hidden="true" />
+            Log in
+          </button>
+        ) : (
+          <>
+            <button
+              type="button"
+              className="mobile-get-started"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                navigate("/application-status");
+              }}
+            >
+              <FileText size={17} aria-hidden="true" />
+              Check Application Status
+            </button>
+            <button
+              type="button"
+              className="mobile-logout-btn"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </header>
   );

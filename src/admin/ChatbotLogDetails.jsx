@@ -12,9 +12,11 @@ import {
 } from "lucide-react";
 import "./ChatbotLogDetails.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://rosybrown-snake-826018.hostingersite.com";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/chatbot-logs`;
 
 function ChatbotLogDetails() {
   const { id } = useParams();
@@ -30,8 +32,24 @@ function ChatbotLogDetails() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(`${API_URL}/${id}`);
-        const data = await response.json();
+      const response = await fetch(`${API_URL}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("ragasAdminToken") || ""
+          }`,
+        },
+      });
+
+const contentType =
+  response.headers.get("content-type") || "";
+
+if (!contentType.includes("application/json")) {
+  throw new Error(
+    `Server returned an unexpected response (${response.status}).`
+  );
+}
+
+const data = await response.json();
 
         if (!response.ok || !data.success) {
           throw new Error(
