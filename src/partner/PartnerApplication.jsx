@@ -8,12 +8,15 @@ import {
   Eye,
   Users,
   Filter,
+  Building2,
 } from "lucide-react";
 import "./PartnerApplications.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = `${API_BASE_URL}/api/partners/applications`;
+const API_URL =
+  `${API_BASE_URL}/api/partners/applications`;
 
 function PartnerApplications() {
   const navigate = useNavigate();
@@ -29,7 +32,13 @@ function PartnerApplications() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [jobFilter, setJobFilter] = useState(jobId || "All");
+  const [jobFilter, setJobFilter] = useState(
+    jobId || "All"
+  );
+
+  /* =========================================
+     FETCH DATA
+  ========================================= */
 
   useEffect(() => {
     fetchApplications();
@@ -41,10 +50,13 @@ function PartnerApplications() {
       setLoading(true);
       setError("");
 
-      const token = localStorage.getItem("ragasPartnerToken");
+      const token =
+        localStorage.getItem("ragasPartnerToken");
 
       if (!token) {
-        setError("Partner authentication required.");
+        setError(
+          "Partner authentication required."
+        );
         setLoading(false);
         return;
       }
@@ -59,7 +71,8 @@ function PartnerApplications() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Unable to load applications."
+          data.message ||
+            "Unable to load applications."
         );
       }
 
@@ -67,12 +80,23 @@ function PartnerApplications() {
         data.applications ||
         data.data ||
         data.results ||
-        (Array.isArray(data) ? data : []);
+        (Array.isArray(data)
+          ? data
+          : []);
 
-      setApplications(receivedApplications);
+      setApplications(
+        receivedApplications
+      );
     } catch (err) {
-      console.error("Fetch applications error:", err);
-      setError(err.message);
+      console.error(
+        "Fetch applications error:",
+        err
+      );
+
+      setError(
+        err.message ||
+          "Unable to load applications."
+      );
     } finally {
       setLoading(false);
     }
@@ -80,7 +104,10 @@ function PartnerApplications() {
 
   const fetchJobs = async () => {
     try {
-      const token = localStorage.getItem("ragasPartnerToken");
+      const token =
+        localStorage.getItem(
+          "ragasPartnerToken"
+        );
 
       if (!token) {
         return;
@@ -104,15 +131,26 @@ function PartnerApplications() {
       const receivedJobs =
         data.jobs ||
         data.data ||
-        (Array.isArray(data) ? data : []);
+        (Array.isArray(data)
+          ? data
+          : []);
 
       setJobs(receivedJobs);
     } catch (err) {
-      console.error("Fetch jobs error:", err);
+      console.error(
+        "Fetch jobs error:",
+        err
+      );
     }
   };
 
-  const getCandidateName = (application) => {
+  /* =========================================
+     HELPERS
+  ========================================= */
+
+  const getCandidateName = (
+    application
+  ) => {
     return (
       application.candidateName ||
       application.fullName ||
@@ -123,7 +161,9 @@ function PartnerApplications() {
     );
   };
 
-  const getCandidateEmail = (application) => {
+  const getCandidateEmail = (
+    application
+  ) => {
     return (
       application.email ||
       application.candidate?.email ||
@@ -131,7 +171,9 @@ function PartnerApplications() {
     );
   };
 
-  const getJobTitle = (application) => {
+  const getJobTitle = (
+    application
+  ) => {
     return (
       application.jobTitle ||
       application.job?.title ||
@@ -140,16 +182,72 @@ function PartnerApplications() {
     );
   };
 
-  const getJobId = (application) => {
-    return (
+  const getJobId = (
+    application
+  ) => {
+    const value =
       application.jobId ||
       application.job?._id ||
-      application.job?._id?.toString?.() ||
-      ""
-    );
+      application.job?.id ||
+      "";
+
+    return String(value);
   };
 
-  const getStatus = (application) => {
+  /* =========================================
+     COMPANY NAME
+  ========================================= */
+
+  const getCompanyName = (
+    application
+  ) => {
+    /*
+      1. Use companyName directly from application
+      2. Use nested job companyName
+      3. Find the matching job from fetched jobs
+      4. Use company / employer fallbacks
+    */
+
+    const directCompanyName =
+      application.companyName ||
+      application.company ||
+      application.employerName ||
+      application.job?.companyName ||
+      application.job?.company ||
+      application.job?.employerName;
+
+    if (directCompanyName) {
+      return String(
+        directCompanyName
+      ).trim();
+    }
+
+    const applicationJobId =
+      getJobId(application);
+
+    const matchingJob =
+      jobs.find(
+        (job) =>
+          String(
+            job._id || job.id || ""
+          ) === applicationJobId
+      );
+
+    if (matchingJob) {
+      return (
+        matchingJob.companyName ||
+        matchingJob.company ||
+        matchingJob.employerName ||
+        "Company not specified"
+      );
+    }
+
+    return "Company not specified";
+  };
+
+  const getStatus = (
+    application
+  ) => {
     return (
       application.status ||
       application.applicationStatus ||
@@ -157,15 +255,31 @@ function PartnerApplications() {
     );
   };
 
-  const getLocation = (application) => {
+  const getLocation = (
+    application
+  ) => {
+    const applicationJobId =
+      getJobId(application);
+
+    const matchingJob =
+      jobs.find(
+        (job) =>
+          String(
+            job._id || job.id || ""
+          ) === applicationJobId
+      );
+
     return (
       application.location ||
       application.job?.location ||
+      matchingJob?.location ||
       "Location not specified"
     );
   };
 
-  const getAppliedDate = (application) => {
+  const getAppliedDate = (
+    application
+  ) => {
     const date =
       application.createdAt ||
       application.appliedAt ||
@@ -176,93 +290,147 @@ function PartnerApplications() {
     }
 
     try {
-      return new Date(date).toLocaleDateString();
+      return new Date(
+        date
+      ).toLocaleDateString();
     } catch {
       return "Date unavailable";
     }
   };
 
-  const getStatusClass = (status) => {
+  const getStatusClass = (
+    status
+  ) => {
     return String(status)
       .toLowerCase()
       .replace(/\s+/g, "-");
   };
 
-  const filteredApplications = useMemo(() => {
-    return applications.filter((application) => {
-      const candidateName =
-        getCandidateName(application).toLowerCase();
+  /* =========================================
+     FILTER APPLICATIONS
+  ========================================= */
 
-      const email =
-        getCandidateEmail(application).toLowerCase();
+  const filteredApplications =
+    useMemo(() => {
+      return applications.filter(
+        (application) => {
+          const candidateName =
+            getCandidateName(
+              application
+            ).toLowerCase();
 
-      const jobTitle =
-        getJobTitle(application).toLowerCase();
+          const email =
+            getCandidateEmail(
+              application
+            ).toLowerCase();
 
-      const search =
-        searchTerm.trim().toLowerCase();
+          const jobTitle =
+            getJobTitle(
+              application
+            ).toLowerCase();
 
-      const matchesSearch =
-        !search ||
-        candidateName.includes(search) ||
-        email.includes(search) ||
-        jobTitle.includes(search);
+          const companyName =
+            getCompanyName(
+              application
+            ).toLowerCase();
 
-      const applicationStatus =
-        String(getStatus(application)).toLowerCase();
+          const search =
+            searchTerm
+              .trim()
+              .toLowerCase();
 
-      const matchesStatus =
-        statusFilter === "All" ||
-        applicationStatus ===
-          statusFilter.toLowerCase();
+          const matchesSearch =
+            !search ||
+            candidateName.includes(
+              search
+            ) ||
+            email.includes(search) ||
+            jobTitle.includes(
+              search
+            ) ||
+            companyName.includes(
+              search
+            );
 
-      const applicationJobId =
-        String(getJobId(application));
+          const applicationStatus =
+            String(
+              getStatus(application)
+            ).toLowerCase();
 
-      const matchesJob =
-        jobFilter === "All" ||
-        applicationJobId === String(jobFilter);
+          const matchesStatus =
+            statusFilter === "All" ||
+            applicationStatus ===
+              statusFilter.toLowerCase();
 
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesJob
+          const applicationJobId =
+            getJobId(application);
+
+          const matchesJob =
+            jobFilter === "All" ||
+            applicationJobId ===
+              String(jobFilter);
+
+          return (
+            matchesSearch &&
+            matchesStatus &&
+            matchesJob
+          );
+        }
       );
-    });
-  }, [
-    applications,
-    searchTerm,
-    statusFilter,
-    jobFilter,
-  ]);
+    }, [
+      applications,
+      jobs,
+      searchTerm,
+      statusFilter,
+      jobFilter,
+    ]);
 
-  const statusCounts = useMemo(() => {
-    const counts = {
-      All: applications.length,
-      Pending: 0,
-      Shortlisted: 0,
-      Rejected: 0,
-      Hired: 0,
-    };
+  /* =========================================
+     STATUS COUNTS
+  ========================================= */
 
-    applications.forEach((application) => {
-      const status = String(
-        getStatus(application)
-      ).toLowerCase();
+  const statusCounts =
+    useMemo(() => {
+      const counts = {
+        All: applications.length,
+        Pending: 0,
+        Shortlisted: 0,
+        Rejected: 0,
+        Hired: 0,
+      };
 
-      if (status === "pending") {
-        counts.Pending += 1;
-      } else if (status === "shortlisted") {
-        counts.Shortlisted += 1;
-      } else if (status === "rejected") {
-        counts.Rejected += 1;
-      } else if (status === "hired") {
-        counts.Hired += 1;
-      }
-    });
+      applications.forEach(
+        (application) => {
+          const status =
+            String(
+              getStatus(application)
+            ).toLowerCase();
 
-    return counts;
-  }, [applications]);
+          if (status === "pending") {
+            counts.Pending += 1;
+          } else if (
+            status === "shortlisted"
+          ) {
+            counts.Shortlisted += 1;
+          } else if (
+            status === "rejected"
+          ) {
+            counts.Rejected += 1;
+          } else if (
+            status === "hired" ||
+            status === "selected"
+          ) {
+            counts.Hired += 1;
+          }
+        }
+      );
+
+      return counts;
+    }, [applications]);
+
+  /* =========================================
+     CLEAR FILTERS
+  ========================================= */
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -270,18 +438,37 @@ function PartnerApplications() {
     setJobFilter("All");
   };
 
+  /* =========================================
+     LOADING
+  ========================================= */
+
   if (loading) {
     return (
       <div className="partner-applications-state">
         <Users size={30} />
-        <h3>Loading applications...</h3>
-        <p>Please wait while applications are loaded.</p>
+
+        <h3>
+          Loading applications...
+        </h3>
+
+        <p>
+          Please wait while applications
+          are loaded.
+        </p>
       </div>
     );
   }
 
+  /* =========================================
+     RENDER
+  ========================================= */
+
   return (
     <div className="partner-applications">
+
+      {/* =====================================
+          HEADER
+      ===================================== */}
 
       <div className="partner-applications-header">
 
@@ -290,15 +477,21 @@ function PartnerApplications() {
             APPLICATION MANAGEMENT
           </p>
 
-          <h2>Applications</h2>
+          <h2>
+            Applications
+          </h2>
 
           <p className="partner-applications-subtitle">
-            Review and manage candidates who applied
-            to your jobs.
+            Review and manage candidates who
+            applied to your jobs.
           </p>
         </div>
 
       </div>
+
+      {/* =====================================
+          ERROR
+      ===================================== */}
 
       {error && (
         <div className="partner-applications-error">
@@ -306,9 +499,9 @@ function PartnerApplications() {
         </div>
       )}
 
-      {/* =========================
+      {/* =====================================
           STATUS SUMMARY
-      ========================= */}
+      ===================================== */}
 
       <div className="partner-application-summary">
 
@@ -319,10 +512,17 @@ function PartnerApplications() {
               ? "active"
               : ""
           }`}
-          onClick={() => setStatusFilter("All")}
+          onClick={() =>
+            setStatusFilter("All")
+          }
         >
-          <span>All Applications</span>
-          <strong>{statusCounts.All}</strong>
+          <span>
+            All Applications
+          </span>
+
+          <strong>
+            {statusCounts.All}
+          </strong>
         </button>
 
         <button
@@ -336,8 +536,13 @@ function PartnerApplications() {
             setStatusFilter("Pending")
           }
         >
-          <span>Pending</span>
-          <strong>{statusCounts.Pending}</strong>
+          <span>
+            Pending
+          </span>
+
+          <strong>
+            {statusCounts.Pending}
+          </strong>
         </button>
 
         <button
@@ -348,10 +553,15 @@ function PartnerApplications() {
               : ""
           }`}
           onClick={() =>
-            setStatusFilter("Shortlisted")
+            setStatusFilter(
+              "Shortlisted"
+            )
           }
         >
-          <span>Shortlisted</span>
+          <span>
+            Shortlisted
+          </span>
+
           <strong>
             {statusCounts.Shortlisted}
           </strong>
@@ -368,75 +578,117 @@ function PartnerApplications() {
             setStatusFilter("Hired")
           }
         >
-          <span>Hired</span>
-          <strong>{statusCounts.Hired}</strong>
+          <span>
+            Hired
+          </span>
+
+          <strong>
+            {statusCounts.Hired}
+          </strong>
         </button>
 
       </div>
 
-      {/* =========================
+      {/* =====================================
           FILTERS
-      ========================= */}
+      ===================================== */}
 
       <div className="partner-applications-filters">
 
+        {/* SEARCH */}
+
         <div className="partner-application-search">
+
           <Search size={17} />
 
           <input
             type="text"
-            placeholder="Search candidate, email or job..."
+            placeholder="Search candidate, email, company or job..."
             value={searchTerm}
             onChange={(e) =>
-              setSearchTerm(e.target.value)
+              setSearchTerm(
+                e.target.value
+              )
             }
           />
+
         </div>
 
+        {/* STATUS */}
+
         <div className="partner-application-filter">
+
           <Filter size={15} />
 
           <select
             value={statusFilter}
             onChange={(e) =>
-              setStatusFilter(e.target.value)
+              setStatusFilter(
+                e.target.value
+              )
             }
           >
-            <option value="All">All Status</option>
-            <option value="Pending">Pending</option>
+            <option value="All">
+              All Status
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
             <option value="Shortlisted">
               Shortlisted
             </option>
+
             <option value="Rejected">
               Rejected
             </option>
-            <option value="Hired">Hired</option>
+
+            <option value="Hired">
+              Hired
+            </option>
           </select>
+
         </div>
 
+        {/* JOB */}
+
         <div className="partner-application-filter">
+
           <BriefcaseIcon />
 
           <select
             value={jobFilter}
             onChange={(e) =>
-              setJobFilter(e.target.value)
+              setJobFilter(
+                e.target.value
+              )
             }
           >
-            <option value="All">All Jobs</option>
+            <option value="All">
+              All Jobs
+            </option>
 
             {jobs.map((job) => (
               <option
-                key={job._id || job.id}
-                value={job._id || job.id}
+                key={
+                  job._id || job.id
+                }
+                value={
+                  job._id || job.id
+                }
               >
-                {job.title ||
-                  job.jobTitle ||
+                {job.jobTitle ||
+                  job.title ||
                   "Untitled Job"}
               </option>
             ))}
+
           </select>
+
         </div>
+
+        {/* CLEAR */}
 
         {(searchTerm ||
           statusFilter !== "All" ||
@@ -444,7 +696,9 @@ function PartnerApplications() {
           <button
             type="button"
             className="partner-clear-filters"
-            onClick={clearFilters}
+            onClick={
+              clearFilters
+            }
           >
             Clear
           </button>
@@ -452,39 +706,54 @@ function PartnerApplications() {
 
       </div>
 
-      {/* =========================
+      {/* =====================================
           RESULTS
-      ========================= */}
+      ===================================== */}
 
       <div className="partner-applications-results">
 
         <div className="partner-results-heading">
+
           <div>
+
             <h3>
               Candidate Applications
             </h3>
 
             <p>
-              {filteredApplications.length} application
-              {filteredApplications.length !== 1
+              {filteredApplications.length}{" "}
+              application
+              {filteredApplications.length !==
+              1
                 ? "s"
-                : ""} found
+                : ""}{" "}
+              found
             </p>
+
           </div>
+
         </div>
 
-        {filteredApplications.length === 0 ? (
+        {/* ===================================
+            EMPTY
+        =================================== */}
+
+        {filteredApplications.length ===
+        0 ? (
+
           <div className="partner-applications-empty">
 
             <div className="partner-empty-icon">
               <FileText size={28} />
             </div>
 
-            <h3>No applications found</h3>
+            <h3>
+              No applications found
+            </h3>
 
             <p>
-              There are no applications matching
-              your current filters.
+              There are no applications
+              matching your current filters.
             </p>
 
             {(searchTerm ||
@@ -492,24 +761,42 @@ function PartnerApplications() {
               jobFilter !== "All") && (
               <button
                 type="button"
-                onClick={clearFilters}
+                onClick={
+                  clearFilters
+                }
               >
                 Clear Filters
               </button>
             )}
 
           </div>
+
         ) : (
+
+          /* ================================
+             APPLICATION LIST
+          ================================= */
+
           <div className="partner-application-list">
 
             {filteredApplications.map(
-              (application, index) => {
+              (
+                application,
+                index
+              ) => {
                 const applicationId =
                   application._id ||
                   application.id;
 
                 const status =
-                  getStatus(application);
+                  getStatus(
+                    application
+                  );
+
+                const companyName =
+                  getCompanyName(
+                    application
+                  );
 
                 return (
                   <div
@@ -520,19 +807,28 @@ function PartnerApplications() {
                     }
                   >
 
+                    {/* AVATAR */}
+
                     <div className="partner-application-avatar">
+
                       {getCandidateName(
                         application
                       )
                         .charAt(0)
                         .toUpperCase()}
+
                     </div>
 
+                    {/* MAIN */}
+
                     <div className="partner-application-main">
+
+                      {/* TOP */}
 
                       <div className="partner-application-top">
 
                         <div>
+
                           <h4>
                             {getCandidateName(
                               application
@@ -544,6 +840,7 @@ function PartnerApplications() {
                               application
                             )}
                           </p>
+
                         </div>
 
                         <span
@@ -556,24 +853,51 @@ function PartnerApplications() {
 
                       </div>
 
+                      {/* META */}
+
                       <div className="partner-application-meta">
 
+                        {/* JOB */}
+
                         <span>
-                          <FileText size={14} />
+                          <FileText
+                            size={14}
+                          />
+
                           {getJobTitle(
                             application
                           )}
                         </span>
 
+                        {/* COMPANY */}
+
                         <span>
-                          <MapPin size={14} />
+                          <Building2
+                            size={14}
+                          />
+
+                          {companyName}
+                        </span>
+
+                        {/* LOCATION */}
+
+                        <span>
+                          <MapPin
+                            size={14}
+                          />
+
                           {getLocation(
                             application
                           )}
                         </span>
 
+                        {/* DATE */}
+
                         <span>
-                          <CalendarDays size={14} />
+                          <CalendarDays
+                            size={14}
+                          />
+
                           Applied{" "}
                           {getAppliedDate(
                             application
@@ -583,6 +907,8 @@ function PartnerApplications() {
                       </div>
 
                     </div>
+
+                    {/* VIEW */}
 
                     <button
                       type="button"
@@ -603,6 +929,7 @@ function PartnerApplications() {
             )}
 
           </div>
+
         )}
 
       </div>
@@ -610,6 +937,10 @@ function PartnerApplications() {
     </div>
   );
 }
+
+/* =========================================
+   JOB FILTER ICON
+========================================= */
 
 function BriefcaseIcon() {
   return (
@@ -630,6 +961,7 @@ function BriefcaseIcon() {
         height="13"
         rx="2"
       />
+
       <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
     </svg>
   );

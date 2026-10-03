@@ -1,0 +1,100 @@
+.add-employee-page {
+  padding: 30px;
+  min-height: 100vh;
+  background: #f7f9fb;
+}
+
+.add-employee-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.add-employee-header p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #063d32;
+  letter-spacing: 1px;
+}
+
+.add-employee-header h2 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  color: #17202a;
+}
+
+.add-employee-header span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.back-btn {
+  border: none;
+  background: white;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #063d32;
+}
+
+.add-employee-card {
+  max-width: 650px;
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-group input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid #d7dde3;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #063d32;
+}
+
+.create-employee-btn {
+  width: 100%;
+  border: none;
+  background: #063d32;
+  color: white;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-employee-btn:hover {
+  opacity: 0.92;
+}
+
+.form-error {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #b42318;
+  font-size: 14px;
+}

@@ -1,105 +1,958 @@
+/* =========================================================
+   HOME SERVICES – RAGAS CAREER WORLD
+========================================================= */
+
 .home-services {
   width: 100%;
-  padding: 50px 40px 65px;
-  color: #10243f;
-  background: #ffffff;
+  background: #fbfaf5;
+  color: #174d3f;
   font-family: Arial, Helvetica, sans-serif;
+
+  padding: 68px 0 85px;
+
+  overflow: hidden;
 }
 
-.home-services-heading {
-  max-width: 900px;
-  margin-bottom: 30px;
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.sv-container {
+  width: 100%;
+  max-width: 1500px;
+
+  margin: 0 auto;
+  padding: 0 4vw;
 }
 
-.home-services-eyebrow {
-  margin: 0 0 10px;
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.sv-intro {
+  width: fit-content;
+  max-width: 100%;
+
+  margin: 0 auto 38px;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.sv-eyebrow {
+  margin: 0 0 8px;
+
+  padding: 6px 14px;
+
+  border: 1px solid #c9a254;
+  border-radius: 999px;
+
   color: #8c753d;
-  font-size: 11px;
-  line-height: 1;
+
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+
+  line-height: 1.2;
 }
 
-.home-services h2 {
+
+/* =========================================================
+   MAIN HEADING
+========================================================= */
+
+.sv-intro h2 {
   margin: 0;
-  color: #10243f;
-  font-size: clamp(32px, 4vw, 50px);
-  line-height: 1.08;
-  font-weight: 750;
+  padding: 0;
+
+  display: inline-block;
+
+  color: #174d3f;
+
+  font-size: clamp(38px, 4.5vw, 62px);
+
+  /*
+    Tight line spacing so the two heading
+    lines stay visually connected.
+  */
+  line-height: 0.88;
+
+  font-weight: 900;
+
+  /*
+    Makes the heading visually tighter
+    from left and right.
+  */
+  letter-spacing: -0.055em;
+
+  white-space: nowrap;
 }
 
-.home-services-heading > p:last-child {
-  max-width: 760px;
-  margin: 17px 0 0;
-  color: #666d75;
-  font-size: 14px;
-  line-height: 1.7;
+
+/* Gold second line */
+
+.sv-intro h2 em {
+  display: block;
+
+  margin: 0;
+  padding: 0;
+
+  font-style: normal;
+
+  color: #c9a254;
 }
 
-.home-services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px 24px;
+
+/* =========================================================
+   INTRO DESCRIPTION
+========================================================= */
+
+.sv-intro-text {
+  max-width: 570px;
+
+  margin: 18px 0 20px;
+
+  color: #394d48;
+
+  font-size: 16px;
+
+  line-height: 1.45;
+
+  text-align: center;
 }
 
-.home-service-card {
-  min-height: 116px;
-  padding: 19px 17px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  border: 1px solid #e3e5e7;
-  border-radius: 8px;
-  background: #ffffff;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
 
-.home-service-card:hover {
-  transform: translateY(-3px);
-  border-color: #d7bd7c;
-  box-shadow: 0 10px 25px rgba(16, 36, 63, 0.07);
-}
+/* =========================================================
+   CTA
+========================================================= */
 
-.home-service-icon {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  display: flex;
+.sv-cta {
+  display: inline-flex;
+
   align-items: center;
   justify-content: center;
-  color: #26374b;
-  background: #f1f3f4;
-  border-radius: 7px;
-}
 
-.home-service-card h3 {
-  margin: 1px 0 7px;
-  color: #24354a;
+  gap: 9px;
+
+  min-height: 52px;
+
+  padding: 0 25px;
+
+  border: 1px solid #174d3f;
+
+  background: transparent;
+
+  color: #174d3f;
+
+  font-family: Arial, Helvetica, sans-serif;
+
   font-size: 14px;
-  line-height: 1.3;
+
   font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-.home-service-card p {
-  margin: 0;
-  color: #737980;
+.sv-cta:hover {
+  background: #174d3f;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(23, 77, 63, 0.15);
+}
+
+
+/* =========================================================
+   SERVICES GRID
+========================================================= */
+
+.sv-services-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
+
+  /*
+    Keeps cards close to the intro.
+  */
+  margin-top: 0;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+========================================================= */
+
+.sv-service-card {
+  position: relative;
+
+  min-height: 175px;
+
+  padding: 20px 22px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  text-align: left;
+
+  border: 1px solid rgba(23, 77, 63, 0.14);
+
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #174d3f;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 18px rgba(23, 77, 63, 0.05);
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+
+/* =========================================================
+   CARD HOVER
+========================================================= */
+
+.sv-service-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #c9a254;
+
+  box-shadow:
+    0 14px 30px rgba(23, 77, 63, 0.11);
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.sv-card-top {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+}
+
+
+/* =========================================================
+   CARD ICON
+========================================================= */
+
+.sv-card-icon {
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: #f3efe2;
+
+  color: #174d3f;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+/* =========================================================
+   CARD ARROW
+========================================================= */
+
+.sv-card-arrow {
+  color: #c9a254;
+
+  transform: rotate(-45deg);
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+
+/* =========================================================
+   CARD CONTENT
+========================================================= */
+
+.sv-card-content {
+  margin-top: 16px;
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.sv-card-category {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8c753d;
+
   font-size: 11px;
-  line-height: 1.55;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.04em;
 }
 
-@media (max-width: 800px) {
-  .home-services-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
+.sv-card-content h3 {
+  margin: 0;
+
+  color: #174d3f;
+
+  font-size: 18px;
+
+  line-height: 1.15;
+
+  font-weight: 900;
+
+  letter-spacing: -0.02em;
+}
+
+
+/* =========================================================
+   CARD DESCRIPTION
+========================================================= */
+
+.sv-card-content p {
+  max-width: 320px;
+
+  margin: 7px 0 0;
+
+  color: #61716c;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   ACTIVE CARD
+========================================================= */
+
+.sv-service-card.is-active {
+  background:
+    linear-gradient(
+      145deg,
+      #174d3f,
+      #216653
+    );
+
+  border-color: #174d3f;
+
+  box-shadow:
+    0 16px 34px rgba(23, 77, 63, 0.20);
+}
+
+
+/* ---------- Active Icon ---------- */
+
+.sv-service-card.is-active .sv-card-icon {
+  background: #c9a254;
+
+  color: #174d3f;
+}
+
+
+/* ---------- Active Category ---------- */
+
+.sv-service-card.is-active .sv-card-category {
+  color: #c9a254;
+}
+
+
+/* ---------- Active Title ---------- */
+
+.sv-service-card.is-active .sv-card-content h3 {
+  color: #ffffff;
+}
+
+
+/* ---------- Active Description ---------- */
+
+.sv-service-card.is-active .sv-card-content p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+
+/* ---------- Active Arrow ---------- */
+
+.sv-service-card.is-active .sv-card-arrow {
+  color: #c9a254;
+
+  transform: rotate(0deg);
+}
+
+
+/* =========================================================
+   ACTIVE SERVICE DETAILS
+========================================================= */
+
+.sv-active-service {
+  margin-top: 14px;
+
+  padding: 25px 28px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #174d3f,
+      #216653
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 16px 36px rgba(23, 77, 63, 0.15);
+
+  animation: serviceReveal 0.35s ease;
+}
+
+
+/* =========================================================
+   ACTIVE SERVICE ANIMATION
+========================================================= */
+
+@keyframes serviceReveal {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(7px);
   }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
 }
 
-@media (max-width: 560px) {
+
+/* =========================================================
+   ACTIVE LABEL
+========================================================= */
+
+.sv-active-label {
+  display: inline-block;
+
+  margin-bottom: 13px;
+
+  color: #c9a254;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+}
+
+
+/* =========================================================
+   ACTIVE CONTENT
+========================================================= */
+
+.sv-active-content {
+  display: grid;
+
+  grid-template-columns:
+    1.1fr 1.5fr auto;
+
+  align-items: center;
+
+  gap: 28px;
+}
+
+
+/* =========================================================
+   ACTIVE CATEGORY
+========================================================= */
+
+.sv-active-category {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #c9a254;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ACTIVE TITLE
+========================================================= */
+
+.sv-active-content h3 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 24px;
+
+  line-height: 1.1;
+
+  font-weight: 900;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   ACTIVE DESCRIPTION
+========================================================= */
+
+.sv-active-content p {
+  max-width: 400px;
+
+  margin: 7px 0 0;
+
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 13px;
+
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   ACTIVE POINTS
+========================================================= */
+
+.sv-active-points {
+  list-style: none;
+
+  margin: 0;
+
+  padding: 0;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 6px 16px;
+}
+
+
+.sv-active-points li {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 7px;
+
+  color: rgba(255, 255, 255, 0.9);
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   CHECK
+========================================================= */
+
+.sv-check {
+  flex-shrink: 0;
+
+  width: 17px;
+  height: 17px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #c9a254;
+
+  color: #174d3f;
+
+  font-size: 10px;
+
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   ENQUIRE BUTTON
+========================================================= */
+
+.sv-enquire {
+  min-height: 46px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  white-space: nowrap;
+
+  border: 1px solid #c9a254;
+
+  background: #c9a254;
+
+  color: #174d3f;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.sv-enquire:hover {
+  background: transparent;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+.sv-service-card:focus-visible,
+.sv-enquire:focus-visible,
+.sv-cta:focus-visible {
+
+  outline: 3px solid #c9a254;
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .sv-container {
+    padding: 0 3vw;
+  }
+
+  .sv-services-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .sv-active-content {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sv-enquire {
+    grid-column: 1 / -1;
+
+    justify-self: start;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+
   .home-services {
-    padding: 40px 20px 50px;
+    padding: 55px 0 65px;
   }
 
-  .home-services-grid {
-    grid-template-columns: 1fr;
+  .sv-container {
+    padding: 0 18px;
   }
+
+
+  /* ---------- Intro ---------- */
+
+  .sv-intro {
+    width: 100%;
+
+    margin-bottom: 34px;
+  }
+
+  .sv-eyebrow {
+    margin-bottom: 7px;
+  }
+
+
+  /* ---------- Mobile Heading ---------- */
+
+  .sv-intro h2 {
+
+    /*
+      Allow heading to fit mobile screens.
+    */
+
+    width: 100%;
+
+    font-size: clamp(34px, 10vw, 46px);
+
+    line-height: 0.9;
+
+    letter-spacing: -0.05em;
+
+    white-space: normal;
+  }
+
+
+  .sv-intro h2 em {
+    display: block;
+  }
+
+
+  /* ---------- Description ---------- */
+
+  .sv-intro-text {
+    max-width: 500px;
+
+    margin: 14px 0 19px;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+  }
+
+
+  /* ---------- CTA ---------- */
+
+  .sv-cta {
+    min-height: 50px;
+
+    padding: 0 21px;
+  }
+
+
+  /* ---------- Cards ---------- */
+
+  .sv-services-grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+    margin-top: 0;
+  }
+
+
+  .sv-service-card {
+
+    min-height: 165px;
+
+    padding: 19px 20px;
+  }
+
+
+  .sv-card-icon {
+
+    width: 44px;
+    height: 44px;
+  }
+
+
+  .sv-card-content {
+
+    margin-top: 14px;
+  }
+
+
+  .sv-card-content h3 {
+
+    font-size: 18px;
+  }
+
+
+  .sv-card-content p {
+
+    font-size: 13px;
+  }
+
+
+  /* ---------- Active Service ---------- */
+
+  .sv-active-service {
+
+    margin-top: 12px;
+
+    padding: 22px 20px;
+  }
+
+
+  .sv-active-content {
+
+    grid-template-columns: 1fr;
+
+    gap: 19px;
+  }
+
+
+  .sv-active-content h3 {
+
+    font-size: 22px;
+  }
+
+
+  .sv-active-content p {
+
+    font-size: 13px;
+  }
+
+
+  .sv-active-points {
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+  }
+
+
+  .sv-enquire {
+
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .sv-container {
+    padding: 0 14px;
+  }
+
+
+  .sv-service-card {
+
+    min-height: 155px;
+
+    padding: 18px;
+  }
+
+
+  .sv-card-icon {
+
+    width: 42px;
+    height: 42px;
+  }
+
+
+  .sv-card-content h3 {
+
+    font-size: 17px;
+  }
+
+
+  .sv-card-content p {
+
+    font-size: 12px;
+  }
+
+
+  .sv-active-content h3 {
+
+    font-size: 21px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .sv-service-card,
+  .sv-card-icon,
+  .sv-card-arrow,
+  .sv-cta,
+  .sv-enquire {
+
+    transition: none;
+  }
+
+  .sv-active-service {
+
+    animation: none;
+  }
+
 }

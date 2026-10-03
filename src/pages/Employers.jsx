@@ -1,136 +1,79 @@
 import { useNavigate } from "react-router-dom";
 import "./Employers.css";
 
-const hiringSteps = [
+const benefits = [
   {
-    number: "1",
-    title: "Register & verify",
-    text: "Submit company details for admin verification",
+    title: "Verified talent",
+    text: "Access qualified professionals aligned with your requirements.",
   },
   {
-    number: "2",
-    title: "Post a job",
-    text: "Self-service form, published after approval",
+    title: "Smart hiring",
+    text: "Streamline candidate sourcing, screening and selection.",
   },
   {
-    number: "3",
-    title: "Review applicants",
-    text: "Manage candidates from your dashboard",
+    title: "Expert support",
+    text: "Recruitment support for specialised hiring requirements.",
   },
-  {
-    number: "4",
-    title: "Hire",
-    text: "Request executive search or RPO for bulk hiring",
-  },
-];
-
-const features = [
-  "Company verification workflow",
-  "Applicant dashboard with status tracking",
-  "Downloadable hiring-requirement submission",
 ];
 
 function Employers() {
   const navigate = useNavigate();
 
   return (
-    <main className="employers-page">
-      <section className="employers-section">
+    <main className="emp-page">
+      <section className="emp-hero">
+        {/* LEFT: message + action */}
+        <div className="emp-copy">
+          <p className="emp-kicker">For agents</p>
 
-        {/* HERO */}
-        <div className="employers-hero">
-          <p className="employers-eyebrow">
-            FOR EMPLOYERS
+         <h1 className="emp-title">
+  <span className="emp-title-green">Hiring that moves</span>
+  <span className="emp-title-gold">business forward.</span>
+</h1>
+
+          <span className="emp-rule" aria-hidden="true"></span>
+
+          <p className="emp-lead">
+            Connect your company with qualified, verified talent.
           </p>
 
-          <h1>
-            Hire verified talent, faster.
-          </h1>
-
-          <p className="employers-description">
-            Post roles, manage applicants, and request executive search or
-            bulk hiring support — all from one employer dashboard.
-          </p>
-
-          <div className="employers-buttons">
-
-            {/* REGISTER AS EMPLOYER */}
-            <button
-              type="button"
-              className="employer-btn gold"
-              onClick={() => navigate("/employer-registration")}
-            >
-              Register as Employer
-            </button>
-
-            {/* POST A JOB */}
-            <a
-              href="/post-a-job"
-              className="employer-btn outline"
-              onClick={(event) => {
-                event.preventDefault();
-                navigate("/post-a-job");
-              }}
-            >
-              Post a Job
-            </a>
-
-          </div>
+          <button
+            type="button"
+            className="emp-btn"
+            onClick={() => navigate("/employee-login")}
+          >
+            <span>Login as agent</span>
+            <span className="emp-btn-arrow" aria-hidden="true">↗</span>
+          </button>
         </div>
 
-        {/* HIRING PROCESS */}
-        <div className="hiring-process">
+        {/* RIGHT: ecosystem panel */}
+        <aside className="emp-panel" aria-label="Ragas agents ecosystem">
+          <header className="emp-panel-head">
+            <span className="emp-panel-brand">Ragas</span>
+            <span className="emp-panel-sub">Agents ecosystem</span>
+          </header>
 
-          <p className="process-eyebrow">
-            HIRING PROCESS
-          </p>
-
-          <h2>
-            How It Works for Companies
-          </h2>
-
-          <div className="steps-grid">
-
-            {hiringSteps.map((step) => (
-              <div
-                className="step"
-                key={step.number}
-              >
-                <div className="step-number">
-                  {step.number}
+          <ul className="emp-list">
+            {benefits.map((item, i) => (
+              <li className="emp-item" style={{ "--i": i }} key={item.title}>
+                <span className="emp-item-mark" aria-hidden="true"></span>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
                 </div>
-
-                <h3>
-                  {step.title}
-                </h3>
-
-                <p>
-                  {step.text}
-                </p>
-              </div>
+              </li>
             ))}
+          </ul>
 
-          </div>
-        </div>
-
-        {/* FEATURES */}
-        <div className="employer-features">
-
-          {features.map((feature, index) => (
-            <div
-              className="employer-feature"
-              key={index}
-            >
-              <span>✓</span>
-
-              <p>
-                {feature}
-              </p>
-            </div>
-          ))}
-
-        </div>
-
+          <footer className="emp-panel-foot">
+            <span>People</span>
+            <i aria-hidden="true"></i>
+            <span>Business</span>
+            <i aria-hidden="true"></i>
+            <span>Opportunity</span>
+          </footer>
+        </aside>
       </section>
     </main>
   );

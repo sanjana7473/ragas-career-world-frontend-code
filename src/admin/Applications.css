@@ -366,3 +366,122 @@
     width: 100%;
   }
 }
+/* =========================================================
+   COMPANY COLUMN
+========================================================= */
+
+.application-company {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 180px;
+}
+
+.application-company-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  background: #e8f1ee;
+  color: #063d32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.application-company > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.application-company strong {
+  color: #263a33;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.application-company span {
+  color: #8a9893;
+  font-size: 10px;
+}
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+.applications-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.applications-refresh:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.applications-spin,
+.applications-loader-icon {
+  animation: applicationsSpin 1s linear infinite;
+}
+
+@keyframes applicationsSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.application-status.status-applied {
+  background: #eef3f1;
+  color: #53645e;
+}
+
+.application-status.status-under-review {
+  background: #fff5df;
+  color: #9a6a00;
+}
+
+.application-status.status-shortlisted {
+  background: #e8f4ee;
+  color: #18704d;
+}
+
+.application-status.status-interview {
+  background: #eaf1fb;
+  color: #35629a;
+}
+
+.application-status.status-selected {
+  background: #e4f6ec;
+  color: #147344;
+}
+
+.application-status.status-rejected {
+  background: #fbeaea;
+  color: #a33a3a;
+}
+
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
+
+.application-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}

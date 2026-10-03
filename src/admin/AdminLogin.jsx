@@ -26,8 +26,7 @@ function AdminLogin() {
     setLoading(true);
 
     try {
-      const API_URL =
-        API_BASE_URL;
+     const API_URL = API_BASE_URL;
 
       const response = await fetch(
         `${API_URL}/api/auth/admin/login`,

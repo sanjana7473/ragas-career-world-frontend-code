@@ -1,0 +1,354 @@
+/* =========================================
+   EMPLOYEE SIDEBAR
+========================================= */
+
+.employee-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #063d32;
+  color: #ffffff;
+
+  padding: 24px 16px;
+  box-sizing: border-box;
+
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.employee-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 4px 10px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.employee-sidebar-logo {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  color: #063d32;
+
+  border-radius: 10px;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.employee-sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.employee-sidebar-brand-text h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.employee-sidebar-brand-text span {
+  margin-top: 4px;
+
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* =========================================
+   EMPLOYEE PROFILE
+========================================= */
+
+.employee-sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 20px 10px;
+}
+
+.employee-sidebar-avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.employee-sidebar-user-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-sidebar-user-info strong {
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.employee-sidebar-user-info span {
+  margin-top: 3px;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.employee-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  flex: 1;
+}
+
+.employee-sidebar-link {
+  width: 100%;
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border-radius: 9px;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.employee-sidebar-link svg {
+  flex-shrink: 0;
+}
+
+.employee-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+}
+
+.employee-sidebar-link.active {
+  background: #ffffff;
+  color: #063d32;
+  font-weight: 700;
+}
+
+.employee-sidebar-link.active:hover {
+  background: #ffffff;
+  color: #063d32;
+}
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.employee-sidebar-bottom {
+  margin-top: auto;
+
+  padding-top: 18px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.employee-sidebar-logout {
+  width: 100%;
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 0 14px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.employee-sidebar-logout:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+.employee-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.employee-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.employee-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .employee-sidebar {
+    width: 230px;
+    min-width: 230px;
+  }
+
+  .employee-sidebar-link {
+    font-size: 13px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .employee-sidebar {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    min-height: auto;
+
+    position: relative;
+
+    padding: 16px;
+  }
+
+  .employee-sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .employee-sidebar-link {
+    width: auto;
+    flex: 1 1 140px;
+  }
+
+  .employee-sidebar-bottom {
+    margin-top: 15px;
+  }
+}
+/* =========================================
+   EMPLOYEE PAGE - WIDTH FIX
+========================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.employee-layout {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+
+  display: flex;
+}
+
+/* Main content should use remaining screen */
+.employee-main,
+.employee-content,
+.employee-page {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Prevent fixed narrow containers */
+.employee-layout .container,
+.employee-layout .page-container {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+@media (max-width: 700px) {
+  .employee-layout {
+    display: block;
+    width: 100%;
+  }
+
+  .employee-main {
+    width: 100%;
+    min-width: 0;
+    padding: 70px 16px 20px;
+  }
+}

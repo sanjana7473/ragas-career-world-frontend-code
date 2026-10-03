@@ -1,0 +1,173 @@
+/* =========================================================
+   EMPLOYEE MOBILE DRAWER  (override file)
+
+   IMPORT THIS FILE LAST, after every other css import,
+   so it wins over any older sidebar / layout styles.
+   Works at 900px and below.
+========================================================= */
+
+/* Hidden on desktop */
+.employee-mobile-topbar,
+.employee-sidebar-overlay,
+.employee-sidebar-close {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .employee-layout {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .employee-layout-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* ---------- Top bar with hamburger ---------- */
+
+  .employee-mobile-topbar {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+
+    position: sticky;
+    top: 0;
+    z-index: 900;
+
+    padding: 10px 14px;
+    background: #063d32;
+    color: #ffffff;
+  }
+
+  .employee-menu-toggle,
+  .employee-sidebar-close {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .employee-topbar-title {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+
+  /* ---------- Overlay ---------- */
+
+  .employee-sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .employee-sidebar-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---------- Drawer ---------- */
+
+  .employee-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 1100 !important;
+
+    width: min(280px, 82vw) !important;
+    min-width: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    padding: 24px 16px !important;
+    overflow-y: auto !important;
+
+    transform: translateX(-100%) !important;
+    visibility: hidden !important;
+    transition:
+      transform 0.28s ease,
+      visibility 0s linear 0.28s;
+  }
+
+  .employee-sidebar.open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    transition:
+      transform 0.28s ease,
+      visibility 0s;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.35);
+  }
+
+  .employee-sidebar {
+    justify-content: flex-start !important;
+  }
+
+  .employee-sidebar .employee-sidebar-nav {
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    align-content: flex-start !important;
+    gap: 6px !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .employee-sidebar .employee-sidebar-link {
+    width: 100% !important;
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 46px !important;
+    max-height: none !important;
+    margin: 0 !important;
+  }
+
+  /* Logout sits at the bottom of the drawer */
+  .employee-sidebar .employee-sidebar-bottom {
+    margin-top: auto !important;
+    padding-top: 18px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .employee-sidebar-close {
+    display: flex !important;
+    position: absolute;
+    top: 14px;
+    right: 14px;
+  }
+
+  .employee-sidebar-brand {
+    padding-right: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .employee-sidebar,
+  .employee-sidebar-overlay {
+    transition: none !important;
+  }
+}

@@ -1,244 +1,313 @@
-.employers-page {
+/* =========================================================
+   EMPLOYERS PAGE – RAGAS CAREER WORLD
+   Palette: cream #fbfaf5 · green #174d3f / #216653 · gold #c9a254
+========================================================= */
+
+.emp-page {
   width: 100%;
-  min-height: 100%;
   background: #fbfaf5;
-  color: #102f2a;
+  color: #174d3f;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  overflow: hidden;
 }
 
-.employers-section {
+.emp-hero {
   width: 100%;
-  min-height: calc(100vh - 78px);
-  padding: 20px 3vw 35px;
-  background: #fbfaf5;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 640px;
+  padding: 80px 0 96px;
+
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 40px;
+  align-items: center;
 }
 
+/* ---------- Left copy ---------- */
 
-
-.employers-hero {
-  width: 100%;
+.emp-copy {
+  max-width: 600px;
 }
 
-.employers-eyebrow,
-.process-eyebrow {
-  margin: 0 0 14px;
-  color: #a77a2c;
-  font-size: 14px;
+.emp-kicker {
+  display: inline-block;
+  margin: 0 0 22px;
+  padding: 6px 14px;
+
+  border: 1px solid #c9a254;
+  border-radius: 999px;
+
+  color: #8c753d;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.5px;
 }
 
-.employers-hero h1 {
+.emp-title {
   margin: 0;
-  color: #10342f;
-  font-size: clamp(38px, 3.1vw, 52px);
-  line-height: 1.08;
-  font-weight: 800;
-  letter-spacing: -1.5px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(38px, 4vw, 60px);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.04em;
 }
 
-.employers-description {
-  max-width: 900px;
-  margin: 18px 0 12px;
-  color: #394449;
-  font-size: 17px;
+.emp-title-green {
+  display: block;
+  color: #174d3f;
+}
+
+.emp-title-gold {
+  display: block;
+  color: #c9a254;
+}
+
+.emp-rule {
+  display: block;
+  width: 72px;
+  height: 4px;
+  margin: 28px 0;
+  background: #c9a254;
+}
+
+.emp-lead {
+  margin: 0 0 34px;
+  max-width: 420px;
+  color: #394d48;
+  font-size: clamp(17px, 1.5vw, 20px);
   line-height: 1.55;
 }
 
-.employers-buttons {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 10px;
-}
+/* ---------- Button ---------- */
 
-.employer-btn {
-  height: 46px;
-  padding: 0 26px;
+.emp-btn {
+  position: relative;
+  overflow: hidden;
+
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-
-  border-radius: 8px;
-
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 700;
-
-  transition: all 0.25s ease;
-}
-
-.employer-btn.gold {
-  background: #c9a254;
-  color: #102f2a;
-  border: 1px solid #c9a254;
-}
-
-.employer-btn.gold:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(90, 70, 30, 0.15);
-}
-
-.employer-btn.outline {
-  background: #ffffff;
-  color: #102f2a;
-  border: 2px solid #24463f;
-}
-
-.employer-btn.outline:hover {
-  background: #f4f1e9;
-  transform: translateY(-2px);
-}
-
-.hiring-process {
-  width: 100%;
-  margin-top: 22px;
-}
-
-.process-eyebrow {
-  margin-bottom: 14px;
-}
-
-.hiring-process h2 {
-  margin: 0;
-  color: #10342f;
-  font-size: 25px;
-  line-height: 1.2;
-  font-weight: 800;
-}
-
-
-
-.steps-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin-top: 24px;
-}
-
-.step {
-  text-align: center;
-  padding: 0 25px;
-}
-
-.step-number {
-  width: 46px;
-  height: 46px;
-  margin: 0 auto 10px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #c9a254;
-  color: #102f2a;
-
-  font-size: 21px;
-  font-weight: 700;
-}
-
-.step h3 {
-  margin: 0 0 2px;
-  color: #151c1d;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.step p {
-  margin: 0;
-  color: #596065;
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-.employer-features {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
-  margin-top: 26px;
-}
 
-.employer-feature {
-  min-height: 69px;
+  padding: 17px 26px;
 
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  border: 1px solid #c9a254;
+  background: #c9a254;
+  color: #174d3f;
 
-  padding: 15px 27px;
-
-  background: #ffffff;
-  border: 1px solid #e1ddd2;
-  border-radius: 13px;
-
-  box-shadow: 0 2px 5px rgba(30, 40, 35, 0.02);
-}
-
-.employer-feature span {
-  flex-shrink: 0;
-  color: #102f2a;
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.employer-feature p {
-  margin: 0;
-  color: #1f2930;
+  font: inherit;
   font-size: 15px;
-  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+
+  transition: color 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 1000px) {
-  .employers-section {
-    padding: 25px 30px 35px;
-  }
+.emp-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #174d3f;
+  transform: translateX(-101%);
+  transition: transform 0.35s ease;
+}
 
-  .steps-grid {
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: 25px;
-  }
+.emp-btn span {
+  position: relative;
+  z-index: 1;
+}
 
-  .employer-features {
+.emp-btn:hover,
+.emp-btn:focus-visible {
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(23, 77, 63, 0.18);
+}
+
+.emp-btn:hover::before,
+.emp-btn:focus-visible::before {
+  transform: translateX(0);
+}
+
+.emp-btn:focus-visible {
+  outline: 3px solid #174d3f;
+  outline-offset: 3px;
+}
+
+.emp-btn-arrow {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.emp-btn:hover .emp-btn-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ---------- Right panel ---------- */
+
+.emp-panel {
+  position: relative;
+  padding: 36px 34px 28px;
+
+  background: linear-gradient(145deg, #174d3f, #216653);
+  color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 30px 60px rgba(23, 77, 63, 0.22);
+}
+
+/* offset gold frame behind the panel */
+.emp-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate(14px, 14px);
+  border: 1px solid #c9a254;
+  border-radius: 6px;
+  z-index: -1;
+}
+
+.emp-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(201, 162, 84, 0.45);
+}
+
+.emp-panel-brand {
+  color: #c9a254;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.emp-panel-sub {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+.emp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emp-item {
+  display: flex;
+  gap: 18px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+  /* the one entrance moment */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: empReveal 0.6s ease forwards;
+  animation-delay: calc(0.15s + var(--i) * 0.14s);
+}
+
+.emp-item-mark {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  margin-top: 6px;
+  background: #c9a254;
+  transform: rotate(45deg);
+}
+
+.emp-item h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.emp-item p {
+  margin: 0;
+  max-width: 320px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+@keyframes empReveal {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.emp-panel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 22px;
+
+  color: #c9a254;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.emp-panel-foot i {
+  width: 18px;
+  height: 1px;
+  background: #c9a254;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .emp-hero {
     grid-template-columns: 1fr;
+    gap: 56px;
+    min-height: auto;
+    padding: 44px 18px 56px;
+  }
+
+  .emp-panel {
+    margin-right: 14px;
   }
 }
 
-@media (max-width: 600px) {
-  .employers-section {
-    min-height: calc(100vh - 72px);
-    padding: 25px 20px;
+@media (max-width: 520px) {
+  .emp-title {
+    font-size: clamp(36px, 11vw, 48px);
   }
 
-  .employers-hero h1 {
-    font-size: 38px;
-  }
-
-  .employers-description {
-    font-size: 15px;
-  }
-
-  .employers-buttons {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .employer-btn {
+  .emp-btn {
     width: 100%;
+    justify-content: space-between;
   }
 
-  .steps-grid {
-    grid-template-columns: 1fr;
-    gap: 25px;
+  .emp-panel {
+    padding: 28px 22px 22px;
   }
 
-  .employer-features {
-    grid-template-columns: 1fr;
+  .emp-panel-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .emp-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 
-  .employer-feature {
-    padding: 15px 18px;
+  .emp-btn,
+  .emp-btn::before,
+  .emp-btn-arrow {
+    transition: none;
   }
 }

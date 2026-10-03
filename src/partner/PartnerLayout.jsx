@@ -19,19 +19,31 @@ function PartnerLayout() {
   let partner = null;
 
   try {
-    const savedPartner = localStorage.getItem("ragasPartner");
+    const savedPartner =
+      localStorage.getItem("ragasPartner");
 
     if (savedPartner) {
       partner = JSON.parse(savedPartner);
     }
   } catch (error) {
-    console.error("Invalid partner data:", error);
+    console.error(
+      "Invalid partner data:",
+      error
+    );
   }
 
   const handleLogout = () => {
-    localStorage.removeItem("ragasPartnerToken");
-    localStorage.removeItem("ragasPartnerLoggedIn");
-    localStorage.removeItem("ragasPartner");
+    localStorage.removeItem(
+      "ragasPartnerToken"
+    );
+
+    localStorage.removeItem(
+      "ragasPartnerLoggedIn"
+    );
+
+    localStorage.removeItem(
+      "ragasPartner"
+    );
 
     navigate("/partner-login");
   };
@@ -40,15 +52,27 @@ function PartnerLayout() {
     setSidebarOpen(false);
   };
 
+  const partnerEmail =
+    partner?.email || "Partner Account";
+
+  const companyName =
+    partner?.companyName || "Partner";
+
   return (
     <div className="partner-layout">
 
-      {/* MOBILE TOP BAR */}
+      {/* =====================================================
+          MOBILE TOP BAR
+      ===================================================== */}
+
       <div className="partner-mobile-header">
+
         <button
           type="button"
           className="partner-menu-btn"
-          onClick={() => setSidebarOpen(true)}
+          onClick={() =>
+            setSidebarOpen(true)
+          }
         >
           <Menu size={22} />
         </button>
@@ -56,9 +80,13 @@ function PartnerLayout() {
         <div className="partner-mobile-title">
           Partner Panel
         </div>
+
       </div>
 
-      {/* OVERLAY */}
+      {/* =====================================================
+          OVERLAY
+      ===================================================== */}
+
       {sidebarOpen && (
         <div
           className="partner-sidebar-overlay"
@@ -66,17 +94,26 @@ function PartnerLayout() {
         />
       )}
 
-      {/* SIDEBAR */}
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
+
       <aside
         className={`partner-sidebar ${
-          sidebarOpen ? "partner-sidebar-open" : ""
+          sidebarOpen
+            ? "partner-sidebar-open"
+            : ""
         }`}
       >
 
-        {/* SIDEBAR HEADER */}
+        {/* ===================================================
+            SIDEBAR HEADER
+        =================================================== */}
+
         <div className="partner-sidebar-header">
 
           <div className="partner-panel-brand">
+
             <div className="partner-panel-brand-name">
               RAGAS
             </div>
@@ -84,6 +121,7 @@ function PartnerLayout() {
             <div className="partner-panel-brand-subtitle">
               CAREER WORLD
             </div>
+
           </div>
 
           <button
@@ -96,7 +134,10 @@ function PartnerLayout() {
 
         </div>
 
-        {/* PARTNER INFO */}
+        {/* ===================================================
+            PARTNER INFO
+        =================================================== */}
+
         <div className="partner-sidebar-profile">
 
           <div className="partner-avatar">
@@ -105,26 +146,35 @@ function PartnerLayout() {
 
           <div className="partner-profile-text">
 
+            {/* Company name remains here */}
+
             <strong>
-              {partner?.companyName || "Partner"}
+              {companyName}
             </strong>
 
+            {/* Login email */}
+
             <span>
-              {partner?.email || "Partner Account"}
+              {partnerEmail}
             </span>
 
           </div>
 
         </div>
 
-        {/* NAVIGATION */}
+        {/* ===================================================
+            NAVIGATION
+        =================================================== */}
+
         <nav className="partner-sidebar-nav">
 
           <NavLink
             to="/partner-dashboard"
             className={({ isActive }) =>
               `partner-nav-link ${
-                isActive ? "partner-nav-active" : ""
+                isActive
+                  ? "partner-nav-active"
+                  : ""
               }`
             }
             onClick={closeSidebar}
@@ -137,7 +187,9 @@ function PartnerLayout() {
             to="/partner-dashboard/post-job"
             className={({ isActive }) =>
               `partner-nav-link ${
-                isActive ? "partner-nav-active" : ""
+                isActive
+                  ? "partner-nav-active"
+                  : ""
               }`
             }
             onClick={closeSidebar}
@@ -150,7 +202,9 @@ function PartnerLayout() {
             to="/partner-dashboard/jobs"
             className={({ isActive }) =>
               `partner-nav-link ${
-                isActive ? "partner-nav-active" : ""
+                isActive
+                  ? "partner-nav-active"
+                  : ""
               }`
             }
             onClick={closeSidebar}
@@ -163,7 +217,9 @@ function PartnerLayout() {
             to="/partner-dashboard/applications"
             className={({ isActive }) =>
               `partner-nav-link ${
-                isActive ? "partner-nav-active" : ""
+                isActive
+                  ? "partner-nav-active"
+                  : ""
               }`
             }
             onClick={closeSidebar}
@@ -176,7 +232,9 @@ function PartnerLayout() {
             to="/partner-dashboard/profile"
             className={({ isActive }) =>
               `partner-nav-link ${
-                isActive ? "partner-nav-active" : ""
+                isActive
+                  ? "partner-nav-active"
+                  : ""
               }`
             }
             onClick={closeSidebar}
@@ -187,7 +245,10 @@ function PartnerLayout() {
 
         </nav>
 
-        {/* LOGOUT */}
+        {/* ===================================================
+            LOGOUT
+        =================================================== */}
+
         <div className="partner-sidebar-footer">
 
           <button
@@ -203,36 +264,51 @@ function PartnerLayout() {
 
       </aside>
 
-      {/* MAIN CONTENT */}
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
+
       <div className="partner-content">
 
-        {/* DESKTOP TOP HEADER */}
+        {/* ===================================================
+            DESKTOP TOP HEADER
+        =================================================== */}
+
         <header className="partner-top-header">
 
           <div>
+
             <p className="partner-top-eyebrow">
               PARTNER PORTAL
             </p>
 
             <h1>
               Welcome,{" "}
-              {partner?.companyName || "Partner"}
+              {partnerEmail}
             </h1>
+
           </div>
+
+          {/* =================================================
+              TOP RIGHT ACCOUNT
+          ================================================= */}
 
           <div className="partner-top-account">
 
             <UserCircle size={22} />
 
             <span>
-              {partner?.contactPerson || "Partner"}
+              {partnerEmail}
             </span>
 
           </div>
 
         </header>
 
-        {/* PAGE CONTENT */}
+        {/* ===================================================
+            PAGE CONTENT
+        =================================================== */}
+
         <main className="partner-page-content">
           <Outlet />
         </main>

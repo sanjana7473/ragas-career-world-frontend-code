@@ -7,8 +7,11 @@ function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   let storedAdmin = null;
+
   try {
-    storedAdmin = JSON.parse(localStorage.getItem("ragasAdmin") || "{}");
+    storedAdmin = JSON.parse(
+      localStorage.getItem("ragasAdmin") || "{}"
+    );
   } catch {
     storedAdmin = null;
   }
@@ -17,6 +20,9 @@ function AdminLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem("ragasAdminLoggedIn");
+    localStorage.removeItem("ragasAdminToken");
+    localStorage.removeItem("ragasAdmin");
+
     window.location.href = "/admin/login";
   };
 
@@ -27,7 +33,10 @@ function AdminLayout() {
   return (
     <div className="admin-layout">
 
-      {/* MOBILE OVERLAY */}
+      {/* =================================================
+          MOBILE OVERLAY
+      ================================================= */}
+
       {sidebarOpen && (
         <div
           className="admin-sidebar-overlay"
@@ -35,7 +44,11 @@ function AdminLayout() {
         ></div>
       )}
 
-      {/* SIDEBAR */}
+
+      {/* =================================================
+          SIDEBAR
+      ================================================= */}
+
       <aside
         className={`admin-sidebar ${
           sidebarOpen ? "sidebar-open" : ""
@@ -43,6 +56,7 @@ function AdminLayout() {
       >
 
         {/* MOBILE CLOSE BUTTON */}
+
         <button
           className="admin-mobile-close"
           onClick={closeSidebar}
@@ -51,31 +65,48 @@ function AdminLayout() {
           ×
         </button>
 
-        {/* BRAND */}
+
+        {/* =================================================
+            BRAND
+        ================================================= */}
+
         <div className="admin-brand">
+
           <img
             src={ragasLogo}
             alt="RAGAS Career World"
             className="admin-brand-logo"
           />
 
-        
         </div>
 
-        {/* ADMIN USER */}
+
+        {/* =================================================
+            ADMIN USER
+        ================================================= */}
+
         <div className="admin-user">
-          <div className="admin-avatar">{adminName?.charAt(0)?.toUpperCase() || "A"}</div>
+
+          <div className="admin-avatar">
+            {adminName?.charAt(0)?.toUpperCase() || "A"}
+          </div>
 
           <div>
             <strong>{adminName}</strong>
             <span>Administrator</span>
           </div>
+
         </div>
 
-        {/* NAVIGATION */}
+
+        {/* =================================================
+            NAVIGATION
+        ================================================= */}
+
         <nav className="admin-nav">
 
           {/* DASHBOARD */}
+
           <NavLink
             to="/admin"
             end
@@ -85,7 +116,9 @@ function AdminLayout() {
             Dashboard
           </NavLink>
 
+
           {/* CHATBOT LOGS */}
+
           <NavLink
             to="/admin/chatbot-logs"
             onClick={closeSidebar}
@@ -94,7 +127,9 @@ function AdminLayout() {
             Chatbot Logs
           </NavLink>
 
+
           {/* APPLICATIONS */}
+
           <NavLink
             to="/admin/applications"
             onClick={closeSidebar}
@@ -103,7 +138,9 @@ function AdminLayout() {
             Applications
           </NavLink>
 
+
           {/* CANDIDATES */}
+
           <NavLink
             to="/admin/candidates"
             onClick={closeSidebar}
@@ -112,7 +149,9 @@ function AdminLayout() {
             Candidates
           </NavLink>
 
+
           {/* JOB POSTS */}
+
           <NavLink
             to="/admin/jobs"
             onClick={closeSidebar}
@@ -121,7 +160,22 @@ function AdminLayout() {
             Job Posts
           </NavLink>
 
+
+          {/* =================================================
+              EMPLOYERS
+          ================================================= */}
+
+          <NavLink
+            to="/admin/employers"
+            onClick={closeSidebar}
+          >
+            <span>▥</span>
+            Agents
+          </NavLink>
+
+
           {/* CONTACT MESSAGES */}
+
           <NavLink
             to="/admin/contact-messages"
             onClick={closeSidebar}
@@ -130,7 +184,9 @@ function AdminLayout() {
             Contact Messages
           </NavLink>
 
+
           {/* PARTNERS */}
+
           <NavLink
             to="/admin/partners"
             onClick={closeSidebar}
@@ -141,10 +197,15 @@ function AdminLayout() {
 
         </nav>
 
-        {/* SIDEBAR BOTTOM */}
+
+        {/* =================================================
+            SIDEBAR BOTTOM
+        ================================================= */}
+
         <div className="admin-sidebar-bottom">
 
           {/* VIEW WEBSITE */}
+
           <a
             href="/"
             className="admin-website-link"
@@ -153,7 +214,9 @@ function AdminLayout() {
             ↗ View Website
           </a>
 
+
           {/* LOGOUT */}
+
           <button
             className="admin-logout"
             onClick={handleLogout}
@@ -165,13 +228,22 @@ function AdminLayout() {
 
       </aside>
 
-      {/* RIGHT SIDE */}
+
+      {/* =================================================
+          RIGHT SIDE
+      ================================================= */}
+
       <main className="admin-main">
 
-        {/* TOPBAR */}
+
+        {/* =================================================
+            TOPBAR
+        ================================================= */}
+
         <header className="admin-topbar">
 
           {/* MOBILE MENU BUTTON */}
+
           <button
             className="admin-mobile-menu"
             onClick={() => setSidebarOpen(true)}
@@ -180,19 +252,37 @@ function AdminLayout() {
             ☰
           </button>
 
+
           <div className="admin-topbar-title">
-            <p>RAGAS CAREER WORLD</p>
-            <h1>Admin Panel</h1>
+
+            <p>
+              RAGAS CAREER WORLD
+            </p>
+
+            <h1>
+              Admin Panel
+            </h1>
+
           </div>
 
+
           <div className="admin-system-status">
+
             <i></i>
-            <span>System Online</span>
+
+            <span>
+              System Online
+            </span>
+
           </div>
 
         </header>
 
-        {/* PAGE CONTENT */}
+
+        {/* =================================================
+            PAGE CONTENT
+        ================================================= */}
+
         <div className="admin-page-content">
           <Outlet />
         </div>

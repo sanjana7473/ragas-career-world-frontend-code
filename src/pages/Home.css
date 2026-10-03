@@ -257,7 +257,7 @@
 
   margin: 0;
 
-  color: #10243f;
+  color: #164a3d;
 
   font-size: clamp(46px, 5vw, 68px);
 
@@ -2233,5 +2233,836 @@
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+  }
+}
+/* =========================================================
+   PREMIUM ANIMATION - RECRUITMENT SERVICES
+   ========================================================= */
+
+/* ---------- Section Entrance ---------- */
+
+@keyframes servicesEyebrowReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    letter-spacing: 5px;
+    filter: blur(4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 2px;
+    filter: blur(0);
+  }
+}
+
+@keyframes servicesHeadingReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(35px);
+    filter: blur(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes servicesTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+
+/* ---------- Service Cards ---------- */
+
+@keyframes serviceCardReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(35px) scale(0.97);
+    filter: blur(4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+
+/* =========================================================
+   SERVICES SECTION
+   Change .home-services if your actual section class
+   is different.
+   ========================================================= */
+
+.home-services {
+  overflow: hidden;
+}
+
+
+/* ---------- Eyebrow ---------- */
+
+.home-services .home-services-eyebrow {
+  animation:
+    servicesEyebrowReveal
+    0.8s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+
+  animation-delay: 0.05s;
+}
+
+
+/* ---------- Main Heading ---------- */
+
+.home-services .home-services-heading h2 {
+  animation:
+    servicesHeadingReveal
+    0.9s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+
+  animation-delay: 0.15s;
+}
+
+
+/* ---------- Description ---------- */
+
+.home-services .home-services-heading p {
+  animation:
+    servicesTextReveal
+    0.8s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    both;
+
+  animation-delay: 0.3s;
+}
+
+
+/* =========================================================
+   SERVICE CARDS
+   ========================================================= */
+
+.home-services .service-card {
+  opacity: 0;
+
+  animation:
+    serviceCardReveal
+    0.8s
+    cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background 0.35s ease;
+}
+
+
+/* Staggered animation */
+
+.home-services .service-card:nth-child(1) {
+  animation-delay: 0.4s;
+}
+
+.home-services .service-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.home-services .service-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.home-services .service-card:nth-child(4) {
+  animation-delay: 0.7s;
+}
+
+.home-services .service-card:nth-child(5) {
+  animation-delay: 0.8s;
+}
+
+.home-services .service-card:nth-child(6) {
+  animation-delay: 0.9s;
+}
+
+
+/* =========================================================
+   CARD HOVER
+   ========================================================= */
+
+.home-services .service-card:hover {
+  transform: translateY(-8px);
+
+  box-shadow:
+    0 18px 45px rgba(16, 36, 63, 0.10),
+    0 4px 12px rgba(200, 164, 93, 0.08);
+
+  border-color: rgba(200, 164, 93, 0.45);
+
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   SERVICE ICON
+   ========================================================= */
+
+.home-services .service-icon {
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+
+.home-services .service-card:hover .service-icon {
+  transform: scale(1.08) rotate(-3deg);
+
+  background: rgba(200, 164, 93, 0.12);
+}
+
+
+/* =========================================================
+   SERVICE TITLE
+   ========================================================= */
+
+.home-services .service-card h3 {
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease;
+}
+
+
+.home-services .service-card:hover h3 {
+  transform: translateX(4px);
+  color: #b18c4d;
+}
+
+
+/* =========================================================
+   SERVICE DESCRIPTION
+   ========================================================= */
+
+.home-services .service-card p {
+  transition:
+    transform 0.35s ease,
+    color 0.35s ease;
+}
+
+
+.home-services .service-card:hover p {
+  transform: translateX(2px);
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .home-services .home-services-eyebrow,
+  .home-services .home-services-heading h2,
+  .home-services .home-services-heading p,
+  .home-services .service-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .home-services .service-card,
+  .home-services .service-icon,
+  .home-services .service-card h3,
+  .home-services .service-card p {
+    transition: none !important;
+  }
+}
+/* =========================================================
+   RAGAS CAREER WORLD
+   PREMIUM CONTINUOUS ANIMATION SYSTEM
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. CONTINUOUS BACKGROUND GLOW
+   --------------------------------------------------------- */
+
+@keyframes homeAmbientGlow {
+  0% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.06);
+  }
+
+  100% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+}
+
+
+/* Apply only if these elements already exist in your Hero */
+
+.home-page .hero-glow-one,
+.home-page .hero-glow-two {
+  animation:
+    homeAmbientGlow
+    12s
+    ease-in-out
+    infinite;
+  will-change: transform;
+}
+
+.home-page .hero-glow-two {
+  animation-delay: -5s;
+}
+
+
+/* ---------------------------------------------------------
+   2. HERO IMAGE / VISUAL BREATHING
+   --------------------------------------------------------- */
+
+@keyframes premiumVisualFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.home-page .hero-visual {
+  animation:
+    premiumVisualFloat
+    7s
+    ease-in-out
+    infinite;
+  will-change: transform;
+}
+
+
+/* ---------------------------------------------------------
+   3. HERO IMAGE SOFT SCALE
+   --------------------------------------------------------- */
+
+@keyframes premiumImageBreathing {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.015);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.home-page .hero-visual img {
+  animation:
+    premiumImageBreathing
+    8s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   4. HERO HIGHLIGHT SHIMMER
+   --------------------------------------------------------- */
+
+@keyframes premiumTextShimmer {
+  0% {
+    background-position: 200% center;
+  }
+
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.home-page .home-hero-content h1 span {
+  background-image:
+    linear-gradient(
+      110deg,
+      #c8a45d 0%,
+      #c8a45d 40%,
+      #ead9a9 50%,
+      #c8a45d 60%,
+      #c8a45d 100%
+    );
+
+  background-size: 250% auto;
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation:
+    premiumTextShimmer
+    6s
+    linear
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   5. CTA BUTTON SHINE
+   --------------------------------------------------------- */
+
+.home-page .hero-actions button,
+.home-page .hero-actions a {
+  position: relative;
+  overflow: hidden;
+}
+
+.home-page .hero-actions button::after,
+.home-page .hero-actions a::after {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.32),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  animation:
+    premiumButtonShine
+    5.5s
+    ease-in-out
+    infinite;
+}
+
+@keyframes premiumButtonShine {
+
+  0% {
+    left: -120%;
+  }
+
+  18% {
+    left: 140%;
+  }
+
+  100% {
+    left: 140%;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   6. STATS - SOFT PULSE
+   --------------------------------------------------------- */
+
+@keyframes premiumStatPulse {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.home-page .hero-stats > * {
+  animation:
+    premiumStatPulse
+    5s
+    ease-in-out
+    infinite;
+}
+
+.home-page .hero-stats > *:nth-child(2) {
+  animation-delay: -1.5s;
+}
+
+.home-page .hero-stats > *:nth-child(3) {
+  animation-delay: -3s;
+}
+
+
+/* ---------------------------------------------------------
+   7. SECTION EYEBROW - SOFT LETTER MOTION
+   --------------------------------------------------------- */
+
+@keyframes premiumEyebrowPulse {
+
+  0% {
+    opacity: 0.78;
+    letter-spacing: 2px;
+  }
+
+  50% {
+    opacity: 1;
+    letter-spacing: 2.8px;
+  }
+
+  100% {
+    opacity: 0.78;
+    letter-spacing: 2px;
+  }
+}
+
+.home-page .section-eyebrow {
+  animation:
+    premiumEyebrowPulse
+    5s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   8. SECTION HEADINGS - VERY SUBTLE BREATHING
+   --------------------------------------------------------- */
+
+@keyframes premiumHeadingBreath {
+
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.home-page .section-top h2,
+.home-page .openings-left h2,
+.home-page .why-card h2 {
+  animation:
+    premiumHeadingBreath
+    6s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   9. DECORATIVE HEADING LINE
+   --------------------------------------------------------- */
+
+.home-page .section-top h2::after,
+.home-page .openings-left h2::after,
+.home-page .why-card h2::after {
+  content: "";
+
+  display: block;
+
+  width: 48px;
+  height: 2px;
+
+  margin-top: 12px;
+
+  background: #c8a45d;
+
+  transform-origin: left center;
+
+  animation:
+    premiumLinePulse
+    4s
+    ease-in-out
+    infinite;
+}
+
+@keyframes premiumLinePulse {
+
+  0% {
+    transform: scaleX(0.65);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleX(0.65);
+    opacity: 0.55;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   10. JOB CARDS - SOFT BREATHING
+   --------------------------------------------------------- */
+
+@keyframes premiumJobBreath {
+
+  0% {
+    box-shadow:
+      0 8px 25px rgba(16, 36, 63, 0.04);
+  }
+
+  50% {
+    box-shadow:
+      0 14px 35px rgba(16, 36, 63, 0.08);
+  }
+
+  100% {
+    box-shadow:
+      0 8px 25px rgba(16, 36, 63, 0.04);
+  }
+}
+
+.home-page .job-card {
+  animation:
+    premiumJobBreath
+    6s
+    ease-in-out
+    infinite;
+}
+
+.home-page .job-card:nth-child(2) {
+  animation-delay: -2s;
+}
+
+.home-page .job-card:nth-child(3) {
+  animation-delay: -4s;
+}
+
+
+/* ---------------------------------------------------------
+   11. INDUSTRY CARDS - SOFT LIGHT
+   --------------------------------------------------------- */
+
+@keyframes premiumIndustryGlow {
+
+  0% {
+    box-shadow:
+      0 8px 25px rgba(16, 36, 63, 0.03);
+  }
+
+  50% {
+    box-shadow:
+      0 12px 32px rgba(200, 164, 93, 0.08);
+  }
+
+  100% {
+    box-shadow:
+      0 8px 25px rgba(16, 36, 63, 0.03);
+  }
+}
+
+.home-page .industry-card {
+  animation:
+    premiumIndustryGlow
+    7s
+    ease-in-out
+    infinite;
+}
+
+.home-page .industry-card:nth-child(2) {
+  animation-delay: -2s;
+}
+
+.home-page .industry-card:nth-child(3) {
+  animation-delay: -4s;
+}
+
+.home-page .industry-card:nth-child(4) {
+  animation-delay: -6s;
+}
+
+
+/* ---------------------------------------------------------
+   12. GOLD ACCENT DOT / DECORATION
+   --------------------------------------------------------- */
+
+@keyframes premiumDotPulse {
+
+  0% {
+    transform: scale(0.85);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.85);
+    opacity: 0.45;
+  }
+}
+
+.home-page .section-eyebrow::before {
+  content: "";
+
+  display: inline-block;
+
+  width: 6px;
+  height: 6px;
+
+  margin-right: 8px;
+
+  border-radius: 50%;
+
+  background: #c8a45d;
+
+  animation:
+    premiumDotPulse
+    2.8s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   13. WHY CHOOSE US - ICON PULSE
+   --------------------------------------------------------- */
+
+@keyframes premiumIconPulse {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.07);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.home-page .why-card svg {
+  animation:
+    premiumIconPulse
+    4s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   14. GOLD ACCENTS
+   --------------------------------------------------------- */
+
+@keyframes premiumGoldGlow {
+
+  0% {
+    filter:
+      drop-shadow(
+        0 0 0 rgba(200, 164, 93, 0)
+      );
+  }
+
+  50% {
+    filter:
+      drop-shadow(
+        0 0 7px rgba(200, 164, 93, 0.20)
+      );
+  }
+
+  100% {
+    filter:
+      drop-shadow(
+        0 0 0 rgba(200, 164, 93, 0)
+      );
+  }
+}
+
+.home-page .gold,
+.home-page .gold-text {
+  animation:
+    premiumGoldGlow
+    4s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   15. SLOW BACKGROUND LIGHT
+   --------------------------------------------------------- */
+
+@keyframes premiumBackgroundMove {
+
+  0% {
+    background-position:
+      0% 50%;
+  }
+
+  50% {
+    background-position:
+      100% 50%;
+  }
+
+  100% {
+    background-position:
+      0% 50%;
+  }
+}
+
+.home-page {
+  background-size: 180% 180%;
+
+  animation:
+    premiumBackgroundMove
+    18s
+    ease-in-out
+    infinite;
+}
+
+
+/* ---------------------------------------------------------
+   16. REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .home-page,
+  .home-page *,
+  .home-page *::before,
+  .home-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }

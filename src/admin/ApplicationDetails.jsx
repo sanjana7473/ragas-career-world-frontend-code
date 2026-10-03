@@ -1,5 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  MessageCircle,
+  FileText,
+  Building2,
+  MapPin,
+  BriefcaseBusiness,
+  GraduationCap,
+  CalendarDays,
+  IndianRupee,
+  Clock3,
+  UserRound,
+  Globe2,
+  RefreshCw,
+  Loader2,
+  ExternalLink,
+  CheckCircle2,
+} from "lucide-react";
+
 import "./ApplicationDetails.css";
 
 const API_BASE_URL =
@@ -26,22 +47,30 @@ function ApplicationDetails() {
   const [error, setError] = useState("");
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
-  // =====================================================
-  // FETCH APPLICATION
-  // =====================================================
+  /* =====================================================
+     FETCH APPLICATION
+  ===================================================== */
 
   const fetchApplication = async () => {
+    if (!id) {
+      setError("Application ID is missing.");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
 
+      const token =
+        localStorage.getItem("ragasAdminToken") || "";
+
       const response = await fetch(
         `${API_URL}/${encodeURIComponent(id)}`,
         {
+          method: "GET",
           headers: {
-            Authorization: `Bearer ${
-              localStorage.getItem("ragasAdminToken") || ""
-            }`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -59,7 +88,14 @@ function ApplicationDetails() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message || "Unable to fetch application."
+          data?.message ||
+            "Unable to fetch application."
+        );
+      }
+
+      if (!data.data) {
+        throw new Error(
+          "Application data was not found."
         );
       }
 
@@ -80,20 +116,23 @@ function ApplicationDetails() {
   };
 
   useEffect(() => {
-    if (id) {
-      fetchApplication();
-    }
+    fetchApplication();
   }, [id]);
 
-  // =====================================================
-  // UPDATE STATUS
-  // =====================================================
+  /* =====================================================
+     UPDATE STATUS
+  ===================================================== */
 
   const updateStatus = async (newStatus) => {
-    if (!application?._id) return;
+    if (!application?._id || updatingStatus) {
+      return;
+    }
 
     try {
       setUpdatingStatus(true);
+
+      const token =
+        localStorage.getItem("ragasAdminToken") || "";
 
       const response = await fetch(
         `${API_URL}/${application._id}/status`,
@@ -102,9 +141,7 @@ function ApplicationDetails() {
 
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${
-              localStorage.getItem("ragasAdminToken") || ""
-            }`,
+            Authorization: `Bearer ${token}`,
           },
 
           body: JSON.stringify({
@@ -126,12 +163,17 @@ function ApplicationDetails() {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message ||
+          data?.message ||
             "Unable to update status."
         );
       }
 
-      setApplication(data.data);
+      setApplication(
+        data.data || {
+          ...application,
+          status: newStatus,
+        }
+      );
     } catch (err) {
       console.error(
         "Status update error:",
@@ -147,14 +189,20 @@ function ApplicationDetails() {
     }
   };
 
-  // =====================================================
-  // FORMAT DATE
-  // =====================================================
+  /* =====================================================
+     FORMAT DATE
+  ===================================================== */
 
   const formatDate = (date) => {
     if (!date) return "—";
 
-    return new Date(date).toLocaleDateString(
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "—";
+    }
+
+    return parsedDate.toLocaleDateString(
       "en-IN",
       {
         day: "2-digit",
@@ -164,53 +212,135 @@ function ApplicationDetails() {
     );
   };
 
-  // =====================================================
-  // RESUME URL
-  // =====================================================
+  /* =====================================================
+     SAFE TEXT HELPER
+  ===================================================== */
 
-  const resumeUrl =
-    application?.resumeFile
-      ? `${API_URL}/api/applications/resume/${encodeURIComponent(
-          application.resumeFile
-        )}`
-      : null;
+  const displayValue = (value) => {
+    if (
+      value === null ||
+      value === undefined ||
+      String(value).trim() === ""
+    ) {
+      return "—";
+    }
 
-  // =====================================================
-  // WHATSAPP
-  // =====================================================
+    return value;
+  };
 
-  const whatsappNumber =
-    application?.phone
-      ? application.phone.replace(/\D/g, "")
-      : "";
+  /* =====================================================
+     COMPANY NAME
+     
+     Supports different possible backend field names.
+  ===================================================== */
+
+  const companyName = useMemo(() => {
+    if (!application) {
+      return "RAGAS CAREER WORLD";
+    }
+
+    return (
+      application.companyName ||
+      application.company ||
+      application.employerName ||
+      application.jobCompanyName ||
+      application.job?.companyName ||
+      application.job?.company ||
+      application.job?.employerName ||
+      "RAGAS CAREER WORLD"
+    );
+  }, [application]);
+
+  /* =====================================================
+     RESUME URL
+     
+     IMPORTANT:
+     The old code had:
+     API_URL + /api/applications/resume
+     
+     API_URL already contains /api/applications,
+     which created an incorrect duplicated URL.
+  ===================================================== */
+
+  const resumeUrl = application?.resumeFile
+    ? `${API_BASE_URL}/api/applications/resume/${encodeURIComponent(
+        application.resumeFile
+      )}`
+    : null;
+
+  /* =====================================================
+     WHATSAPP
+  ===================================================== */
+
+  const whatsappNumber = useMemo(() => {
+    if (!application?.phone) {
+      return "";
+    }
+
+    let number = String(
+      application.phone
+    ).replace(/\D/g, "");
+
+    /*
+      If an Indian number is stored as:
+      9876543210
+      convert it to:
+      919876543210
+    */
+
+    if (
+      number.length === 10 &&
+      number.startsWith("6") ||
+      number.startsWith("7") ||
+      number.startsWith("8") ||
+      number.startsWith("9")
+    ) {
+      number = `91${number}`;
+    }
+
+    return number;
+  }, [application]);
 
   const whatsappUrl = whatsappNumber
     ? `https://wa.me/${whatsappNumber}`
     : "#";
 
-  // =====================================================
-  // LOADING
-  // =====================================================
+  /* =====================================================
+     LOADING
+  ===================================================== */
 
   if (loading) {
     return (
       <div className="application-details-loading">
-        <div className="application-details-loader"></div>
+        <Loader2
+          size={38}
+          className="application-details-loader-icon"
+        />
+
+        <h3>
+          Loading candidate details...
+        </h3>
 
         <p>
-          Loading candidate details...
+          Please wait while we fetch the
+          application information.
         </p>
       </div>
     );
   }
 
-  // =====================================================
-  // ERROR
-  // =====================================================
+  /* =====================================================
+     ERROR
+  ===================================================== */
 
   if (error || !application) {
     return (
       <div className="application-details-error">
+
+        <div className="application-details-error-icon">
+          <FileText size={32} />
+        </div>
+
         <h2>
           Unable to load application
         </h2>
@@ -220,29 +350,49 @@ function ApplicationDetails() {
             "Application not found."}
         </p>
 
-        <button
-          onClick={() =>
-            navigate(
-              "/admin/applications"
-            )
-          }
-        >
-          ← Back to Applications
-        </button>
+        <div className="application-details-error-actions">
+
+          <button
+            type="button"
+            onClick={fetchApplication}
+            className="application-retry-btn"
+          >
+            <RefreshCw size={16} />
+            Try Again
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate(
+                "/admin/applications"
+              )
+            }
+            className="application-back-error-btn"
+          >
+            <ArrowLeft size={16} />
+            Back to Applications
+          </button>
+
+        </div>
+
       </div>
     );
   }
 
-  // =====================================================
-  // PAGE
-  // =====================================================
+  /* =====================================================
+     PAGE
+  ===================================================== */
 
   return (
     <div className="application-details-page">
 
-      {/* BACK */}
+      {/* =================================================
+          BACK BUTTON
+      ================================================= */}
 
       <button
+        type="button"
         className="application-back-btn"
         onClick={() =>
           navigate(
@@ -250,10 +400,13 @@ function ApplicationDetails() {
           )
         }
       >
-        ← Back to Applications
+        <ArrowLeft size={17} />
+        Back to Applications
       </button>
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <div className="application-details-header">
 
@@ -267,7 +420,7 @@ function ApplicationDetails() {
               : "C"}
           </div>
 
-          <div>
+          <div className="candidate-header-text">
 
             <p className="details-eyebrow">
               JOB APPLICATION
@@ -286,9 +439,23 @@ function ApplicationDetails() {
               </strong>
             </p>
 
+            <p className="candidate-applied-company">
+              <Building2 size={15} />
+
+              <span>
+                Company:
+              </span>
+
+              <strong>
+                {companyName}
+              </strong>
+            </p>
+
           </div>
 
         </div>
+
+        {/* STATUS */}
 
         <div className="application-status-control">
 
@@ -296,47 +463,73 @@ function ApplicationDetails() {
             Application Status
           </label>
 
-          <select
-            value={
-              application.status ||
-              "Applied"
-            }
-            onChange={(e) =>
-              updateStatus(
-                e.target.value
-              )
-            }
-            disabled={updatingStatus}
-          >
+          <div className="application-status-select-wrapper">
 
-            {STATUSES.map(
-              (status) => (
-                <option
-                  key={status}
-                  value={status}
-                >
-                  {status}
-                </option>
-              )
+            {updatingStatus ? (
+              <Loader2
+                size={17}
+                className="status-loader"
+              />
+            ) : (
+              <CheckCircle2 size={17} />
             )}
 
-          </select>
+            <select
+              value={
+                application.status ||
+                "Applied"
+              }
+              onChange={(e) =>
+                updateStatus(
+                  e.target.value
+                )
+              }
+              disabled={updatingStatus}
+            >
+              {STATUSES.map(
+                (status) => (
+                  <option
+                    key={status}
+                    value={status}
+                  >
+                    {status}
+                  </option>
+                )
+              )}
+            </select>
+
+          </div>
 
         </div>
 
       </div>
 
-      {/* CONTACT ACTIONS */}
+      {/* =================================================
+          CONTACT ACTIONS
+      ================================================= */}
 
       <div className="candidate-contact-actions">
 
+        {/* EMAIL */}
+
         <a
-          href={`mailto:${
-            application.email || ""
+          href={
+            application.email
+              ? `mailto:${application.email}`
+              : "#"
+          }
+          className={`contact-action email-action ${
+            !application.email
+              ? "contact-action-disabled"
+              : ""
           }`}
-          className="contact-action email-action"
+          onClick={(e) => {
+            if (!application.email) {
+              e.preventDefault();
+            }
+          }}
         >
-          <span>✉</span>
+          <Mail size={21} />
 
           <div>
             <strong>
@@ -345,10 +538,12 @@ function ApplicationDetails() {
 
             <small>
               {application.email ||
-                "No email"}
+                "No email available"}
             </small>
           </div>
         </a>
+
+        {/* CALL */}
 
         <a
           href={
@@ -356,9 +551,18 @@ function ApplicationDetails() {
               ? `tel:${application.phone}`
               : "#"
           }
-          className="contact-action call-action"
+          className={`contact-action call-action ${
+            !application.phone
+              ? "contact-action-disabled"
+              : ""
+          }`}
+          onClick={(e) => {
+            if (!application.phone) {
+              e.preventDefault();
+            }
+          }}
         >
-          <span>☎</span>
+          <Phone size={21} />
 
           <div>
             <strong>
@@ -367,18 +571,29 @@ function ApplicationDetails() {
 
             <small>
               {application.phone ||
-                "No phone"}
+                "No phone available"}
             </small>
           </div>
         </a>
+
+        {/* WHATSAPP */}
 
         <a
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="contact-action whatsapp-action"
+          className={`contact-action whatsapp-action ${
+            !whatsappNumber
+              ? "contact-action-disabled"
+              : ""
+          }`}
+          onClick={(e) => {
+            if (!whatsappNumber) {
+              e.preventDefault();
+            }
+          }}
         >
-          <span>◉</span>
+          <MessageCircle size={21} />
 
           <div>
             <strong>
@@ -386,10 +601,14 @@ function ApplicationDetails() {
             </strong>
 
             <small>
-              Start conversation
+              {whatsappNumber
+                ? "Start conversation"
+                : "No phone available"}
             </small>
           </div>
         </a>
+
+        {/* RESUME */}
 
         {resumeUrl && (
           <a
@@ -398,7 +617,7 @@ function ApplicationDetails() {
             rel="noreferrer"
             className="contact-action resume-action"
           >
-            <span>↥</span>
+            <FileText size={21} />
 
             <div>
               <strong>
@@ -409,23 +628,38 @@ function ApplicationDetails() {
                 Open candidate resume
               </small>
             </div>
+
+            <ExternalLink
+              size={15}
+              className="contact-action-external"
+            />
           </a>
         )}
 
       </div>
 
-      {/* MAIN GRID */}
+      {/* =================================================
+          MAIN GRID
+      ================================================= */}
 
       <div className="application-details-grid">
 
-        {/* PERSONAL INFORMATION */}
+        {/* =================================================
+            PERSONAL INFORMATION
+        ================================================= */}
 
         <section className="details-card">
 
           <div className="details-card-header">
+
+            <div className="details-section-icon">
+              <UserRound size={18} />
+            </div>
+
             <h2>
               Personal Information
             </h2>
+
           </div>
 
           <div className="details-info-grid">
@@ -436,8 +670,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.fullName ||
-                  "—"}
+                {displayValue(
+                  application.fullName
+                )}
               </strong>
             </div>
 
@@ -447,8 +682,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.email ||
-                  "—"}
+                {displayValue(
+                  application.email
+                )}
               </strong>
             </div>
 
@@ -458,8 +694,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.phone ||
-                  "—"}
+                {displayValue(
+                  application.phone
+                )}
               </strong>
             </div>
 
@@ -469,8 +706,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.dateOfBirth ||
-                  "—"}
+                {displayValue(
+                  application.dateOfBirth
+                )}
               </strong>
             </div>
 
@@ -480,8 +718,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.currentLocation ||
-                  "—"}
+                {displayValue(
+                  application.currentLocation
+                )}
               </strong>
             </div>
 
@@ -501,14 +740,22 @@ function ApplicationDetails() {
 
         </section>
 
-        {/* PROFESSIONAL INFORMATION */}
+        {/* =================================================
+            PROFESSIONAL INFORMATION
+        ================================================= */}
 
         <section className="details-card">
 
           <div className="details-card-header">
+
+            <div className="details-section-icon">
+              <BriefcaseBusiness size={18} />
+            </div>
+
             <h2>
               Professional Information
             </h2>
+
           </div>
 
           <div className="details-info-grid">
@@ -519,8 +766,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.currentJobTitle ||
-                  "—"}
+                {displayValue(
+                  application.currentJobTitle
+                )}
               </strong>
             </div>
 
@@ -530,8 +778,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.currentCompany ||
-                  "—"}
+                {displayValue(
+                  application.currentCompany
+                )}
               </strong>
             </div>
 
@@ -541,8 +790,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.totalExperience ||
-                  "—"}
+                {displayValue(
+                  application.totalExperience
+                )}
               </strong>
             </div>
 
@@ -552,8 +802,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.highestQualification ||
-                  "—"}
+                {displayValue(
+                  application.highestQualification
+                )}
               </strong>
             </div>
 
@@ -563,8 +814,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.keySkills ||
-                  "—"}
+                {displayValue(
+                  application.keySkills
+                )}
               </strong>
             </div>
 
@@ -572,14 +824,22 @@ function ApplicationDetails() {
 
         </section>
 
-        {/* JOB INFORMATION */}
+        {/* =================================================
+            JOB INFORMATION
+        ================================================= */}
 
         <section className="details-card">
 
           <div className="details-card-header">
+
+            <div className="details-section-icon">
+              <BriefcaseBusiness size={18} />
+            </div>
+
             <h2>
               Job Information
             </h2>
+
           </div>
 
           <div className="details-info-grid">
@@ -590,8 +850,22 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.jobTitle ||
-                  "—"}
+                {displayValue(
+                  application.jobTitle
+                )}
+              </strong>
+            </div>
+
+            {/* COMPANY NAME */}
+
+            <div className="details-field company-detail-field">
+              <span>
+                Company Name
+              </span>
+
+              <strong className="company-value">
+                <Building2 size={15} />
+                {companyName}
               </strong>
             </div>
 
@@ -601,8 +875,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.jobId ||
-                  "—"}
+                {displayValue(
+                  application.jobId
+                )}
               </strong>
             </div>
 
@@ -612,8 +887,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.preferredLocation ||
-                  "—"}
+                {displayValue(
+                  application.preferredLocation
+                )}
               </strong>
             </div>
 
@@ -623,8 +899,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.preferredCountry ||
-                  "—"}
+                {displayValue(
+                  application.preferredCountry
+                )}
               </strong>
             </div>
 
@@ -634,8 +911,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.expectedSalary ||
-                  "—"}
+                {displayValue(
+                  application.expectedSalary
+                )}
               </strong>
             </div>
 
@@ -645,8 +923,9 @@ function ApplicationDetails() {
               </span>
 
               <strong>
-                {application.noticePeriod ||
-                  "—"}
+                {displayValue(
+                  application.noticePeriod
+                )}
               </strong>
             </div>
 
@@ -654,14 +933,22 @@ function ApplicationDetails() {
 
         </section>
 
-        {/* RESUME */}
+        {/* =================================================
+            RESUME
+        ================================================= */}
 
         <section className="details-card">
 
           <div className="details-card-header">
+
+            <div className="details-section-icon">
+              <FileText size={18} />
+            </div>
+
             <h2>
               Resume
             </h2>
+
           </div>
 
           {application.resumeFile ? (
@@ -683,39 +970,56 @@ function ApplicationDetails() {
 
               </div>
 
-              <a
-                href={resumeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="resume-open-btn"
-              >
-                Open Resume
-              </a>
+              {resumeUrl && (
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="resume-open-btn"
+                >
+                  <ExternalLink size={15} />
+                  Open Resume
+                </a>
+              )}
 
             </div>
           ) : (
             <div className="no-resume">
-              No resume was uploaded with
-              this application.
+              <FileText size={22} />
+
+              <span>
+                No resume was uploaded with
+                this application.
+              </span>
             </div>
           )}
 
         </section>
 
-        {/* COVER LETTER */}
+        {/* =================================================
+            COVER LETTER
+        ================================================= */}
 
         <section className="details-card details-card-full">
 
           <div className="details-card-header">
+
+            <div className="details-section-icon">
+              <FileText size={18} />
+            </div>
+
             <h2>
               Cover Letter / Message
             </h2>
+
           </div>
 
           <div className="cover-letter-content">
 
             {application.coverLetter ? (
-              application.coverLetter
+              <p>
+                {application.coverLetter}
+              </p>
             ) : (
               <span>
                 No cover letter or message
@@ -729,11 +1033,13 @@ function ApplicationDetails() {
 
       </div>
 
-      {/* BOTTOM CONTACT */}
+      {/* =================================================
+          BOTTOM CONTACT
+      ================================================= */}
 
       <div className="application-details-footer">
 
-        <div>
+        <div className="application-footer-text">
 
           <strong>
             Need to contact this candidate?
@@ -749,12 +1055,15 @@ function ApplicationDetails() {
         <div className="footer-contact-buttons">
 
           <a
-            href={`mailto:${
-              application.email || ""
-            }`}
+            href={
+              application.email
+                ? `mailto:${application.email}`
+                : "#"
+            }
             className="footer-email-btn"
           >
-            ✉ Email
+            <Mail size={16} />
+            Email
           </a>
 
           <a
@@ -765,7 +1074,8 @@ function ApplicationDetails() {
             }
             className="footer-call-btn"
           >
-            ☎ Call
+            <Phone size={16} />
+            Call
           </a>
 
           <a
@@ -774,7 +1084,8 @@ function ApplicationDetails() {
             rel="noreferrer"
             className="footer-whatsapp-btn"
           >
-            ◉ WhatsApp
+            <MessageCircle size={16} />
+            WhatsApp
           </a>
 
         </div>

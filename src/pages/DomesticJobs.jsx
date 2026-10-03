@@ -8,61 +8,20 @@ import { useEffect, useState } from "react";
 
 import "./DomesticJobs.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:5000";
 
 const states = [
-  {
-    name: "Maharashtra",
-    openings: "58 openings",
-  },
-  {
-    name: "Karnataka",
-    openings: "47 openings",
-  },
-  {
-    name: "Delhi NCR",
-    openings: "39 openings",
-  },
-  {
-    name: "Tamil Nadu",
-    openings: "31 openings",
-  },
-  {
-    name: "Telangana",
-    openings: "26 openings",
-  },
-  {
-    name: "Gujarat",
-    openings: "21 openings",
-  },
+  "Maharashtra",
+  "Karnataka",
+  "Delhi NCR",
+  "Tamil Nadu",
+  "Telangana",
+  "Gujarat",
 ];
 
-// const jobs = [
-//   {
-//     id: "software-developer-bengaluru",
-//     title: "Software Developer",
-//     category: "IT",
-//     location: "Bengaluru, KA",
-//   },
-//   {
-//     id: "bank-relationship-manager-mumbai",
-//     title: "Bank Relationship Manager",
-//     category: "Banking",
-//     location: "Mumbai, MH",
-//   },
-//   {
-//     id: "plant-operations-head-pune",
-//     title: "Plant Operations Head",
-//     category: "Manufacturing",
-//     location: "Pune, MH",
-//   },
-//   {
-//     id: "airport-customer-service-hyderabad",
-//     title: "Airport Customer Service",
-//     category: "Aviation",
-//     location: "Hyderabad, TS",
-//   },
-// ];
+
 
 function FeaturedDomesticJobs({ onApply, onViewJobs }) {
   const [jobs, setJobs] = useState([]);
@@ -71,12 +30,16 @@ function FeaturedDomesticJobs({ onApply, onViewJobs }) {
   useEffect(() => {
     const fetchDomesticJobs = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/jobs`);
+        const response = await fetch(
+          `${API_BASE_URL}/api/jobs`
+        );
 
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(result.message || "Failed to fetch jobs");
+          throw new Error(
+            result.message || "Failed to fetch jobs"
+          );
         }
 
         const allJobs = result.data || [];
@@ -91,7 +54,11 @@ function FeaturedDomesticJobs({ onApply, onViewJobs }) {
 
         setJobs(domesticJobs.slice(0, 4));
       } catch (error) {
-        console.error("Domestic Jobs Error:", error);
+        console.error(
+          "Domestic Jobs Error:",
+          error
+        );
+
         setJobs([]);
       } finally {
         setLoading(false);
@@ -175,7 +142,10 @@ function FeaturedDomesticJobs({ onApply, onViewJobs }) {
                     </span>
 
                     {job.location}
-                    {job.country ? `, ${job.country}` : ""}
+
+                    {job.country
+                      ? `, ${job.country}`
+                      : ""}
                   </p>
 
                 </div>
@@ -210,38 +180,114 @@ function FeaturedDomesticJobs({ onApply, onViewJobs }) {
   );
 }
 
+
 function DomesticJobs({ featuredOnly = false }) {
   const navigate = useNavigate();
 
+  const [domesticJobs, setDomesticJobs] =
+    useState([]);
+
+  const [locationLoading, setLocationLoading] =
+    useState(true);
+
+ 
+
+  useEffect(() => {
+    const fetchDomesticJobs = async () => {
+      try {
+        setLocationLoading(true);
+
+        const response = await fetch(
+          `${API_BASE_URL}/api/jobs`
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.message || "Failed to fetch jobs"
+          );
+        }
+
+        const allJobs = result.data || [];
+
+        // Only India jobs
+        const jobs = allJobs.filter((job) => {
+          const country = String(job.country || "")
+            .trim()
+            .toLowerCase();
+
+          return country === "india";
+        });
+
+        setDomesticJobs(jobs);
+      } catch (error) {
+        console.error(
+          "Domestic location count error:",
+          error
+        );
+
+        setDomesticJobs([]);
+      } finally {
+        setLocationLoading(false);
+      }
+    };
+
+    fetchDomesticJobs();
+  }, []);
+
+  
+
+  const locationCounts = {};
+
+  domesticJobs.forEach((job) => {
+    const location = String(job.location || "")
+      .trim()
+      .toLowerCase();
+
+    if (location) {
+      locationCounts[location] =
+        (locationCounts[location] || 0) + 1;
+    }
+  });
+
+  
   const handleApply = (jobId) => {
     navigate(`/apply/${jobId}`);
   };
+
+ 
 
   const handleViewJobs = () => {
     navigate("/current-openings");
   };
 
+
   if (featuredOnly) {
     return (
       <main className="domestic-page featured-domestic-page">
+
         <section className="domestic-main">
+
           <FeaturedDomesticJobs
             onApply={handleApply}
             onViewJobs={handleViewJobs}
           />
+
         </section>
+
       </main>
     );
   }
 
+  
+
   return (
     <main className="domestic-page">
 
-      {/* ================= MAIN ================= */}
 
       <section className="domestic-main">
 
-        {/* ================= HEADER ================= */}
 
         <div className="domestic-heading">
 
@@ -263,7 +309,6 @@ function DomesticJobs({ featuredOnly = false }) {
         </div>
 
 
-        {/* ================= INTRO ================= */}
 
         <div className="domestic-intro">
 
@@ -338,7 +383,7 @@ function DomesticJobs({ featuredOnly = false }) {
         </div>
 
 
-        {/* ================= STATES ================= */}
+  
 
         <div className="domestic-section-header">
 
@@ -359,40 +404,51 @@ function DomesticJobs({ featuredOnly = false }) {
 
         <div className="state-grid">
 
-          {states.map((state, index) => (
+          {states.map((state) => {
 
-            <div
-              className="state-card"
-              key={index}
-            >
+            const count =
+              locationCounts[
+                state.toLowerCase()
+              ] || 0;
 
-              <div className="state-icon">
-                <MapPin
-                  size={17}
-                  strokeWidth={1.8}
-                />
+            return (
+              <div
+                className="state-card"
+                key={state}
+              >
+
+                <div className="state-icon">
+
+                  <MapPin
+                    size={17}
+                    strokeWidth={1.8}
+                  />
+
+                </div>
+
+                <div>
+
+                  <h3>
+                    {state}
+                  </h3>
+
+                  <span>
+
+                    {locationLoading
+                      ? "Loading..."
+                      : `${count} openings`}
+
+                  </span>
+
+                </div>
+
               </div>
-
-              <div>
-
-                <h3>
-                  {state.name}
-                </h3>
-
-                <span>
-                  {state.openings}
-                </span>
-
-              </div>
-
-            </div>
-
-          ))}
+            );
+          })}
 
         </div>
 
 
-        {/* ================= FEATURED OPENINGS ================= */}
 
         <FeaturedDomesticJobs
           onApply={handleApply}
@@ -400,8 +456,7 @@ function DomesticJobs({ featuredOnly = false }) {
         />
 
 
-        {/* ================= INDUSTRIES ================= */}
-
+      
         <section className="domestic-industries">
 
           <div className="domestic-section-header">
@@ -476,7 +531,6 @@ function DomesticJobs({ featuredOnly = false }) {
         </section>
 
 
-        {/* ================= CANDIDATE SUPPORT ================= */}
 
         <section className="domestic-support">
 
@@ -575,7 +629,7 @@ function DomesticJobs({ featuredOnly = false }) {
         </section>
 
 
-        {/* ================= CTA ================= */}
+     
 
         <section className="domestic-cta">
 
@@ -598,7 +652,9 @@ function DomesticJobs({ featuredOnly = false }) {
 
           <button
             type="button"
-            onClick={() => navigate("/upload-resume")}
+            onClick={() =>
+              navigate("/upload-resume")
+            }
           >
             Upload Your Resume
             <ArrowRight size={16} />

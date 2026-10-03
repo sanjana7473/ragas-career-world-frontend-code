@@ -1,226 +1,472 @@
-.employer-details-page {
-  width: 100%;
+/* =========================================================
+   EMPLOYEE DETAILS PAGE
+========================================================= */
+
+.employee-details-page {
   min-height: 100vh;
-  padding: 30px;
-  background: #f5f7fa;
+  padding: 32px;
+  background: #f5f8f7;
+  box-sizing: border-box;
+  color: #1f2937;
 }
 
-.employer-details-loading,
-.employer-details-error {
-  padding: 40px;
-  text-align: center;
-  background: #fff;
-  border-radius: 14px;
-  color: #555;
+/* =========================================================
+   HEADER
+========================================================= */
+
+.employee-details-header {
+  max-width: 1200px;
+  margin: 0 auto 28px;
 }
 
-.employer-details-error {
-  color: #b42318;
-}
-
-.employer-back-button {
+.back-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   border: none;
   background: transparent;
-  color: #244b45;
-  font-size: 15px;
+  color: #063d32;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  padding: 0;
-  margin-bottom: 28px;
+  padding: 8px 0;
+  margin-bottom: 22px;
+  transition: 0.2s ease;
 }
 
-.employer-details-header {
-  margin-bottom: 30px;
+.back-btn:hover {
+  color: #0b6b59;
+  transform: translateX(-2px);
 }
 
-.employer-title-area {
+.employee-header-content {
   display: flex;
   align-items: center;
   gap: 18px;
+  background: #ffffff;
+  border: 1px solid #e5ebe8;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 18px rgba(6, 61, 50, 0.06);
 }
 
-.employer-details-icon {
-  width: 62px;
-  height: 62px;
-  border-radius: 15px;
-  background: #e7f0ee;
-  color: #244b45;
+.employee-avatar-large {
+  width: 68px;
+  height: 68px;
+  min-width: 68px;
+  border-radius: 16px;
+  background: #063d32;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.employer-details-eyebrow {
-  margin: 0 0 6px;
-  font-size: 12px;
+.employee-header-content h1 {
+  margin: 0 0 5px;
+  font-size: 25px;
   font-weight: 700;
-  letter-spacing: 1.4px;
-  color: #777;
+  color: #16342e;
 }
 
-.employer-title-area h1 {
+.employee-header-content p {
   margin: 0;
-  font-size: 30px;
-  color: #172b27;
-}
-
-.employer-contact-person {
-  margin-top: 7px;
   font-size: 14px;
-  color: #666;
+  color: #6b7280;
 }
 
-.employer-details-grid {
+.employee-status {
+  margin-left: auto;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.employee-status.active {
+  background: #e8f7ef;
+  color: #16804a;
+}
+
+.employee-status.inactive {
+  background: #fcecec;
+  color: #c53030;
+}
+
+/* =========================================================
+   DETAILS GRID
+========================================================= */
+
+.employee-details-grid {
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
 }
 
-.employer-details-main {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+/* =========================================================
+   DETAIL CARD
+========================================================= */
 
-.employer-details-card {
-  background: #fff;
-  border: 1px solid #e7e9eb;
+.employee-details-card {
+  background: #ffffff;
+  border: 1px solid #e5ebe8;
   border-radius: 16px;
-  padding: 25px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(6, 61, 50, 0.05);
 }
 
-.employer-section-title {
+.card-title {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin-bottom: 22px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #172b27;
+  gap: 10px;
+  padding-bottom: 18px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #edf1ef;
 }
 
-.employer-info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+.card-title svg {
+  color: #063d32;
 }
 
-.employer-info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.employer-info-item span,
-.employer-sidebar-item span,
-.sidebar-label {
-  font-size: 12px;
-  color: #888;
-}
-
-.employer-info-item strong {
-  font-size: 14px;
-  color: #263b37;
-  font-weight: 600;
-}
-
-.employer-description {
+.card-title h2 {
   margin: 0;
-  color: #555;
-  font-size: 15px;
-  line-height: 1.8;
-  white-space: pre-line;
+  font-size: 17px;
+  font-weight: 700;
+  color: #16342e;
 }
 
-.employer-details-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+/* =========================================================
+   DETAIL ROW
+========================================================= */
 
-.employer-status-card {
-  background: #fff;
-  border: 1px solid #e7e9eb;
-  border-radius: 16px;
-  padding: 22px;
+.detail-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 14px;
+  padding: 17px 0;
+  border-bottom: 1px solid #f0f2f1;
 }
 
-.sidebar-label {
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.employer-detail-status {
-  padding: 7px 13px;
-  border-radius: 20px;
-  background: #e9f8ef;
-  color: #16704a;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.employer-sidebar-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f1f2;
-  color: #244b45;
-}
-
-.employer-sidebar-item:first-child {
-  padding-top: 0;
-}
-
-.employer-sidebar-item:last-child {
+.detail-row:last-child {
   border-bottom: none;
-  padding-bottom: 0;
+  padding-bottom: 4px;
 }
 
-.employer-sidebar-item div {
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 10px;
+  background: #edf6f3;
+  color: #063d32;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
-.employer-sidebar-item strong {
+.detail-row div:last-child {
+  min-width: 0;
+}
+
+.detail-row span {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7a8581;
+}
+
+.detail-row strong {
+  display: block;
   font-size: 14px;
-  color: #263b37;
   font-weight: 600;
+  color: #25332f;
   word-break: break-word;
 }
 
-@media (max-width: 900px) {
-  .employer-details-grid {
-    grid-template-columns: 1fr;
+/* =========================================================
+   LOADING
+========================================================= */
+
+.employee-details-loading {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #063d32;
+}
+
+.employee-details-loading p {
+  margin-top: 12px;
+  color: #68746f;
+  font-size: 14px;
+}
+
+.loading-icon {
+  animation: employeeSpin 1s linear infinite;
+}
+
+@keyframes employeeSpin {
+  from {
+    transform: rotate(0deg);
   }
 
-  .employer-details-sidebar {
-    order: -1;
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.employee-details-error {
+  max-width: 600px;
+  margin: 100px auto;
+  padding: 40px;
+  background: #ffffff;
+  border: 1px solid #e5ebe8;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(6, 61, 50, 0.06);
+}
+
+.employee-details-error h2 {
+  margin: 0 0 10px;
+  color: #16342e;
+  font-size: 22px;
+}
+
+.employee-details-error p {
+  margin: 0 0 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.back-employees-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #063d32;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-employees-btn:hover {
+  background: #0b6b59;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+  .employee-details-page {
+    padding: 24px;
+  }
+
+  .employee-details-grid {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 600px) {
-  .employer-details-page {
+  .employee-details-page {
+    padding: 18px;
+  }
+
+  .employee-header-content {
+    padding: 20px;
+    flex-wrap: wrap;
+  }
+
+  .employee-avatar-large {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+  }
+
+  .employee-header-content h1 {
+    font-size: 21px;
+  }
+
+  .employee-status {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+
+  .employee-details-card {
     padding: 20px;
   }
 
-  .employer-title-area h1 {
-    font-size: 24px;
+  .card-title h2 {
+    font-size: 16px;
   }
 
-  .employer-info-grid {
-    grid-template-columns: 1fr;
+  .detail-row {
+    gap: 11px;
   }
 
-  .employer-details-card {
-    padding: 20px;
+  .detail-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+}
+
+@media (max-width: 420px) {
+  .employee-details-page {
+    padding: 14px;
+  }
+
+  .employee-header-content {
+    padding: 16px;
+  }
+
+  .employee-details-card {
+    padding: 16px;
+  }
+
+  .employee-header-content h1 {
+    font-size: 19px;
+  }
+}
+/* =========================================================
+   PASSWORD SECTION
+========================================================= */
+
+.password-card {
+  grid-column: 1 / -1;
+}
+
+.password-description {
+  margin: 16px 0 18px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.password-form {
+  max-width: 560px;
+}
+
+.password-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.password-input-wrapper {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px;
+  border: 1px solid #dce5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  transition: border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.password-input-wrapper:focus-within {
+  border-color: #063d32;
+  box-shadow: 0 0 0 3px rgba(6, 61, 50, 0.08);
+}
+
+.password-input-wrapper > svg {
+  color: #6b7a75;
+  flex-shrink: 0;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.password-input-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: #063d32;
+}
+
+.save-password-btn {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 17px;
+  border: none;
+  border-radius: 8px;
+  background: #063d32;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.save-password-btn:hover {
+  background: #0b6b59;
+}
+
+.save-password-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.password-error {
+  margin: 10px 0 0;
+  color: #c53030;
+  font-size: 13px;
+}
+
+.password-success {
+  margin: 10px 0 0;
+  color: #16804a;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .password-card {
+    grid-column: auto;
+  }
+
+  .password-form {
+    max-width: 100%;
   }
 }

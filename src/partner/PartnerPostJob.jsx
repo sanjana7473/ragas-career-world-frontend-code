@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import "./PartnerPostJob.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const PARTNER_JOBS_API = `${API_BASE_URL}/api/jobs`;
 
@@ -23,7 +24,7 @@ function PartnerPostJob() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    company: "",
+    companyName: "",
     location: "",
     jobType: "Full-time",
     industry: "",
@@ -36,13 +37,9 @@ function PartnerPostJob() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  /* -----------------------------------------
-     PARTNER VERIFICATION STATE
-
-     The account works instantly, but publishing a job
-     requires admin verification. An unverified partner can
-     still save the job as a private draft.
-  ----------------------------------------- */
+  /* =========================================
+     PARTNER DATA
+  ========================================= */
 
   let partner = null;
 
@@ -55,7 +52,12 @@ function PartnerPostJob() {
     partner = null;
   }
 
-  const isVerified = partner?.status === "Verified";
+  const isVerified =
+    String(partner?.status || "").toLowerCase() === "verified";
+
+  /* =========================================
+     INPUT CHANGE
+  ========================================= */
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,12 +68,9 @@ function PartnerPostJob() {
     }));
   };
 
-  /* -----------------------------------------
-     SUBMIT
-
-     publish = true  -> send the job to the admin queue
-     publish = false -> keep it as a private draft
-  ----------------------------------------- */
+  /* =========================================
+     SUBMIT JOB
+  ========================================= */
 
   const submitJob = async ({ publish }) => {
     setLoading(true);
@@ -79,11 +78,37 @@ function PartnerPostJob() {
     setError("");
 
     try {
-      const token = localStorage.getItem("ragasPartnerToken");
+      const token =
+        localStorage.getItem("ragasPartnerToken") ||
+        sessionStorage.getItem("ragasPartnerToken");
 
       if (!token) {
         setError("Partner authentication required.");
-        setLoading(false);
+        return;
+      }
+
+      const companyName = formData.companyName.trim();
+      const jobTitle = formData.title.trim();
+      const description = formData.description.trim();
+      const location = formData.location.trim();
+
+      if (!jobTitle) {
+        setError("Job title is required.");
+        return;
+      }
+
+      if (!companyName) {
+        setError("Company name is required.");
+        return;
+      }
+
+      if (!description) {
+        setError("Job description is required.");
+        return;
+      }
+
+      if (!location) {
+        setError("Location is required.");
         return;
       }
 
@@ -91,26 +116,51 @@ function PartnerPostJob() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          jobTitle: formData.title,
-          description: formData.description,
+          jobTitle,
+          companyName,
+          description,
           jobType: formData.jobType,
-          category: formData.industry,
-          location: formData.location,
-          salary: formData.salary,
-          experience: formData.experience,
-          skills: formData.skills,
+          category: formData.industry.trim(),
+          industry: formData.industry.trim(),
+          location,
+          salary: formData.salary.trim(),
+          experience: formData.experience.trim(),
+          skills: formData.skills.trim(),
           publish,
         }),
       });
 
-      const data = await response.json();
+      const contentType =
+        response.headers.get("content-type") || "";
+
+      let data = {};
+
+      if (contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+
+        console.error(
+          "Non-JSON response from server:",
+          text
+        );
+
+        throw new Error(
+          text.startsWith("<")
+            ? "Server returned an HTML response instead of JSON. Please check the API URL and backend."
+            : "Invalid server response."
+        );
+      }
+
+      console.log("Partner job create response:", data);
 
       if (!response.ok) {
         throw new Error(
-          data.message || "Unable to save the job."
+          data?.message || "Unable to save the job."
         );
       }
 
@@ -123,7 +173,7 @@ function PartnerPostJob() {
       setFormData({
         title: "",
         description: "",
-        company: "",
+        companyName: "",
         location: "",
         jobType: "Full-time",
         industry: "",
@@ -132,39 +182,59 @@ function PartnerPostJob() {
         skills: "",
       });
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      console.error(
+        "Partner job submission error:",
+        err
+      );
+
+      setError(
+        err?.message ||
+          "Something went wrong while saving the job."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  /* -----------------------------------------
-     FORM SUBMIT
-
-     A verified partner publishes straight away, an
-     unverified partner saves a draft with the same button.
-  ----------------------------------------- */
+  /* =========================================
+     NORMAL SUBMIT
+  ========================================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await submitJob({ publish: isVerified });
+    await submitJob({
+      publish: isVerified,
+    });
   };
 
+  /* =========================================
+     SAVE DRAFT
+  ========================================= */
+
   const handleSaveDraft = async () => {
-    await submitJob({ publish: false });
+    await submitJob({
+      publish: false,
+    });
   };
 
   return (
     <div className="partner-post-job">
 
+      {/* =========================================
+          PAGE HEADING
+      ========================================= */}
+
       <div className="partner-post-job-heading">
 
         <div>
+
           <button
             type="button"
             className="partner-back-btn"
-            onClick={() => navigate("/partner-dashboard")}
+            onClick={() =>
+              navigate("/partner-dashboard")
+            }
           >
             <ArrowLeft size={15} />
             Back to Dashboard
@@ -180,49 +250,77 @@ function PartnerPostJob() {
             Create a new job vacancy for your recruitment
             requirements.
           </p>
+
         </div>
 
       </div>
 
-      {/* VERIFICATION NOTICE */}
+      {/* =========================================
+          VERIFICATION NOTICE
+      ========================================= */}
 
       {isVerified ? (
         <div className="partner-form-success">
-          <ShieldCheck size={16} /> Your partner account is verified.
-          You can publish jobs directly for admin approval.
+
+          <ShieldCheck size={16} />
+
+          <span>
+            Your partner account is verified.
+            You can publish jobs directly for admin approval.
+          </span>
+
         </div>
       ) : (
         <div className="partner-form-warning">
+
           <ShieldAlert size={16} />
+
           <span>
-            Your partner account is awaiting admin verification.
-            You can save this job as a draft now and publish it
-            once your account is verified.
+            Your partner account is awaiting admin
+            verification. You can save this job as a draft
+            now and publish it once your account is verified.
           </span>
+
         </div>
       )}
+
+      {/* =========================================
+          FORM
+      ========================================= */}
 
       <form
         className="partner-job-form"
         onSubmit={handleSubmit}
       >
 
+        {/* =========================================
+            JOB INFORMATION
+        ========================================= */}
+
         <div className="partner-form-section">
 
           <div className="partner-form-section-title">
+
             <BriefcaseBusiness size={18} />
 
             <div>
+
               <h3>Job Information</h3>
+
               <p>
                 Enter the basic details of the job vacancy.
               </p>
+
             </div>
+
           </div>
 
           <div className="partner-form-grid">
 
+            {/* JOB TITLE */}
+
             <div className="partner-form-group partner-full-width">
+
               <label htmlFor="title">
                 Job Title *
               </label>
@@ -234,36 +332,49 @@ function PartnerPostJob() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="e.g. Senior Software Engineer"
+                disabled={loading}
                 required
               />
+
             </div>
 
+            {/* COMPANY NAME */}
+
             <div className="partner-form-group">
-              <label htmlFor="company">
+
+              <label htmlFor="companyName">
                 Company Name *
               </label>
 
               <div className="partner-input-icon">
+
                 <Building2 size={16} />
 
                 <input
-                  id="company"
-                  name="company"
+                  id="companyName"
+                  name="companyName"
                   type="text"
-                  value={formData.company}
+                  value={formData.companyName}
                   onChange={handleChange}
-                  placeholder="Company name"
+                  placeholder="Enter company name"
+                  disabled={loading}
                   required
                 />
+
               </div>
+
             </div>
 
+            {/* LOCATION */}
+
             <div className="partner-form-group">
+
               <label htmlFor="location">
                 Location *
               </label>
 
               <div className="partner-input-icon">
+
                 <MapPin size={16} />
 
                 <input
@@ -273,17 +384,24 @@ function PartnerPostJob() {
                   value={formData.location}
                   onChange={handleChange}
                   placeholder="City, Country"
+                  disabled={loading}
                   required
                 />
+
               </div>
+
             </div>
 
+            {/* JOB TYPE */}
+
             <div className="partner-form-group">
+
               <label htmlFor="jobType">
                 Job Type *
               </label>
 
               <div className="partner-input-icon">
+
                 <Clock3 size={16} />
 
                 <select
@@ -291,8 +409,10 @@ function PartnerPostJob() {
                   name="jobType"
                   value={formData.jobType}
                   onChange={handleChange}
+                  disabled={loading}
                   required
                 >
+
                   <option value="Full-time">
                     Full-time
                   </option>
@@ -312,11 +432,17 @@ function PartnerPostJob() {
                   <option value="Internship">
                     Internship
                   </option>
+
                 </select>
+
               </div>
+
             </div>
 
+            {/* INDUSTRY */}
+
             <div className="partner-form-group">
+
               <label htmlFor="industry">
                 Industry
               </label>
@@ -328,15 +454,21 @@ function PartnerPostJob() {
                 value={formData.industry}
                 onChange={handleChange}
                 placeholder="e.g. IT & Software"
+                disabled={loading}
               />
+
             </div>
 
+            {/* SALARY */}
+
             <div className="partner-form-group">
+
               <label htmlFor="salary">
                 Salary
               </label>
 
               <div className="partner-input-icon">
+
                 <DollarSign size={16} />
 
                 <input
@@ -346,11 +478,17 @@ function PartnerPostJob() {
                   value={formData.salary}
                   onChange={handleChange}
                   placeholder="e.g. ₹8-12 LPA"
+                  disabled={loading}
                 />
+
               </div>
+
             </div>
 
+            {/* EXPERIENCE */}
+
             <div className="partner-form-group">
+
               <label htmlFor="experience">
                 Experience
               </label>
@@ -362,26 +500,41 @@ function PartnerPostJob() {
                 value={formData.experience}
                 onChange={handleChange}
                 placeholder="e.g. 3-5 years"
+                disabled={loading}
               />
+
             </div>
 
           </div>
+
         </div>
+
+        {/* =========================================
+            JOB DESCRIPTION
+        ========================================= */}
 
         <div className="partner-form-section">
 
           <div className="partner-form-section-title">
+
             <FileText size={18} />
 
             <div>
+
               <h3>Job Description</h3>
+
               <p>
                 Provide complete information about the role.
               </p>
+
             </div>
+
           </div>
 
+          {/* DESCRIPTION */}
+
           <div className="partner-form-group">
+
             <label htmlFor="description">
               Description *
             </label>
@@ -393,11 +546,16 @@ function PartnerPostJob() {
               onChange={handleChange}
               placeholder="Write the job description..."
               rows="7"
+              disabled={loading}
               required
             />
+
           </div>
 
+          {/* SKILLS */}
+
           <div className="partner-form-group">
+
             <label htmlFor="skills">
               Required Skills
             </label>
@@ -409,9 +567,16 @@ function PartnerPostJob() {
               onChange={handleChange}
               placeholder="e.g. React, Node.js, MongoDB, JavaScript"
               rows="4"
+              disabled={loading}
             />
+
           </div>
+
         </div>
+
+        {/* =========================================
+            SUCCESS MESSAGE
+        ========================================= */}
 
         {message && (
           <div className="partner-form-success">
@@ -419,33 +584,50 @@ function PartnerPostJob() {
           </div>
         )}
 
+        {/* =========================================
+            ERROR MESSAGE
+        ========================================= */}
+
         {error && (
           <div className="partner-form-error">
             {error}
           </div>
         )}
 
+        {/* =========================================
+            ACTION BUTTONS
+        ========================================= */}
+
         <div className="partner-form-actions">
+
+          {/* CANCEL */}
 
           <button
             type="button"
             className="partner-cancel-btn"
-            onClick={() => navigate("/partner-dashboard")}
+            onClick={() =>
+              navigate("/partner-dashboard")
+            }
+            disabled={loading}
           >
             Cancel
           </button>
 
-          {/* Save as draft - always available */}
+          {/* SAVE DRAFT */}
+
           <button
             type="button"
             className="partner-cancel-btn"
             onClick={handleSaveDraft}
             disabled={loading}
           >
-            {loading ? "Saving..." : "Save as Draft"}
+            {loading
+              ? "Saving..."
+              : "Save as Draft"}
           </button>
 
-          {/* Publish - verified partners only */}
+          {/* PUBLISH */}
+
           <button
             type="submit"
             className="partner-submit-job-btn"
@@ -466,6 +648,7 @@ function PartnerPostJob() {
         </div>
 
       </form>
+
     </div>
   );
 }

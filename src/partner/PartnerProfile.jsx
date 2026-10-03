@@ -17,6 +17,41 @@ const EDITABLE_FIELDS = [
   ["postalCode", "Postal Code"],
 ];
 
+/* =========================================================
+   GET PARTNER TOKEN
+========================================================= */
+
+const getPartnerToken = () => {
+  return (
+    localStorage.getItem("ragasPartnerToken") ||
+    sessionStorage.getItem("ragasPartnerToken")
+  );
+};
+
+/* =========================================================
+   SAFE JSON RESPONSE
+========================================================= */
+
+const parseResponse = async (response) => {
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    const text = await response.text();
+
+    console.error(
+      "Partner API returned non-JSON response:",
+      text.slice(0, 500)
+    );
+
+    throw new Error(
+      "The server returned an invalid response. Please check the API URL and backend."
+    );
+  }
+
+  return response.json();
+};
+
 function PartnerProfile() {
   const navigate = useNavigate();
 
@@ -27,9 +62,13 @@ function PartnerProfile() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  /* =======================================================
+     LOAD PROFILE
+  ======================================================= */
+
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem("ragasPartnerToken");
+      const token = getPartnerToken();
 
       if (!token) {
         navigate("/partner-login");
@@ -37,35 +76,99 @@ function PartnerProfile() {
       }
 
       try {
+        setLoading(true);
+        setError("");
+
         const response = await fetch(
           `${API_BASE_URL}/api/partners/me`,
           {
+            method: "GET",
             headers: {
+              Accept: "application/json",
               Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        const data = await response.json();
+        /*
+         * Handle expired/invalid token first.
+         */
 
-        if (!response.ok || !data.success) {
-          throw new Error(data.message || "Unable to load your profile.");
+        if (
+          response.status === 401 ||
+          response.status === 403
+        ) {
+          localStorage.removeItem(
+            "ragasPartnerToken"
+          );
+
+          sessionStorage.removeItem(
+            "ragasPartnerToken"
+          );
+
+          localStorage.removeItem(
+            "ragasPartner"
+          );
+
+          sessionStorage.removeItem(
+            "ragasPartner"
+          );
+
+          navigate("/partner-login");
+          return;
         }
 
-        setPartner(data.data);
+        const data = await parseResponse(response);
+
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.message ||
+              "Unable to load your profile."
+          );
+        }
+
+        const partnerData = data.data;
+
+        setPartner(partnerData);
+
         setForm({
-          contactPerson: data.data.contactPerson || "",
-          phone: data.data.phone || "",
-          alternatePhone: data.data.alternatePhone || "",
-          website: data.data.website || "",
-          address: data.data.address || "",
-          city: data.data.city || "",
-          state: data.data.state || "",
-          country: data.data.country || "",
-          postalCode: data.data.postalCode || "",
+          contactPerson:
+            partnerData?.contactPerson || "",
+
+          phone:
+            partnerData?.phone || "",
+
+          alternatePhone:
+            partnerData?.alternatePhone || "",
+
+          website:
+            partnerData?.website || "",
+
+          address:
+            partnerData?.address || "",
+
+          city:
+            partnerData?.city || "",
+
+          state:
+            partnerData?.state || "",
+
+          country:
+            partnerData?.country || "",
+
+          postalCode:
+            partnerData?.postalCode || "",
         });
       } catch (err) {
-        setError(err.message);
+        console.error(
+          "Partner profile fetch error:",
+          err
+        );
+
+        setError(
+          err?.message ||
+            "Unable to load your profile."
+        );
       } finally {
         setLoading(false);
       }
@@ -74,26 +177,44 @@ function PartnerProfile() {
     fetchProfile();
   }, [navigate]);
 
+  /* =======================================================
+     INPUT CHANGE
+  ======================================================= */
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  /* =======================================================
+     SAVE PROFILE
+  ======================================================= */
 
   const handleSave = async (event) => {
     event.preventDefault();
+
     setSaving(true);
     setMessage("");
     setError("");
 
     try {
-      const token = localStorage.getItem("ragasPartnerToken");
+      const token = getPartnerToken();
+
+      if (!token) {
+        navigate("/partner-login");
+        return;
+      }
 
       const response = await fetch(
         `${API_BASE_URL}/api/partners/me`,
         {
           method: "PATCH",
           headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
@@ -101,127 +222,349 @@ function PartnerProfile() {
         }
       );
 
-      const data = await response.json();
+      /*
+       * Handle authentication failure.
+       */
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+        localStorage.removeItem(
+          "ragasPartnerToken"
+        );
+
+        sessionStorage.removeItem(
+          "ragasPartnerToken"
+        );
+
+        localStorage.removeItem(
+          "ragasPartner"
+        );
+
+        sessionStorage.removeItem(
+          "ragasPartner"
+        );
+
+        navigate("/partner-login");
+        return;
+      }
+
+      const data = await parseResponse(response);
 
       if (!response.ok || !data.success) {
-        throw new Error(data.message || "Unable to save your profile.");
+        throw new Error(
+          data.message ||
+            "Unable to save your profile."
+        );
       }
 
       setPartner(data.data);
-      setMessage("Profile updated successfully.");
+
+      setForm({
+        contactPerson:
+          data.data?.contactPerson || "",
+
+        phone:
+          data.data?.phone || "",
+
+        alternatePhone:
+          data.data?.alternatePhone || "",
+
+        website:
+          data.data?.website || "",
+
+        address:
+          data.data?.address || "",
+
+        city:
+          data.data?.city || "",
+
+        state:
+          data.data?.state || "",
+
+        country:
+          data.data?.country || "",
+
+        postalCode:
+          data.data?.postalCode || "",
+      });
+
+      setMessage(
+        "Profile updated successfully."
+      );
     } catch (err) {
-      setError(err.message);
+      console.error(
+        "Partner profile save error:",
+        err
+      );
+
+      setError(
+        err?.message ||
+          "Unable to save your profile."
+      );
     } finally {
       setSaving(false);
     }
   };
 
+  /* =======================================================
+     LOADING
+  ======================================================= */
+
   if (loading) {
     return (
       <div className="partner-profile-page">
-        <div className="partner-profile-loading">Loading your profile...</div>
+        <div className="partner-profile-loading">
+          Loading your profile...
+        </div>
       </div>
     );
   }
+
+  /* =======================================================
+     COMPLETE LOAD ERROR
+  ======================================================= */
 
   if (error && !partner) {
     return (
       <div className="partner-profile-page">
-        <div className="partner-profile-error">{error}</div>
+        <div className="partner-profile-error">
+          {error}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/partner-login")
+            }
+            style={{
+              display: "block",
+              margin: "20px auto 0",
+            }}
+          >
+            Back to Partner Login
+          </button>
+        </div>
       </div>
     );
   }
 
-  const status = partner?.status || "Pending";
-  const isVerified = status === "Verified";
+  /* =======================================================
+     PARTNER STATUS
+  ======================================================= */
+
+  const status =
+    partner?.status || "Pending";
+
+  const isVerified =
+    status.toLowerCase() === "verified";
+
+  const isRejected =
+    status.toLowerCase() === "rejected";
+
+  /* =======================================================
+     PAGE
+  ======================================================= */
 
   return (
     <div className="partner-profile-page">
+
+      {/* ===================================================
+          HEADER
+      =================================================== */}
+
       <div className="partner-profile-header">
+
         <div>
-          <span className="partner-profile-eyebrow">PARTNER ACCOUNT</span>
-          <h1>{partner?.companyName}</h1>
+
+          <span className="partner-profile-eyebrow">
+            PARTNER ACCOUNT
+          </span>
+
+          <h1>
+            {partner?.companyName ||
+              "Partner Profile"}
+          </h1>
+
           <p>
-            {partner?.partnerType}
-            {partner?.email ? ` - ${partner.email}` : ""}
+            {partner?.partnerType || "Partner"}
+
+            {partner?.email
+              ? ` - ${partner.email}`
+              : ""}
           </p>
+
         </div>
 
         <span
           className={`partner-profile-status ${
-            isVerified ? "verified" : status === "Rejected" ? "rejected" : "pending"
+            isVerified
+              ? "verified"
+              : isRejected
+              ? "rejected"
+              : "pending"
           }`}
         >
-          {isVerified ? "Verified" : status === "Rejected" ? "Rejected" : "Pending Verification"}
+          {isVerified
+            ? "Verified"
+            : isRejected
+            ? "Rejected"
+            : "Pending Verification"}
         </span>
+
       </div>
 
-      {!isVerified && status !== "Rejected" && (
+      {/* ===================================================
+          PENDING MESSAGE
+      =================================================== */}
+
+      {!isVerified && !isRejected && (
         <div className="partner-profile-note">
-          Your account is active, but job publishing stays locked until an
+          Your account is active, but job
+          publishing stays locked until an
           administrator verifies your partnership.
         </div>
       )}
 
-      {message && <div className="partner-profile-success">{message}</div>}
+      {/* ===================================================
+          SUCCESS
+      =================================================== */}
 
-      {error && <div className="partner-profile-error">{error}</div>}
+      {message && (
+        <div className="partner-profile-success">
+          {message}
+        </div>
+      )}
 
-      <form className="partner-profile-form" onSubmit={handleSave}>
-        <h2>Company Information (read only)</h2>
+      {/* ===================================================
+          ERROR
+      =================================================== */}
+
+      {error && (
+        <div className="partner-profile-error">
+          {error}
+        </div>
+      )}
+
+      {/* ===================================================
+          FORM
+      =================================================== */}
+
+      <form
+        className="partner-profile-form"
+        onSubmit={handleSave}
+      >
+
+        {/* =================================================
+            COMPANY INFORMATION
+        ================================================= */}
+
+        <h2>
+          Company Information (read only)
+        </h2>
 
         <div className="partner-profile-grid">
+
           <div className="partner-profile-item">
             <span>Company Name</span>
-            <strong>{partner?.companyName || "-"}</strong>
+
+            <strong>
+              {partner?.companyName || "-"}
+            </strong>
           </div>
 
           <div className="partner-profile-item">
             <span>Partner Type</span>
-            <strong>{partner?.partnerType || "-"}</strong>
+
+            <strong>
+              {partner?.partnerType || "-"}
+            </strong>
           </div>
 
           <div className="partner-profile-item">
             <span>Specialization</span>
-            <strong>{partner?.specialization || "-"}</strong>
+
+            <strong>
+              {partner?.specialization || "-"}
+            </strong>
           </div>
 
           <div className="partner-profile-item">
             <span>Geography</span>
-            <strong>{partner?.geography || "-"}</strong>
+
+            <strong>
+              {partner?.geography || "-"}
+            </strong>
           </div>
 
           <div className="partner-profile-item">
             <span>Email (login)</span>
-            <strong>{partner?.email || "-"}</strong>
+
+            <strong>
+              {partner?.email || "-"}
+            </strong>
           </div>
 
           <div className="partner-profile-item">
             <span>Registration No.</span>
-            <strong>{partner?.registrationNumber || "-"}</strong>
+
+            <strong>
+              {partner?.registrationNumber || "-"}
+            </strong>
           </div>
+
         </div>
 
-        <h2>Contact &amp; Address (editable)</h2>
+        {/* =================================================
+            CONTACT & ADDRESS
+        ================================================= */}
+
+        <h2>
+          Contact &amp; Address (editable)
+        </h2>
 
         <div className="partner-profile-grid">
-          {EDITABLE_FIELDS.map(([name, label]) => (
-            <label key={name} className="partner-profile-field">
-              <span>{label}</span>
-              <input
-                type="text"
-                name={name}
-                value={form[name] || ""}
-                onChange={handleChange}
-              />
-            </label>
-          ))}
+
+          {EDITABLE_FIELDS.map(
+            ([name, label]) => (
+              <label
+                key={name}
+                className="partner-profile-field"
+              >
+
+                <span>
+                  {label}
+                </span>
+
+                <input
+                  type="text"
+                  name={name}
+                  value={form[name] || ""}
+                  onChange={handleChange}
+                />
+
+              </label>
+            )
+          )}
+
         </div>
 
-        <button type="submit" className="partner-profile-save" disabled={saving}>
-          {saving ? "Saving..." : "Save Changes"}
+        {/* =================================================
+            SAVE
+        ================================================= */}
+
+        <button
+          type="submit"
+          className="partner-profile-save"
+          disabled={saving}
+        >
+          {saving
+            ? "Saving..."
+            : "Save Changes"}
         </button>
+
       </form>
+
     </div>
   );
 }

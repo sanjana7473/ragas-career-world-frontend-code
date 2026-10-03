@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./PartnerWithUs.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const API_URL = API_BASE_URL;
+const API_URL = `${API_BASE_URL}/api/partners`;
 
 function PartnerWithUs() {
   const [formData, setFormData] = useState({
@@ -33,6 +34,15 @@ function PartnerWithUs() {
       ...prev,
       [name]: value,
     }));
+
+    // Clear old messages when user edits the form
+    if (error) {
+      setError("");
+    }
+
+    if (success) {
+      setSuccess("");
+    }
   };
 
   const handleFileChange = (e) => {
@@ -62,6 +72,7 @@ function PartnerWithUs() {
     }
 
     setError("");
+    setSuccess("");
     setRegistrationFile(file);
   };
 
@@ -110,7 +121,28 @@ function PartnerWithUs() {
         body: data,
       });
 
-      const result = await response.json();
+      /*
+        The backend should normally return JSON.
+        This safely handles cases where the backend returns HTML
+        instead of JSON, so the UI doesn't show:
+        "Unexpected token '<'"
+      */
+
+      const contentType = response.headers.get("content-type") || "";
+
+      let result = {};
+
+      if (contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+
+        throw new Error(
+          text
+            ? `Server returned an unexpected response (${response.status}).`
+            : `Server returned an unexpected response (${response.status}).`
+        );
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -119,7 +151,8 @@ function PartnerWithUs() {
       }
 
       setSuccess(
-        "Your partner registration has been submitted successfully. You can now log in with your email and password."
+        result.message ||
+          "Your partner registration has been submitted successfully. You can now log in with your email and password."
       );
 
       setFormData({
@@ -138,13 +171,13 @@ function PartnerWithUs() {
 
       setRegistrationFile(null);
 
+      // Reset file input
       e.target.reset();
     } catch (err) {
       console.error("Partner registration error:", err);
 
       setError(
-        err.message ||
-          "Something went wrong. Please try again."
+        err.message || "Something went wrong. Please try again."
       );
     } finally {
       setLoading(false);
@@ -155,7 +188,10 @@ function PartnerWithUs() {
     <main className="partner-page">
       <section className="partner-main">
 
-        {/* LEFT SIDE */}
+        {/* =========================================
+            LEFT SIDE
+        ========================================= */}
+
         <div className="partner-info">
 
           <p className="partner-eyebrow">
@@ -181,6 +217,7 @@ function PartnerWithUs() {
 
             <div className="partner-step">
               <strong>1. Register</strong>
+
               <span>
                 Submit company &amp; compliance details
               </span>
@@ -188,6 +225,7 @@ function PartnerWithUs() {
 
             <div className="partner-step">
               <strong>2. Verify</strong>
+
               <span>
                 Admin reviews registration documents in the background
               </span>
@@ -195,16 +233,19 @@ function PartnerWithUs() {
 
             <div className="partner-step">
               <strong>3. Collaborate</strong>
+
               <span>
                 Receive shared job orders &amp; refer candidates
               </span>
             </div>
 
           </div>
-
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* =========================================
+            RIGHT SIDE
+        ========================================= */}
+
         <div className="partner-card">
 
           <h2>Partner Registration Form</h2>
@@ -214,8 +255,12 @@ function PartnerWithUs() {
             onSubmit={handleSubmit}
           >
 
+            {/* COMPANY NAME */}
+
             <div className="partner-field">
-              <label>Company / Consultancy Name</label>
+              <label>
+                Company / Consultancy Name
+              </label>
 
               <input
                 type="text"
@@ -226,8 +271,12 @@ function PartnerWithUs() {
               />
             </div>
 
+            {/* BUSINESS TYPE */}
+
             <div className="partner-field">
-              <label>Business Type</label>
+              <label>
+                Business Type
+              </label>
 
               <select
                 name="partnerType"
@@ -246,8 +295,12 @@ function PartnerWithUs() {
               </select>
             </div>
 
+            {/* YEARS IN OPERATION */}
+
             <div className="partner-field">
-              <label>Years in Operation</label>
+              <label>
+                Years in Operation
+              </label>
 
               <input
                 type="number"
@@ -257,6 +310,8 @@ function PartnerWithUs() {
                 min="0"
               />
             </div>
+
+            {/* REGISTRATION NUMBER */}
 
             <div className="partner-field">
               <label>
@@ -270,6 +325,8 @@ function PartnerWithUs() {
                 onChange={handleChange}
               />
             </div>
+
+            {/* REGISTRATION CERTIFICATE */}
 
             <div className="partner-field">
               <label>
@@ -290,8 +347,12 @@ function PartnerWithUs() {
               )}
             </div>
 
+            {/* SPECIALIZATION */}
+
             <div className="partner-field">
-              <label>Areas of Specialisation</label>
+              <label>
+                Areas of Specialisation
+              </label>
 
               <select
                 name="specialization"
@@ -312,8 +373,12 @@ function PartnerWithUs() {
               </select>
             </div>
 
+            {/* SERVICE GEOGRAPHY */}
+
             <div className="partner-field">
-              <label>Service Geography</label>
+              <label>
+                Service Geography
+              </label>
 
               <select
                 name="geography"
@@ -331,8 +396,12 @@ function PartnerWithUs() {
               </select>
             </div>
 
+            {/* CONTACT PERSON */}
+
             <div className="partner-field">
-              <label>Contact Person — Name</label>
+              <label>
+                Contact Person — Name
+              </label>
 
               <input
                 type="text"
@@ -343,8 +412,12 @@ function PartnerWithUs() {
               />
             </div>
 
+            {/* EMAIL */}
+
             <div className="partner-field">
-              <label>Work Email</label>
+              <label>
+                Work Email
+              </label>
 
               <input
                 type="email"
@@ -355,8 +428,12 @@ function PartnerWithUs() {
               />
             </div>
 
+            {/* PHONE */}
+
             <div className="partner-field">
-              <label>Phone / WhatsApp Number</label>
+              <label>
+                Phone / WhatsApp Number
+              </label>
 
               <input
                 type="tel"
@@ -367,8 +444,12 @@ function PartnerWithUs() {
               />
             </div>
 
+            {/* PASSWORD */}
+
             <div className="partner-field">
-              <label>Password</label>
+              <label>
+                Password
+              </label>
 
               <input
                 type="password"
@@ -382,8 +463,12 @@ function PartnerWithUs() {
               />
             </div>
 
+            {/* CONFIRM PASSWORD */}
+
             <div className="partner-field">
-              <label>Confirm Password</label>
+              <label>
+                Confirm Password
+              </label>
 
               <input
                 type="password"
@@ -398,6 +483,7 @@ function PartnerWithUs() {
             </div>
 
             {/* ERROR */}
+
             {error && (
               <div
                 style={{
@@ -414,6 +500,7 @@ function PartnerWithUs() {
             )}
 
             {/* SUCCESS */}
+
             {success && (
               <div
                 style={{
@@ -429,11 +516,15 @@ function PartnerWithUs() {
               </div>
             )}
 
+            {/* FORM NOTE */}
+
             <p className="partner-form-note">
               Choose a password you will use to log in to your partner
               dashboard. Your registration documents are still reviewed
               by our team for verification.
             </p>
+
+            {/* SUBMIT */}
 
             <button
               type="submit"
@@ -446,7 +537,6 @@ function PartnerWithUs() {
             </button>
 
           </form>
-
         </div>
 
       </section>

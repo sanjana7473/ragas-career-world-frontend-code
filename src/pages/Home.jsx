@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,9 +16,6 @@ import DomesticJobs from "./DomesticJobs";
 import CurrentOpenings from "./CurrentOpenings";
 import Employers from "./Employers";
 import JobSeekers from "./JobSeekers";
-import PostAJob from "./PostAJob";
-import PartnerWithUs from "./PartnerWithUs";
-import Contact from "./Contact";
 
 import homeRecruitment from "../assets/home-recruitment.png";
 
@@ -170,6 +168,7 @@ export function Home() {
               </p>
 
               <div className="hero-actions">
+
                 <button
                   type="button"
                   className="hero-primary-action"
@@ -178,6 +177,7 @@ export function Home() {
                   Explore open roles
                   <ArrowRight size={16} />
                 </button>
+
                 <button
                   type="button"
                   className="hero-secondary-action"
@@ -185,6 +185,7 @@ export function Home() {
                 >
                   Hire with RAGAS
                 </button>
+
               </div>
 
               {/* SEARCH */}
@@ -278,11 +279,13 @@ export function Home() {
                 {/* IMAGE LABEL */}
 
                 <div className="hero-image-label">
+
                   <span className="hero-label-dot"></span>
 
                   <span>
                     Global Recruitment
                   </span>
+
                 </div>
 
               </div>
@@ -387,47 +390,9 @@ export function Home() {
         <JobSeekers featuredOnly />
       </section>
 
-
-      {/* =====================================================
-          POST A JOB
-          LOGIN USERS ONLY
-      ===================================================== */}
-
-      {isUserLoggedIn && (
-        <section
-          id="post-a-job"
-          className="page-slide home-existing-section"
-        >
-          <PostAJob />
-        </section>
-      )}
-
-
-      {/* =====================================================
-          PARTNER WITH US
-      ===================================================== */}
-
-      <section
-        id="partner-with-us"
-        className="page-slide home-existing-section"
-      >
-        <PartnerWithUs />
-      </section>
-
-
-      {/* =====================================================
-          CONTACT
-      ===================================================== */}
-
-      <section
-        id="contact"
-        className="page-slide home-existing-section"
-      >
-        <Contact />
-      </section>
-
     </main>
   );
 }
 
 export default Home;
+

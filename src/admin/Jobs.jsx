@@ -421,7 +421,7 @@ function Jobs() {
             <thead>
               <tr>
                 <th>Job</th>
-                <th>Employer</th>
+                <th>Company Name</th>
                 <th>Location</th>
                 <th>Industry</th>
                 <th>Applicants</th>

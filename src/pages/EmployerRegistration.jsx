@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   Building2,
   User,
@@ -15,12 +16,29 @@ import {
 
 import "./EmployerRegistration.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+/* =========================================================
+   API CONFIGURATION
+   ========================================================= */
 
-const API_URL = API_BASE_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// IMPORTANT:
+// Backend route is mounted at:
+// /api/employers
+const API_URL = `${API_BASE_URL}/api/employers`;
+
+
+/* =========================================================
+   COMPONENT
+   ========================================================= */
 
 function EmployerRegistration() {
   const navigate = useNavigate();
+
+  /* =======================================================
+     FORM STATE
+     ======================================================= */
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -39,12 +57,24 @@ function EmployerRegistration() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+
+  /* =======================================================
+     HANDLE INPUT CHANGE
+     ======================================================= */
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
+
+
+  /* =======================================================
+     HANDLE FORM SUBMIT
+     ======================================================= */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,11 +83,16 @@ function EmployerRegistration() {
     setError("");
 
     try {
+      console.log("Submitting employer registration to:", API_URL);
+
       const response = await fetch(API_URL, {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
+
         body: JSON.stringify({
           companyName: formData.companyName,
           contactPerson: formData.contactPerson,
@@ -72,31 +107,86 @@ function EmployerRegistration() {
         }),
       });
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Unable to submit registration.");
+      /* =====================================================
+         READ RESPONSE SAFELY
+
+         We use response.text() first instead of response.json()
+         because an incorrect backend route can return HTML.
+         ===================================================== */
+
+      const responseText = await response.text();
+
+      let data = {};
+
+      if (responseText) {
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("Invalid JSON response:", responseText);
+
+          if (
+            responseText.includes("<!DOCTYPE") ||
+            responseText.includes("<html") ||
+            responseText.includes("<HTML")
+          ) {
+            throw new Error(
+              "The backend returned an HTML page instead of JSON. Please check the API URL and backend route."
+            );
+          }
+
+          throw new Error(
+            "The server returned an invalid response."
+          );
+        }
       }
 
-      console.log("Employer saved:", data);
+
+      /* =====================================================
+         HANDLE HTTP ERRORS
+         ===================================================== */
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message ||
+            data?.error ||
+            `Unable to submit registration. Server returned ${response.status}.`
+        );
+      }
+
+
+      /* =====================================================
+         SUCCESS
+         ===================================================== */
+
+      console.log("Employer registration successful:", data);
 
       setSubmitted(true);
+
     } catch (err) {
       console.error("Employer Registration Error:", err);
 
       setError(
-        err.message ||
-          "Something went wrong. Please check the backend server."
+        err?.message ||
+          "Something went wrong. Please check the backend server and try again."
       );
+
     } finally {
       setLoading(false);
     }
   };
 
+
+  /* =======================================================
+     SUCCESS SCREEN
+     ======================================================= */
+
   if (submitted) {
     return (
       <main className="employer-registration-page">
+
         <div className="registration-success">
+
           <div className="success-icon">
             <CheckCircle2 size={38} />
           </div>
@@ -105,15 +195,21 @@ function EmployerRegistration() {
             REGISTRATION SUBMITTED
           </p>
 
-          <h1>Thank You for Registering</h1>
+          <h1>
+            Thank You for Registering
+          </h1>
 
           <p>
-            Your employer registration has been successfully submitted.
-            Our team will review your details and contact you shortly.
+            Your employer registration has been successfully
+            submitted. Our team will review your details and
+            contact you shortly.
           </p>
 
           <div className="success-actions">
-            <button onClick={() => navigate("/")}>
+
+            <button
+              onClick={() => navigate("/")}
+            >
               Back to Website
             </button>
 
@@ -123,31 +219,52 @@ function EmployerRegistration() {
             >
               Contact Us
             </button>
+
           </div>
+
         </div>
+
       </main>
     );
   }
 
+
+  /* =======================================================
+     MAIN FORM
+     ======================================================= */
+
   return (
     <main className="employer-registration-page">
+
       <section className="registration-container">
 
-        {/* HEADER */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
+
         <div className="registration-header">
+
           <p className="registration-eyebrow">
             FOR EMPLOYERS
           </p>
 
-          <h1>Register Your Company</h1>
+          <h1>
+            Register Your Company
+          </h1>
 
           <p>
-            Partner with RAGAS CAREER WORLD to connect with qualified
-            talent across India and international markets.
+            Partner with RAGAS CAREER WORLD to connect with
+            qualified talent across India and international
+            markets.
           </p>
+
         </div>
 
-        {/* ERROR */}
+
+        {/* =================================================
+            ERROR MESSAGE
+        ================================================= */}
+
         {error && (
           <div
             style={{
@@ -163,29 +280,51 @@ function EmployerRegistration() {
           </div>
         )}
 
-        {/* FORM */}
+
+        {/* =================================================
+            FORM
+        ================================================= */}
+
         <form
           className="employer-registration-form"
           onSubmit={handleSubmit}
         >
 
-          {/* COMPANY INFORMATION */}
+          {/* ===============================================
+              COMPANY INFORMATION
+          =============================================== */}
+
           <div className="form-section">
+
             <div className="form-section-title">
+
               <Building2 size={19} />
 
               <div>
-                <h2>Company Information</h2>
-                <p>Tell us about your organisation.</p>
+                <h2>
+                  Company Information
+                </h2>
+
+                <p>
+                  Tell us about your organisation.
+                </p>
               </div>
+
             </div>
+
 
             <div className="form-grid">
 
+              {/* COMPANY NAME */}
+
               <div className="form-group">
-                <label>Company Name *</label>
+
+                <label>
+                  Company Name *
+                </label>
 
                 <div className="input-wrapper">
+
                   <Building2 size={17} />
 
                   <input
@@ -196,13 +335,22 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
+
+              {/* INDUSTRY */}
+
               <div className="form-group">
-                <label>Industry *</label>
+
+                <label>
+                  Industry *
+                </label>
 
                 <div className="input-wrapper">
+
                   <BriefcaseBusiness size={17} />
 
                   <select
@@ -211,25 +359,68 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Select industry</option>
-                    <option>Information Technology</option>
-                    <option>Healthcare</option>
-                    <option>Banking & Finance</option>
-                    <option>Manufacturing</option>
-                    <option>Construction</option>
-                    <option>Hospitality</option>
-                    <option>Logistics</option>
-                    <option>Aviation</option>
-                    <option>Retail</option>
-                    <option>Other</option>
+
+                    <option value="">
+                      Select industry
+                    </option>
+
+                    <option>
+                      Information Technology
+                    </option>
+
+                    <option>
+                      Healthcare
+                    </option>
+
+                    <option>
+                      Banking & Finance
+                    </option>
+
+                    <option>
+                      Manufacturing
+                    </option>
+
+                    <option>
+                      Construction
+                    </option>
+
+                    <option>
+                      Hospitality
+                    </option>
+
+                    <option>
+                      Logistics
+                    </option>
+
+                    <option>
+                      Aviation
+                    </option>
+
+                    <option>
+                      Retail
+                    </option>
+
+                    <option>
+                      Other
+                    </option>
+
                   </select>
+
                 </div>
+
               </div>
 
+
+              {/* COMPANY WEBSITE */}
+
               <div className="form-group">
-                <label>Company Website</label>
+
+                <label>
+                  Company Website
+                </label>
 
                 <div className="input-wrapper">
+
                   <Globe size={17} />
 
                   <input
@@ -239,13 +430,22 @@ function EmployerRegistration() {
                     value={formData.website}
                     onChange={handleChange}
                   />
+
                 </div>
+
               </div>
 
+
+              {/* COMPANY SIZE */}
+
               <div className="form-group">
-                <label>Company Size *</label>
+
+                <label>
+                  Company Size *
+                </label>
 
                 <div className="input-wrapper">
+
                   <Users size={17} />
 
                   <select
@@ -254,21 +454,52 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Select company size</option>
-                    <option>1–10 employees</option>
-                    <option>11–50 employees</option>
-                    <option>51–200 employees</option>
-                    <option>201–500 employees</option>
-                    <option>501–1000 employees</option>
-                    <option>1000+ employees</option>
+
+                    <option value="">
+                      Select company size
+                    </option>
+
+                    <option>
+                      1–10 employees
+                    </option>
+
+                    <option>
+                      11–50 employees
+                    </option>
+
+                    <option>
+                      51–200 employees
+                    </option>
+
+                    <option>
+                      201–500 employees
+                    </option>
+
+                    <option>
+                      501–1000 employees
+                    </option>
+
+                    <option>
+                      1000+ employees
+                    </option>
+
                   </select>
+
                 </div>
+
               </div>
 
+
+              {/* COMPANY LOCATION */}
+
               <div className="form-group full-width">
-                <label>Company Location *</label>
+
+                <label>
+                  Company Location *
+                </label>
 
                 <div className="input-wrapper">
+
                   <MapPin size={17} />
 
                   <input
@@ -279,31 +510,53 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
             </div>
+
           </div>
 
-          {/* CONTACT INFORMATION */}
+
+          {/* ===============================================
+              CONTACT INFORMATION
+          =============================================== */}
+
           <div className="form-section">
+
             <div className="form-section-title">
+
               <User size={19} />
 
               <div>
-                <h2>Contact Information</h2>
+
+                <h2>
+                  Contact Information
+                </h2>
+
                 <p>
                   Primary contact for recruitment communication.
                 </p>
+
               </div>
+
             </div>
+
 
             <div className="form-grid">
 
+              {/* CONTACT PERSON */}
+
               <div className="form-group">
-                <label>Contact Person *</label>
+
+                <label>
+                  Contact Person *
+                </label>
 
                 <div className="input-wrapper">
+
                   <User size={17} />
 
                   <input
@@ -314,13 +567,22 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
+
+              {/* EMAIL */}
+
               <div className="form-group">
-                <label>Official Email *</label>
+
+                <label>
+                  Official Email *
+                </label>
 
                 <div className="input-wrapper">
+
                   <Mail size={17} />
 
                   <input
@@ -331,13 +593,22 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
+
+              {/* PHONE */}
+
               <div className="form-group full-width">
-                <label>Phone Number *</label>
+
+                <label>
+                  Phone Number *
+                </label>
 
                 <div className="input-wrapper">
+
                   <Phone size={17} />
 
                   <input
@@ -348,27 +619,48 @@ function EmployerRegistration() {
                     onChange={handleChange}
                     required
                   />
+
                 </div>
+
               </div>
 
             </div>
+
           </div>
 
-          {/* HIRING REQUIREMENT */}
+
+          {/* ===============================================
+              HIRING REQUIREMENTS
+          =============================================== */}
+
           <div className="form-section">
+
             <div className="form-section-title">
+
               <BriefcaseBusiness size={19} />
 
               <div>
-                <h2>Hiring Requirements</h2>
+
+                <h2>
+                  Hiring Requirements
+                </h2>
+
                 <p>
                   Help us understand your recruitment needs.
                 </p>
+
               </div>
+
             </div>
 
+
+            {/* HIRING REQUIREMENT */}
+
             <div className="form-group">
-              <label>Current Hiring Requirement *</label>
+
+              <label>
+                Current Hiring Requirement *
+              </label>
 
               <textarea
                 name="hiringRequirement"
@@ -377,10 +669,17 @@ function EmployerRegistration() {
                 onChange={handleChange}
                 required
               />
+
             </div>
 
+
+            {/* MESSAGE */}
+
             <div className="form-group">
-              <label>Additional Message</label>
+
+              <label>
+                Additional Message
+              </label>
 
               <textarea
                 name="message"
@@ -388,41 +687,66 @@ function EmployerRegistration() {
                 value={formData.message}
                 onChange={handleChange}
               />
+
             </div>
+
           </div>
 
-          {/* DOCUMENT NOTE */}
+
+          {/* ===============================================
+              VERIFICATION NOTE
+          =============================================== */}
+
           <div className="verification-note">
+
             <FileText size={18} />
 
             <div>
-              <strong>Employer Verification</strong>
+
+              <strong>
+                Employer Verification
+              </strong>
 
               <p>
-                After submission, our team may contact you for company
-                verification and additional documentation.
+                After submission, our team may contact you
+                for company verification and additional
+                documentation.
               </p>
+
             </div>
+
           </div>
 
-          {/* SUBMIT */}
+
+          {/* ===============================================
+              SUBMIT
+          =============================================== */}
+
           <div className="registration-submit">
-            <button type="submit" disabled={loading}>
+
+            <button
+              type="submit"
+              disabled={loading}
+            >
               {loading
                 ? "Submitting..."
                 : "Submit Employer Registration"}
             </button>
 
             <p>
-              By submitting this form, you agree to be contacted by
-              RAGAS CAREER WORLD regarding recruitment services.
+              By submitting this form, you agree to be contacted
+              by RAGAS CAREER WORLD regarding recruitment services.
             </p>
+
           </div>
 
         </form>
+
       </section>
+
     </main>
   );
 }
+
 
 export default EmployerRegistration;
